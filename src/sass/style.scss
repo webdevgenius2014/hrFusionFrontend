@@ -1,0 +1,34 @@
+.sideMain{
+    min-height: calc(100vh - 122px);
+}
+.brand{
+    height: 65px;
+    padding-left: 1.2rem;
+    text-align: center;
+    background-color: $gray;
+}
+.section-body{
+    background-color: $primary-color;
+    .login-page{
+        .loginBox{
+            background-color: $white;
+            label{
+                text-align: left;
+            }
+            .rs-panel-title{
+               span{
+                    color: $site_color;
+               }
+            }
+        }
+        
+    }
+}
+.main-content{
+    padding: 1rem 1rem 1rem 2rem ;
+    // min-height: 87vh;
+    min-height: calc(100vh - 65px);
+}
+.footer-main{
+    text-align: center;
+}
