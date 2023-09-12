@@ -8,7 +8,7 @@
     height: 65px;
     padding-left: 1.2rem;
     text-align: center;
-    background-color: $gray;   
+    background-color: $white;   
     .brand-text {
         display: inline-block;
         margin-left:14px;
@@ -36,10 +36,37 @@
     }
 }
 .main-content{
-    padding: 1rem 1rem 1rem 2rem ;
+    padding: 2rem 1rem 1rem 2rem ;
     // min-height: 87vh;
     min-height: calc(100vh - 65px);
+    background-color: $gray;
 }
 .footer-main{
     text-align: center;
+}
+.rs-sidenav-default{
+    background-color: $white;
+    .rs-sidenav-item{
+        background-color: $white;
+    }
+}
+.rs-navbar-default{
+    background-color: $white;
+}
+.card{
+    border-radius: 0.55rem;
+    background-color: $white;
+    .card-header{
+        border-radius: 0.25rem 0.25rem  0 0;
+        padding: 1.25rem 1.25rem 0.625rem 1.25rem;
+        border: 0;
+        .card-title{
+            font-size: 1.125rem;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+    }
+    .card-body{
+        padding: 1.25rem;
+    }
 }
