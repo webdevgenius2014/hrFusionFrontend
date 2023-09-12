@@ -9,6 +9,8 @@ import classNames from 'classnames';
 import { Outlet } from 'react-router-dom';
 import Header from './topnav';
 import Brand from '../../components/Brand';
+import { FiLogIn } from "react-icons/fi";
+
 const NavLink = React.forwardRef(({ href, children, ...rest }, ref) => (
   <Link ref={ref} to={href} {...rest}>
     {children}
@@ -34,7 +36,7 @@ const DashboardLayout = () => {
                   </Nav.Item>
                   <Nav.Item as={NavLink} href="/departments" style={{ textAlign: "left" }} eventKey="2" icon={<GroupIcon />}>Departments
                   </Nav.Item> 
-                  <Nav.Item as={NavLink} href="/login" style={{ textAlign: "left" }} eventKey="3" icon={<GroupIcon />}>Login
+                  <Nav.Item as={NavLink} href="/login" style={{ textAlign: "left" }} eventKey="3" icon={<FiLogIn className='sidenav-icon' />}>Login
                   </Nav.Item>
                   {/* <Nav.Item style={{ textAlign: "left" }} eventKey="3" icon={<GroupIcon />}>
                       Designations

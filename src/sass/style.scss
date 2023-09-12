@@ -1,11 +1,22 @@
 .sideMain{
     min-height: calc(100vh - 122px);
+    .sidenav-icon{
+        width: 1em;
+    }
 }
 .brand{
     height: 65px;
     padding-left: 1.2rem;
     text-align: center;
-    background-color: $gray;
+    background-color: $gray;   
+    .brand-text {
+        display: inline-block;
+        margin-left:14px;
+        font-size: 28px;
+        span{
+            color: $site_color;
+        }
+    }
 }
 .section-body{
     background-color: $primary-color;
