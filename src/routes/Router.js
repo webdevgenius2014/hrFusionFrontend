@@ -10,6 +10,7 @@ const Departments = Loadable(lazy(() => import('../views/departments/Deartments'
 
 const Error = Loadable(lazy(() => import('../views/auth/Error')));
 const Login = Loadable(lazy(() => import('../views/auth/Login')));
+const ResetPassword = Loadable(lazy(() => import('../views/auth/ResetPassword')));
 
 const Router = [
   {
@@ -18,6 +19,10 @@ const Router = [
       {
         path: "/login",
         element: <Login />
+      },
+      {
+        path: "/resetpassword",
+        element: <ResetPassword />
       }
     ]
   },

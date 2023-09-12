@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import {
     Container,
     Content,
@@ -43,7 +44,7 @@ const Login = () => {
                                             <Button appearance="primary" type="submit">
                                                 Submit
                                             </Button>
-                                            <Button appearance="link">Forgot password?</Button>
+                                            <Link to='/resetpassword'><Button appearance="link">Forgot password?</Button></Link>
                                         </ButtonToolbar>
                                     </Form>
                                 </Panel>
