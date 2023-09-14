@@ -65,8 +65,21 @@
             font-weight: 400;
             text-transform: uppercase;
         }
+        .rs-stack{
+            justify-content: space-between;
+        }
+       
     }
     .card-body{
         padding: 1.25rem;
+    }
+    .rs-divider-horizontal{
+        margin: 0.438rem 0;
+    }
+}
+.rs-table-body-wheel-area {
+    .rs-table-cell-content{
+        display: flex;
+        align-items: center;
     }
 }

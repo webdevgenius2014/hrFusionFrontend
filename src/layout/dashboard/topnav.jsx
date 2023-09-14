@@ -3,17 +3,14 @@ import { Navbar, Nav } from 'rsuite';
 import { Input, InputGroup } from 'rsuite';
 import SearchIcon from '@rsuite/icons/Search';
 import CogIcon from '@rsuite/icons/legacy/Cog';
-const styles = {
-    width: 300,
-    marginBottom: 10
-};
+
 const Header = () => {
     return (
         <>
             <Navbar>               
                 <Nav>
                     <Nav.Item>
-                        <InputGroup inside style={styles}>
+                        <InputGroup>
                             <Input placeholder="Search here..." />
                             <InputGroup.Button>
                                 <SearchIcon />
