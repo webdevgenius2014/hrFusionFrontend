@@ -20,6 +20,12 @@ export const mainListItems = (
         <PeopleIcon />
       </ListItemIcon>
       <ListItemText primary="Departments" />
+    </ListItemButton>
+    <ListItemButton component= {NavLink} to='/designations'>
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="Designations" />
     </ListItemButton> 
     <ListItemButton component={NavLink} to='/login'>
       <ListItemIcon>
