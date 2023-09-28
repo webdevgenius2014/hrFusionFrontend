@@ -22,14 +22,17 @@ const Deartments = () => {
     { id: 4, department: 'Support' },
     { id: 5, department: 'Accounts' },
     { id: 6, department: 'PHP Open Source' },
-    { id: 7, department: 'Design and Printing' }
+    { id: 7, department: 'Design and Printing'}
   ]
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: 'transparent',
     boxShadow: 'none'
   }));
-  const handleEditClick = (id) => () => {
+  const [dep, setDep] = useState('')
+  const handleEditClick = (id, department,e) => () => {
+    //console.log("department = "+department)
     //ID - current Row ID
+    setDep(department)
     handleEditOpen()
   };
   const handleDeleteClick = (id) => () => {
@@ -61,19 +64,20 @@ const Deartments = () => {
       field: 'action',
       headerName: 'Action',
       type: 'actions',
-      getActions: ({ id }) => {
+      getActions: (params) => { 
+        //console.log(params)
         return [
           <GridActionsCellItem
-            icon={<EditIcon/>}
+            icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(id)}
+            onClick={handleEditClick(params?.id, params?.row?.department)}
             color="inherit"
           />,
           <GridActionsCellItem
-            icon={<DeleteIcon/>}
+            icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={handleDeleteClick(params?.id)}
             color="inherit"
           />,
         ];
@@ -128,34 +132,34 @@ const Deartments = () => {
         </Box>
       </Container>
       <CommonModal isOpen={editopen} isClose={handleEditClose}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
-              Edit Department
-            </Typography>
-            <Box sx={{
-              width: 500,
-              maxWidth: '100%',
-            }}>
-              <form onSubmit={handleSubmit}>
-                <TextField fullWidth label="Add Department" id="fullWidth" />
-                <Button type='submit' variant="contained" sx={{ marginTop: '13px' }}>Save</Button>
-              </form>
-            </Box>
-          </CommonModal>
+        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
+          Edit Department
+        </Typography>
+        <Box sx={{
+          width: 500,
+          maxWidth: '100%',
+        }}>
+          <form onSubmit={handleSubmit}>
+            <TextField fullWidth label="Add Department" id="fullWidth" value={dep} onChange={(e)=>setDep(e.target.value)} />
+            <Button type='submit' variant="contained" sx={{ marginTop: '13px' }}>Save</Button>
+          </form>
+        </Box>
+      </CommonModal>
 
-          <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
-              Delete Department
-            </Typography>
-            <p>Are you sure want to delete?</p>
-            <Box sx={{
-              width: 500,
-              maxWidth: '100%',
-            }}>
-              
-                <Button type='submit' variant="contained" sx={{ marginTop: '13px', marginRight: '13px' }}>Delete</Button>
-                <Button type='submit' variant="contained" sx={{ marginTop: '13px' }} onClick={handleDeleteClose}>Cancel</Button>
-            </Box>
-          </CommonModal>
+      <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
+        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
+          Delete Department
+        </Typography>
+        <p>Are you sure want to delete?</p>
+        <Box sx={{
+          width: 500,
+          maxWidth: '100%',
+        }}>
+
+          <Button type='submit' variant="contained" sx={{ marginTop: '13px', marginRight: '13px' }}>Delete</Button>
+          <Button type='submit' variant="contained" sx={{ marginTop: '13px' }} onClick={handleDeleteClose}>Cancel</Button>
+        </Box>
+      </CommonModal>
 
 
     </>

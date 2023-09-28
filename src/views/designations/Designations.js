@@ -14,6 +14,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+
 const Designations = () => {
     const sampleData = [
         { id: 1, designation: 'Web Designer', department: 'Web Development' },
@@ -27,65 +31,76 @@ const Designations = () => {
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: 'transparent',
         boxShadow: 'none'
-      }));
-      const handleEditClick = (id) => () => {
+    }));
+
+    const [des, setDes] = useState("");
+
+    const handleEditClick = (id, designation) => () => {
         //ID - current Row ID
+        setDes(designation);
         handleEditOpen()
-      };
-      const handleDeleteClick = (id) => () => {
+    };
+    const handleDeleteClick = (id) => () => {
         handleDeleteOpen()
-      };
-    
-      const [open, setOpen] = useState(false);
-      const handleOpen = () => setOpen(true);
-      const handleClose = () => setOpen(false);
-    
-      const [editopen, setEditOpen] = useState(false);
-      const handleEditOpen = () => setEditOpen(true);
-      const handleEditClose = () => setEditOpen(false);
-    
-      const [deleteopen, setDeleteOpen] = useState(false);
-      const handleDeleteOpen = () => setDeleteOpen(true);
-      const handleDeleteClose = () => setDeleteOpen(false);
-    
-      const [depval, setDepVal] = useState("")
-      const handleSubmit = (e) => {
+    };
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const [editopen, setEditOpen] = useState(false);
+    const handleEditOpen = () => setEditOpen(true);
+    const handleEditClose = () => setEditOpen(false);
+
+    const [deleteopen, setDeleteOpen] = useState(false);
+    const handleDeleteOpen = () => setDeleteOpen(true);
+    const handleDeleteClose = () => setDeleteOpen(false);
+
+    const [depval, setDepVal] = useState("")
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(depval);
-      }
-    
-      const columns = [
+        //console.log(depval);
+    }
+
+    const columns = [
         { field: 'id', headerName: 'ID', width: 100, options: { filter: true } },
         { field: 'designation', headerName: 'Designation', width: 200, options: { filter: true } },
         { field: 'department', headerName: 'Department', width: 200, options: { filter: true } },
         {
-          field: 'action',
-          headerName: 'Action',
-          type: 'actions',
-          getActions: ({ id }) => {
-            return [
-              <GridActionsCellItem
-                icon={<EditIcon/>}
-                label="Edit"
-                className="textPrimary"
-                onClick={handleEditClick(id)}
-                color="inherit"
-              />,
-              <GridActionsCellItem
-                icon={<DeleteIcon/>}
-                label="Delete"
-                onClick={handleDeleteClick(id)}
-                color="inherit"
-              />,
-            ];
-          },
-          width: 500
+            field: 'action',
+            headerName: 'Action',
+            type: 'actions',
+            getActions: (params, id) => {
+                console.log(params)
+                return [
+                    <GridActionsCellItem
+                        icon={<EditIcon />}
+                        label="Edit"
+                        className="textPrimary"
+                        onClick={handleEditClick(params?.id, params?.row?.department)}
+                        color="inherit"
+                    />,
+                    <GridActionsCellItem
+                        icon={<DeleteIcon />}
+                        label="Delete"
+                        onClick={handleDeleteClick(id)}
+                        color="inherit"
+                    />,
+                ];
+            },
+            width: 500
         }
-      ]
-    
-      const styles = {
+    ]
+
+    const styles = {
         backgroundColor: 'white'
-      }
+    }
+
+    const[depart, setDepart]=useState("")
+
+    const handleChangeDep=(e)=>{
+        setDepart(e.target.value)
+    }
     return (
         <>
             <Container>
@@ -137,7 +152,24 @@ const Designations = () => {
                     maxWidth: '100%',
                 }}>
                     <form onSubmit={handleSubmit}>
-                        <TextField fullWidth label="Add Department" id="fullWidth" />
+                        <TextField fullWidth label="Edit Designation" id="fullWidth" value={des} onChange={(e) => setDes(e.target.value)} />
+                        <InputLabel id="demo-simple-select-label">Department</InputLabel>
+                        <Select
+                            fullWidth
+                            labelId="demo-simple-select-label"
+                            sx={{marginTop: '20px'}}
+                            id="demo-simple-select"
+                            value={depart}
+                            label="Department"
+                            onChange={handleChangeDep}
+                        >
+                            {
+                                sampleData && sampleData.map((item, index)=>(
+                                    <MenuItem key={index} value={item.department}>{item.department}</MenuItem>
+                                ))
+                            }
+                           
+                        </Select>
                         <Button type='submit' variant="contained" sx={{ marginTop: '13px' }}>Save</Button>
                     </form>
                 </Box>
