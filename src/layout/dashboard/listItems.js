@@ -5,7 +5,10 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import LoginIcon from '@mui/icons-material/Login';
+import GroupsIcon from '@mui/icons-material/Groups';
 import { NavLink, Link } from 'react-router-dom';
 export const mainListItems = (
   <>
@@ -17,15 +20,21 @@ export const mainListItems = (
     </ListItemButton>  
     <ListItemButton component= {NavLink} to='/departments'>
       <ListItemIcon>
-        <PeopleIcon />
+        <AccountTreeIcon />
       </ListItemIcon>
       <ListItemText primary="Departments" />
     </ListItemButton>
     <ListItemButton component= {NavLink} to='/designations'>
       <ListItemIcon>
-        <PeopleIcon />
+        <BusinessCenterIcon />
       </ListItemIcon>
       <ListItemText primary="Designations" />
+    </ListItemButton>
+    <ListItemButton component= {NavLink} to='/employees'>
+      <ListItemIcon>
+        <GroupsIcon />
+      </ListItemIcon>
+      <ListItemText primary="Employees" />
     </ListItemButton> 
     <ListItemButton component={NavLink} to='/login'>
       <ListItemIcon>

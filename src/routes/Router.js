@@ -7,7 +7,8 @@ const BlankLayout = Loadable(lazy(() => import('../layout/blank/BlankLayout')));
 /* ****Pages***** */
 const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
 const Departments = Loadable(lazy(() => import('../views/departments/Deartments')));
-const Designations = Loadable(lazy(() => import('../views/designations/Designations')))
+const Designations = Loadable(lazy(() => import('../views/designations/Designations')));
+const Employees = Loadable(lazy(() => import('../views/employees/Employees')))
 
 const Error = Loadable(lazy(() => import('../views/auth/Error')));
 const SignIn = Loadable(lazy(() => import('../views/auth/SignIn')));
@@ -45,6 +46,10 @@ const Router = [
       {
         path: "/designations",
         element: <Designations />,
+      },
+      {
+        path: "/employees",
+        element: <Employees />,
       }
     ],
   },

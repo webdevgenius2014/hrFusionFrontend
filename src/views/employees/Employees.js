@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -14,19 +13,17 @@ import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import InputLabel from '@mui/material/InputLabel';
-
-const Designations = () => {
-    const sampleData = [
-        { id: 1, designation: 'Web Designer', department: 'Web Development' },
-        { id: 2, designation: 'Web Developer', department: 'Marketing' },
-        { id: 3, designation: 'Android Developer', department: 'App Development' },
-        { id: 4, designation: 'IOS Developer', department: 'Support' },
-        { id: 5, designation: 'UI Designer', department: 'Accounts' },
-        { id: 6, designation: 'UX Designer', department: 'PHP Open Source' },
-        { id: 7, designation: 'IT Technician', department: 'Design and Printing' }
+import AddEmployee from "./add-employees/addEmployee";
+import EditEmployee from "./edit-employees/editEmployee";
+const Employees = () => {
+    const sampleEmployees = [
+        { id: 1, name: 'Bernardo Galaviz', employeeid: 'FT-0008', email: 'bernardogalaviz@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
+        { id: 2, name: 'Jeffrey Warden', employeeid: 'FT-0009', email: 'jeffreywarden@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
+        { id: 3, name: 'John Doe', employeeid: 'FT-0010', email: 'johndoe@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
+        { id: 4, name: 'John Smith', employeeid: 'FT-0011', email: 'johnsmith@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
+        { id: 5, name: 'Mike Litorus', employeeid: 'FT-0012', email: 'mikelitorus@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
+        { id: 6, name: 'Richard Miles', employeeid: 'FT-0013', email: 'richardmiles@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
+        { id: 7, name: 'Wilmer Deluna', employeeid: 'FT-0014', email: 'wilmerdeluna@example.com', mobile: 9876543210, joindate: '1 Jan 2013' }
     ]
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: 'transparent',
@@ -34,14 +31,17 @@ const Designations = () => {
     }));
 
     const [des, setDes] = useState("");
+    const [emailedit, setEmailEdit] = useState("");
 
-    const handleEditClick = (id, designation) => () => {
+    const handleEditClick = (id, name, email) => () => {
         //ID - current Row ID
-        setDes(designation);
+        setDes(name);
+        setEmailEdit(email);
         handleEditOpen()
     };
-    
-    console .log("hello: " + des)
+
+    console.log("name:"+ des)
+
     const handleDeleteClick = (id) => () => {
         handleDeleteOpen()
     };
@@ -63,11 +63,17 @@ const Designations = () => {
         e.preventDefault();
         //console.log(depval);
     }
+    const [age, setAge] = useState('');
+    const handleChangeSel = (event) => {
+        setAge(event.target.value);
+    };
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 100, options: { filter: true } },
-        { field: 'designation', headerName: 'Designation', width: 200, options: { filter: true } },
-        { field: 'department', headerName: 'Department', width: 200, options: { filter: true } },
+        { field: 'name', headerName: 'Name', width: 200, options: { filter: true } },
+        { field: 'employeeid', headerName: 'Employeeid', width: 100, options: { filter: true } },
+        { field: 'email', headerName: 'Email', width: 200, options: { filter: true } },
+        { field: 'mobile', headerName: 'Mobile', width: 150, options: { filter: true } },
+        { field: 'joindate', headerName: 'Joindate', width: 150, options: { filter: true } },
         {
             field: 'action',
             headerName: 'Action',
@@ -79,7 +85,7 @@ const Designations = () => {
                         icon={<EditIcon />}
                         label="Edit"
                         className="textPrimary"
-                        onClick={handleEditClick(params?.id, params?.row?.department)}
+                        onClick={handleEditClick(params?.id, params?.row?.name, params?.row?.email)}
                         color="inherit"
                     />,
                     <GridActionsCellItem
@@ -90,26 +96,21 @@ const Designations = () => {
                     />,
                 ];
             },
-            width: 500
+            width: 200
         }
     ]
 
     const styles = {
         backgroundColor: 'white'
     }
-
-    const[depart, setDepart]=useState("")
-
-    const handleChangeDep=(e)=>{
-        setDepart(e.target.value)
-    }
+    
     return (
         <>
             <Container>
                 <Box>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <Item><h2>Designation List</h2></Item>
+                            <Item><h2>Employees List</h2></Item>
                         </Grid>
                         <Grid item xs={6}>
                             <Item align="right">
@@ -118,22 +119,11 @@ const Designations = () => {
                         </Grid>
                     </Grid>
                     <CommonModal isOpen={open} isClose={handleClose}>
-                        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
-                            Add Designation
-                        </Typography>
-                        <Box sx={{
-                            width: 500,
-                            maxWidth: '100%',
-                        }}>
-                            <form onSubmit={handleSubmit}>
-                                <TextField fullWidth label="Add Department" id="fullWidth" value={depval} onInput={(e) => setDepVal(e.target.value)} />
-                                <Button type='submit' variant="contained" sx={{ marginTop: '13px' }}>Submit</Button>
-                            </form>
-                        </Box>
+                       <AddEmployee/>
                     </CommonModal>
                     <DataGrid
                         style={styles}
-                        rows={sampleData}
+                        rows={sampleEmployees}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -146,35 +136,10 @@ const Designations = () => {
                 </Box>
             </Container>
             <CommonModal isOpen={editopen} isClose={handleEditClose}>
-                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
-                    Edit Designation
-                </Typography>
-                <Box sx={{
-                    width: 500,
-                    maxWidth: '100%',
-                }}>
-                    <form onSubmit={handleSubmit}>
-                        <TextField fullWidth label="Edit Designation" id="fullWidth" value={des} onChange={(e) => setDes(e.target.value)} />
-                        <InputLabel id="demo-simple-select-label">Department</InputLabel>
-                        <Select
-                            fullWidth
-                            labelId="demo-simple-select-label"
-                            sx={{marginTop: '20px'}}
-                            id="demo-simple-select"
-                            value={depart}
-                            label="Department"
-                            onChange={handleChangeDep}
-                        >
-                            {
-                                sampleData && sampleData.map((item, index)=>(
-                                    <MenuItem key={index} value={item.department}>{item.department}</MenuItem>
-                                ))
-                            }
-                           
-                        </Select>
-                        <Button type='submit' variant="contained" sx={{ marginTop: '13px' }}>Save</Button>
-                    </form>
-                </Box>
+               <EditEmployee
+                namedit ={des}
+                namechange={(e)=>setDes(e.target.value)}
+                emailedit={emailedit} />
             </CommonModal>
 
             <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
@@ -194,4 +159,5 @@ const Designations = () => {
         </>
     )
 }
-export default Designations;
+
+export default Employees;
