@@ -34,6 +34,8 @@ const EditEmployee=(props)=>{
     };
 
     
+
+    
     return(
         <>
          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ marginBottom: '20px', fontWeight: "600" }}>
@@ -46,29 +48,25 @@ const EditEmployee=(props)=>{
                    <form>
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={2}>
-                            <Grid item sm={12}>
+                            <Grid item sm={6}>
                                 <Item>
                                     <TextField fullWidth label="Name" id="fullWidth" value={props.namedit} onInput={props.namechange}/>
                                 </Item>
                             </Grid>
+                           
                             <Grid item sm={6}>
                                 <Item>
-                                    <TextField fullWidth label="Username" id="fullWidth" value={props.emailedit} />
+                                    <TextField fullWidth label="Email" id="fullWidth" value={props.emailedit} onInput={props.emailchange}/>
                                 </Item>
                             </Grid>
                             <Grid item sm={6}>
                                 <Item>
-                                    <TextField fullWidth label="Email" id="fullWidth" autoComplete='off'/>
+                                    <TextField fullWidth label="Password" id="fullWidth" type="password" value={props.passwordedit} onInput={props.passwordchange}/>
                                 </Item>
                             </Grid>
                             <Grid item sm={6}>
                                 <Item>
-                                    <TextField fullWidth label="Password" id="fullWidth" type="password" autoComplete='off' />
-                                </Item>
-                            </Grid>
-                            <Grid item sm={6}>
-                                <Item>
-                                    <TextField fullWidth label="Confirm Password" id="fullWidth" type="password" />
+                                    <TextField fullWidth label="Confirm Password" id="fullWidth" type="password" value={props.passwordedit} onInput={props.passwordchange}/>
                                 </Item>
                             </Grid>
                             <Grid item sm={6}>

@@ -40,7 +40,7 @@ const Designations = () => {
         setDes(designation);
         handleEditOpen()
     };
-    
+
     console .log("hello: " + des)
     const handleDeleteClick = (id) => () => {
         handleDeleteOpen()

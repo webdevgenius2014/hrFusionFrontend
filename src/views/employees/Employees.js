@@ -15,7 +15,11 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import AddEmployee from "./add-employees/addEmployee";
 import EditEmployee from "./edit-employees/editEmployee";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Link,useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 const Employees = () => {
+    const navigate = useNavigate();
     const sampleEmployees = [
         { id: 1, name: 'Bernardo Galaviz', employeeid: 'FT-0008', email: 'bernardogalaviz@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
         { id: 2, name: 'Jeffrey Warden', employeeid: 'FT-0009', email: 'jeffreywarden@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
@@ -32,6 +36,7 @@ const Employees = () => {
 
     const [des, setDes] = useState("");
     const [emailedit, setEmailEdit] = useState("");
+    const [passedit, setPassEdit] = useState("123456");
 
     const handleEditClick = (id, name, email) => () => {
         //ID - current Row ID
@@ -68,17 +73,23 @@ const Employees = () => {
         setAge(event.target.value);
     };
 
+    const detailEmployee=(id)=>{
+        navigate(`/employees/${id}`);
+    }
+    const { id } = useParams();
+
     const columns = [
+        { field: 'id', headerName: 'ID', width: 50, options: { filter: true } },
         { field: 'name', headerName: 'Name', width: 200, options: { filter: true } },
         { field: 'employeeid', headerName: 'Employeeid', width: 100, options: { filter: true } },
         { field: 'email', headerName: 'Email', width: 200, options: { filter: true } },
         { field: 'mobile', headerName: 'Mobile', width: 150, options: { filter: true } },
-        { field: 'joindate', headerName: 'Joindate', width: 150, options: { filter: true } },
+        { field: 'joindate', headerName: 'Joindate', width: 50, options: { filter: true } },
         {
             field: 'action',
             headerName: 'Action',
             type: 'actions',
-            getActions: (params, id) => {
+            getActions: (params) => {
                 
                 return [
                     <GridActionsCellItem
@@ -91,13 +102,22 @@ const Employees = () => {
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
-                        onClick={handleDeleteClick(id)}
+                        onClick={handleDeleteClick(params?.id)}
                         color="inherit"
                     />,
+                    <GridActionsCellItem
+                        icon={<VisibilityIcon/>}
+                        label="View"
+                        color="inherit"
+                        onClick={()=>detailEmployee(params?.id)}
+                    />
                 ];
             },
-            width: 200
+            width: 200,
+           
+
         }
+       
     ]
 
     const styles = {
@@ -139,7 +159,11 @@ const Employees = () => {
                <EditEmployee
                 namedit ={des}
                 namechange={(e)=>setDes(e.target.value)}
-                emailedit={emailedit} />
+                emailedit={emailedit}
+                emailchange={(e)=>setEmailEdit(e.target.value)}
+                passwordedit={passedit}
+                passwordchange={(e)=>setPassEdit(e.target.value)}
+                />
             </CommonModal>
 
             <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
