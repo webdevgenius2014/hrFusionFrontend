@@ -101,7 +101,7 @@ const DashboardLayout = () => {
                 noWrap
                 sx={{ flexGrow: 1 }}
               >
-                HR Dashboard
+                HrFusion
               </Typography>
               <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
@@ -137,12 +137,13 @@ const DashboardLayout = () => {
               flexGrow: 1,
               height: '100vh',
               overflow: 'auto',
+              
             }}
           >
             <Toolbar />
-            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Box as='div' sx={{minHeight:'75vh'}}>
-                <Outlet />
+            <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+              <Box maxWidth="xl" as='div' sx={{minHeight:'75vh'}}>
+                <Outlet/>
               </Box>              
               <Footer />             
             </Container>

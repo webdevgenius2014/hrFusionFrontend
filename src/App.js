@@ -3,7 +3,7 @@ import Router from './routes/Router'
 import { useRoutes } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import {defaultTheme} from './theme/theme'
-import './App.css';
+import './styles/custom.css';
 
 function App() {
   const routing = useRoutes(Router);

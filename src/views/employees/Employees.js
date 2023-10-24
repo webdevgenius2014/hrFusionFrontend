@@ -130,7 +130,7 @@ const Employees = () => {
                 <Box>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <Item><h2>Employees List</h2></Item>
+                            <Item><h2>Employees</h2></Item>
                         </Grid>
                         <Grid item xs={6}>
                             <Item align="right">

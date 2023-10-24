@@ -95,7 +95,7 @@ const Deartments = () => {
         <Box>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <Item><h2>Department List</h2></Item>
+              <Item><h2>Department</h2></Item>
             </Grid>
             <Grid item xs={6}>
               <Item align="right">
