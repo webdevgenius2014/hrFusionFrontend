@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -17,8 +18,130 @@ import { GridActionsCellItem } from '@mui/x-data-grid';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
+import { useSelector } from "react-redux";
+import ApiConfig from "../../config/apiConfig";
 
 const Designations = () => {
+    const token = useSelector((state) => state.SuperAdmin.token);
+    // api integration ----------------------------------------------------
+    // Getdepartments --------------------
+const [getdep, setGetdep] = useState([]);
+const getDepartmentfn = async () => {
+ const res = await axios.get(ApiConfig.getDepartments, {
+   headers: {
+     Accept: "application/json",
+     Authorization: "Bearer " + token,
+   },
+ });
+ if (res) {
+   setGetdep(res.data.data);
+ } else {
+   setGetdep([]);
+ }
+};
+//-------------------------
+// get designations --------------------------------
+    const [getDesig, setGetDesig] = useState([]);
+    const getDesignationsfn = async () => {
+      const res = await axios.get(ApiConfig.getDesignations, {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      if (res) {
+        setGetDesig(()=>res.data.data);
+      } else {
+        setGetDesig([]);
+      }
+    };
+    useEffect(() => {
+        getDesignationsfn();
+        getDepartmentfn();
+    }, []);
+// end getdescription -------------------------  
+// add designations ------------------------
+const [addDesignation,setAddDesignation]=useState({});
+const handleSubmit = async(e) => {
+    // e.preventDefault();
+    // const res = await axios.get(ApiConfig.addDesignation, {
+    //     headers: {
+    //       Accept: "application/json",
+    //       Authorization: "Bearer " + token,
+    //     },
+    //   });
+    //   if(res){
+    //     console.log(res)
+    //   }    
+}
+// end add designations ------------------------
+
+
+
+
+// edit designations ------------------------
+// department change
+const[depart_id, setDepart_id]=useState("")
+    const handleChangeDep=(e)=>{
+        setDepart_id(()=>e.target.value)
+    }
+    
+    //----------------------------------
+    let data;
+    const [designation, setDesignation] = useState("");
+    const handleEditClick = (id, desig) => () => {
+        //ID - current Row ID
+        setAddDesignation(desig)
+        data= {
+            id:id,
+            designation_name:desig,
+            department_id:depart_id,
+        }
+        console.log(data)
+        handleEditOpen();
+    };
+    const handleEditDasignation = async(e) => {  
+        
+           e.preventDefault();
+            const res = await axios.post(ApiConfig.editDesignation, data , {
+              headers: {
+                Accept: "application/json",
+                Authorization: "Bearer " + token,
+              },
+            });
+            handleDeleteClose();
+            if(res.data.success==true){
+                getDesignationsfn();
+            }
+        }
+
+// end edit designations ------------------------
+
+
+// delete designations  ------------------------
+const [deleteDesignations,setDeleteDesignations] =useState({})
+const handleDeleteClick = (id) =>{
+    setDeleteDesignations({id:id})
+    handleDeleteOpen();  
+}
+const handleDeleteDesignation = async(e) => {  
+    console.log(deleteDesignations);
+       e.preventDefault();
+        const res = await axios.post(ApiConfig.deleteDesignation,deleteDesignations , {
+          headers: {
+            Accept: "application/json",
+            Authorization: "Bearer " + token,
+          },
+        });
+        handleDeleteClose();
+        if(res.data.success==true){
+            getDesignationsfn();
+        }
+    }
+// end delete designations ------------------------
+
+
+ // end api integration ------------------------------------------------
     const sampleData = [
         { id: 1, designation: 'Web Designer', department: 'Web Development' },
         { id: 2, designation: 'Web Developer', department: 'Marketing' },
@@ -33,19 +156,8 @@ const Designations = () => {
         boxShadow: 'none'
     }));
 
-    const [des, setDes] = useState("");
-
-    const handleEditClick = (id, designation) => () => {
-        //ID - current Row ID
-        setDes(designation);
-        handleEditOpen()
-    };
-
-    console .log("hello: " + des)
-    const handleDeleteClick = (id) => () => {
-        handleDeleteOpen()
-    };
-
+    
+    
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -58,34 +170,33 @@ const Designations = () => {
     const handleDeleteOpen = () => setDeleteOpen(true);
     const handleDeleteClose = () => setDeleteOpen(false);
 
-    const [depval, setDepVal] = useState("")
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        //console.log(depval);
-    }
+    
+    
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 100, options: { filter: true } },
-        { field: 'designation', headerName: 'Designation', width: 200, options: { filter: true } },
-        { field: 'department', headerName: 'Department', width: 200, options: { filter: true } },
+        // { field: 'id', headerName: 'ID', width: 100, options: { filter: true } },
+        { field: 'designation_name', headerName: 'Designation', width: 200, options: { filter: true } },
+        { field: 'department_name', headerName: 'Department', width: 200, options: { filter: true } },
         {
             field: 'action',
             headerName: 'Action',
             type: 'actions',
-            getActions: (params, id) => {
-                
+            getActions: (params) => {
+                let currentId= params?.id
+                // console.log(params)
                 return [
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
                         className="textPrimary"
-                        onClick={handleEditClick(params?.id, params?.row?.department)}
+                        onClick={handleEditClick(params?.id, params?.row?.designation_name)}
                         color="inherit"
                     />,
-                    <GridActionsCellItem
+                    <GridActionsCellItem 
                         icon={<DeleteIcon />}
                         label="Delete"
-                        onClick={handleDeleteClick(id)}
+                        onClick={()=>handleDeleteClick(currentId)}
+                        
                         color="inherit"
                     />,
                 ];
@@ -98,11 +209,7 @@ const Designations = () => {
         backgroundColor: 'white'
     }
 
-    const[depart, setDepart]=useState("")
-
-    const handleChangeDep=(e)=>{
-        setDepart(e.target.value)
-    }
+    
     return (
         <>
             <Container>
@@ -126,14 +233,34 @@ const Designations = () => {
                             maxWidth: '100%',
                         }}>
                             <form onSubmit={handleSubmit}>
-                                <TextField fullWidth label="Add Department" id="fullWidth" value={depval} onInput={(e) => setDepVal(e.target.value)} />
+                                <TextField fullWidth label="Add designation" id="fullWidth" name="designation_name" 
+                                 onChange={(e) => setAddDesignation(e.target.value)} />
+                                 <InputLabel id="demo-simple-select-label">Department</InputLabel>
+                            <Select
+                                     fullWidth
+                                     labelId="demo-simple-select-label"
+                                     sx={{marginTop: '20px'}}
+                                     id="demo-simple-select"
+                                     defaultValue={depart_id}
+                                     label="Department"
+                                     onChange={handleChangeDep}
+                                 >
+                                     {
+                                         getdep && getdep.map((item, index)=>(
+                                            
+                                             <MenuItem key={index} value={item.id}>{item.department_name}</MenuItem>
+                                         ))
+                                     }
+                                   
+                            </Select>    
+
                                 <Button type='submit' variant="contained" sx={{ marginTop: '13px' }}>Submit</Button>
                             </form>
                         </Box>
                     </CommonModal>
                     <DataGrid
                         style={styles}
-                        rows={sampleData}
+                        rows={getDesig}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -141,8 +268,8 @@ const Designations = () => {
                             },
                         }}
                         pageSizeOptions={[5, 10]}
-                        checkboxSelection
-                    />
+                        />
+                        {/*checkboxSelection */}
                 </Box>
             </Container>
             <CommonModal isOpen={editopen} isClose={handleEditClose}>
@@ -153,21 +280,22 @@ const Designations = () => {
                     width: 500,
                     maxWidth: '100%',
                 }}>
-                    <form onSubmit={handleSubmit}>
-                        <TextField fullWidth label="Edit Designation" id="fullWidth" value={des} onChange={(e) => setDes(e.target.value)} />
+                    <form onSubmit={handleEditDasignation}>
+                        <TextField fullWidth label="Edit Designation" id="fullWidth" value={getDesig}  onChange={(e) => setDesignation(()=>e.target.value)} />
                         <InputLabel id="demo-simple-select-label">Department</InputLabel>
                         <Select
                             fullWidth
                             labelId="demo-simple-select-label"
                             sx={{marginTop: '20px'}}
                             id="demo-simple-select"
-                            value={depart}
+                            defaultValue={depart_id}
                             label="Department"
                             onChange={handleChangeDep}
                         >
                             {
-                                sampleData && sampleData.map((item, index)=>(
-                                    <MenuItem key={index} value={item.department}>{item.department}</MenuItem>
+                                getdep && getdep.map((item, index)=>(
+                                   
+                                    <MenuItem key={index} value={item.id}>{item.department_name}</MenuItem>
                                 ))
                             }
                            
@@ -187,7 +315,7 @@ const Designations = () => {
                     maxWidth: '100%',
                 }}>
 
-                    <Button type='submit' variant="contained" sx={{ marginTop: '13px', marginRight: '13px' }}>Delete</Button>
+                    <Button type='submit' variant="contained" onClick={handleDeleteDesignation} sx={{ marginTop: '13px', marginRight: '13px' }} >Delete</Button>
                     <Button type='submit' variant="contained" sx={{ marginTop: '13px' }} onClick={handleDeleteClose}>Cancel</Button>
                 </Box>
             </CommonModal>

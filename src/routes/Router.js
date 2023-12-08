@@ -20,7 +20,7 @@ const Router = [
     element: <BlankLayout />,
     children: [
       {
-        path: "/login",
+        path: "/",
         element: <SignIn />
       },
       {
@@ -37,7 +37,7 @@ const Router = [
     element: <DashboardLayout />,
     children: [
       {
-        path: "/",
+        path: "/dashboard",
         element: <Dashboard />,
       },
       {

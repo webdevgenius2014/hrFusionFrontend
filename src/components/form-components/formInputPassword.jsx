@@ -9,7 +9,8 @@ export const FormInputPassword= ({name, control, label, required=false, error, .
             rules={{required: required===true?label+' is required':required}}            
             render={({field:{onChange, value, ref}}) => (
                 <TextField                                                                          
-                    ref={ref}              
+                    ref={ref}      
+                    focused        
                     label={label}
                     varient="filled"                                                        
                     value={value?value:''}

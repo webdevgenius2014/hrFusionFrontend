@@ -15,7 +15,8 @@ export const FormInputEmail= ({name, control, label, required=false, error, ...r
                 <TextField                    
                     key={name} 
                     ref={ref}
-                    type="email"                                                   
+                    type="email"  
+                    focused                                                 
                     label={label}
                     varient={"filled"}                    
                     autoComplete='chrome-off'                                                                       

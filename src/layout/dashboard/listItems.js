@@ -10,8 +10,13 @@ import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import LoginIcon from '@mui/icons-material/Login';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { NavLink, Link } from 'react-router-dom';
-export const mainListItems = (
-  <>
+import { useDispatch } from 'react-redux'
+import {superAdminData ,superAdminLogout} from '../../redux/SuperAdminSlice'
+
+export const MainListItems = ()=>{
+  const dispatch = useDispatch();
+
+  return(<>
     <ListItemButton component= {NavLink} to='/'>
       <ListItemIcon>
         <DashboardIcon />
@@ -36,14 +41,14 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Employees" />
     </ListItemButton> 
-    <ListItemButton component={NavLink} to='/login'>
+    <ListItemButton component={NavLink} to='/'>
       <ListItemIcon>
         <LoginIcon />
       </ListItemIcon>
-      <ListItemText primary="Login" />
+      <ListItemText onClick={()=>dispatch(superAdminLogout())} primary="Logout"  />
     </ListItemButton>    
-  </>
-);
+  </>);
+}
 
 export const secondaryListItems = (
   <>

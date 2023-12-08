@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import axios from "axios";
+import TextField from '@mui/material/TextField';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import {Grid, Card, CardContent,  Box, Container, Avatar, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useForm } from 'react-hook-form';
@@ -9,7 +11,18 @@ import { FormInputEmail } from '../../components/form-components/formInputEmail'
 import { FormInputPassword } from '../../components/form-components/formInputPassword';
 import { Footer } from '../../layout/dashboard/Footer';
 import SubmitButton from '../../components/form-components/submitButton';
+import ApiConfig from '../../config/apiConfig';
+import { useSelector, useDispatch } from 'react-redux'
+import {superAdminData } from '../../redux/SuperAdminSlice'
+
+
 const SignIn = () => {
+    // redux
+    const sAdminData = useSelector((state) => state.SuperAdmin)
+    const dispatch = useDispatch();
+    // console.log("sAdminData",sAdminData)
+//----------------------------------------------------------------
+    const navigate = useNavigate();
     const validationSchema = Yup.object().shape({ 
         useremail: Yup.string()
           .required('Email is required')
@@ -25,8 +38,31 @@ const SignIn = () => {
         handleSubmit,
         formState: { errors }
     } = useForm({resolver: yupResolver(validationSchema)});
-    const onSubmit = data => {
-        console.log(JSON.stringify(data, null, 2));
+    const onSubmit = async(formdata) => {
+        let  data = {
+            email: formdata.useremail,
+            password: formdata.password
+        }
+       await axios.post(ApiConfig.login, data, {
+
+            headers: {
+                
+                'Content-Type': 'application/json',
+                
+            }
+        }) .then(function (response) {
+
+            if(response.data.success=== true) {
+                dispatch(superAdminData(response.data.user))
+                navigate('/dashboard')
+            }
+            else {
+                alert(response.data.message)
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     };    
     return (
         <Container component="main" maxWidth="xs">            
@@ -43,15 +79,15 @@ const SignIn = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5" textAlign='center'>Sign in</Typography>
-                    <Box component="form" onClick={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
-                        <FormInputEmail 
+                    <Box component="form"  noValidate sx={{ mt: 1 }}>     
+                    <form onSubmit={handleSubmit(onSubmit)}>            
+                    <FormInputEmail 
                             name='useremail' 
                             control={control} 
                             label='Email Address'                        
-                            error={errors && errors.useremail} 
-                            required 
-                            autoFocus
-                            autoComplete="useremail"                       
+                            error={errors && errors.email} 
+                            required                         
+                            autoComplete="email"                       
                             // size="small" 
                         />
                         <FormInputPassword 
@@ -59,6 +95,7 @@ const SignIn = () => {
                             control={control} 
                             label='Password'
                             required
+                               
                             error={errors && errors.password} 
                             // autoComplete="current-password"                    
                             // size="small"  
@@ -71,6 +108,7 @@ const SignIn = () => {
                                 </Link>
                             </Grid>                    
                         </Grid>
+                        </form>  
                     </Box>
                 </CardContent >
             </Card>           

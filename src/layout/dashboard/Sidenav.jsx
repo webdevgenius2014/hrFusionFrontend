@@ -1,12 +1,15 @@
 import React from 'react'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List';
-import { mainListItems } from './listItems';
+import { MainListItems } from './listItems';
+import {  useDispatch } from 'react-redux'
+import {superAdminData } from '../../redux/SuperAdminSlice'
+
 
 const Sidenav = () => {
   return (
     <List component="nav">
-      {mainListItems}
+    <MainListItems />     
     </List>
   )
 }
