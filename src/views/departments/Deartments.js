@@ -22,36 +22,40 @@ const Deartments = () => {
   const [loading, setLoading] = useState(false);
 
   // api integration -----------------------------------
-  
-  // add department----------------------
-  const addDepartment = async () => {
-   try{
-    setLoading(true);
-    const res = await axios.post(ApiConfig.addDepartment, depval, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    setLoading(false);
-    handleClose();
 
-    console.log("added ",res.data.data);
-   }
-   catch(err){ console.log(err); }
-  }
+  // add department-------------------------------------
+  const addDepartment = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.post(ApiConfig.addDepartment, depval, {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      setLoading(false);
+      handleClose();
+
+      console.log("added ", res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const [depval, setDepVal] = useState(null);
   const handleSubmit = (e) => {
-    console.log(depval);
-    e.preventDefault();
-    addDepartment();
-    getDepartmentfn();
-  
+    if (depval) {
+      e.preventDefault();
+      addDepartment();
+      getDepartmentfn();
+    } else {
+      handleClose();
+      return alert("Please fill details");
+    }
   };
   //---- end add departments  --------------------------------------------------------
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
-   const getDepartmentfn = async () => {
+  const getDepartmentfn = async () => {
     const res = await axios.get(ApiConfig.getDepartments, {
       headers: {
         Accept: "application/json",
@@ -63,7 +67,9 @@ const Deartments = () => {
     } else {
       setGetdep([]);
     }
-    //departments=res.data.data;
+    setLoading(false);
+    handleEditClose();
+    handleDeleteClose();
   };
   useEffect(() => {
     getDepartmentfn();
@@ -72,9 +78,12 @@ const Deartments = () => {
   // end get  all department -------------------------------
   // edit department -------------------------------
   const [editdep, setEditDep] = useState({});
-  let viewDepartment;
-  
-  const handleEditClick = (id,department ) => () => {
+  const [dep, setDep] = useState("");
+
+  const handleEditClick = (id, department) => () => {
+    setDep(() => department);
+
+    console.log("dep", department, "id", id);
     handleEditOpen();
     setEditDep({ ...editdep, id: id });
   };
@@ -95,10 +104,11 @@ const Deartments = () => {
   // delete department -------------------------------
   const [deleteDep, setDeleteDep] = useState({});
   const handleDeleteClick = (id) => () => {
-    setDeleteDep({id:id});
+    setDeleteDep({ id: id });
     handleDeleteOpen();
   };
   const handleDelete = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const res = await axios.post(ApiConfig.deleteDepartment, deleteDep, {
       headers: {
@@ -107,7 +117,7 @@ const Deartments = () => {
       },
     });
     // console.log(res);
-    handleDeleteClose();
+
     getDepartmentfn();
   };
   // end deleteDepartment ------------
@@ -157,7 +167,7 @@ const Deartments = () => {
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(params?.id,params.department_name)}
+            onClick={handleEditClick(params?.id, params?.row.department_name)}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -192,7 +202,7 @@ const Deartments = () => {
                   variant="contained"
                   onClick={handleOpen}
                 >
-               Add
+                  Add
                 </Button>
               </Item>
             </Grid>
@@ -227,7 +237,7 @@ const Deartments = () => {
                   variant="contained"
                   sx={{ marginTop: "13px" }}
                 >
-                {loading ? <>Loading..</> : <>Submit</> } 
+                  {loading ? <>Loading..</> : <>Submit</>}
                 </Button>
               </form>
             </Box>
@@ -244,8 +254,8 @@ const Deartments = () => {
                   },
                 }}
                 pageSizeOptions={[5, 10]}
-                />
-                {/* checkboxSelection  upline */ }
+              />
+              {/* checkboxSelection  upline */}
             </>
           )}
         </Box>
@@ -271,7 +281,7 @@ const Deartments = () => {
               label="Add Department"
               name="department_name"
               id="fullWidth"
-              value={viewDepartment}
+              defaultValue={dep}
               onChange={(e) =>
                 setEditDep({ ...editdep, [e.target.name]: e.target.value })
               }
@@ -281,7 +291,7 @@ const Deartments = () => {
               variant="contained"
               sx={{ marginTop: "13px" }}
             >
-            {loading ? <>Loading..</> : <>Save</> }
+              {loading ? <>Loading..</> : <>Save</>}
             </Button>
           </form>
         </Box>
@@ -309,7 +319,7 @@ const Deartments = () => {
             sx={{ marginTop: "13px", marginRight: "13px" }}
             onClick={handleDelete}
           >
-            Delete
+            {loading ? <>Loading..</> : <>Delete</>}
           </Button>
           <Button
             type="submit"

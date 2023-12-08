@@ -61,7 +61,7 @@ return (
                 <SubmitButton btnText="Submit" />                
                 <Grid container>
                     <Grid item xs textAlign='center'>
-                      <Link to="/login" variant="body2">
+                      <Link to="/" variant="body2">
                         Back to Login?
                       </Link>
                     </Grid>                    

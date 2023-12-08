@@ -1,19 +1,29 @@
-import React, { lazy } from 'react';
-import Loadable from '../layout/dashboard/Lodable';
+import React, { lazy } from "react";
+import Loadable from "../layout/dashboard/Lodable";
 /* ***Layouts**** */
-const DashboardLayout = Loadable(lazy(() => import('../layout/dashboard/DashboardLayout')));
-const BlankLayout = Loadable(lazy(() => import('../layout/blank/BlankLayout')));
+const DashboardLayout = Loadable(
+  lazy(() => import("../layout/dashboard/DashboardLayout"))
+);
+const BlankLayout = Loadable(lazy(() => import("../layout/blank/BlankLayout")));
 
 /* ****Pages***** */
-const Dashboard = Loadable(lazy(() => import('../views/dashboard/Dashboard')));
-const Departments = Loadable(lazy(() => import('../views/departments/Deartments')));
-const Designations = Loadable(lazy(() => import('../views/designations/Designations')));
-const Employees = Loadable(lazy(() => import('../views/employees/Employees')))
-const Profile = Loadable(lazy(() => import('../views/employees/profile-employee/profile')))
+const Dashboard = Loadable(lazy(() => import("../views/dashboard/Dashboard")));
+const Departments = Loadable(
+  lazy(() => import("../views/departments/Deartments"))
+);
+const Designations = Loadable(
+  lazy(() => import("../views/designations/Designations"))
+);
+const Employees = Loadable(lazy(() => import("../views/employees/Employees")));
+const Profile = Loadable(
+  lazy(() => import("../views/employees/profile-employee/profile"))
+);
 
-const Error = Loadable(lazy(() => import('../views/auth/Error')));
-const SignIn = Loadable(lazy(() => import('../views/auth/SignIn')));
-const ResetPassword = Loadable(lazy(() => import('../views/auth/ResetPassword')));
+const Error = Loadable(lazy(() => import("../views/auth/Error")));
+const SignIn = Loadable(lazy(() => import("../views/auth/SignIn")));
+const ResetPassword = Loadable(
+  lazy(() => import("../views/auth/ResetPassword"))
+);
 
 const Router = [
   {
@@ -21,17 +31,17 @@ const Router = [
     children: [
       {
         path: "/",
-        element: <SignIn />
+        element: <SignIn />,
       },
       {
         path: "/reset-password",
-        element: <ResetPassword />
-      }
-    ]
+        element: <ResetPassword />,
+      },
+    ],
   },
   {
-    path: '*',
-    element: <Error />
+    path: "*",
+    element: <Error />,
   },
   {
     element: <DashboardLayout />,
@@ -54,8 +64,8 @@ const Router = [
       },
       {
         path: "/employees/:id",
-        element: <Profile />
-      }
+        element: <Profile />,
+      },
     ],
   },
 ];
