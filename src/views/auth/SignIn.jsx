@@ -79,8 +79,8 @@ const SignIn = () => {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5" textAlign='center'>Sign in</Typography>
-                    <Box component="form"  noValidate sx={{ mt: 1 }}>     
-                    <form onSubmit={handleSubmit(onSubmit)}>            
+                    <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>     
+                            
                     <FormInputEmail 
                             name='useremail' 
                             control={control} 
@@ -108,10 +108,11 @@ const SignIn = () => {
                                 </Link>
                             </Grid>                    
                         </Grid>
-                        </form>  
+                        
                     </Box>
                 </CardContent >
             </Card>           
+            
         </Container>
     );
 }
