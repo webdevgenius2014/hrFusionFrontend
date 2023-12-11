@@ -15,6 +15,11 @@ const ApiConfig = {
   addDesignation: `${apiURL}addDesignation`,
   editDesignation: `${apiURL}editDesignation`,
   deleteDesignation: `${apiURL}deleteDesignation`,
+  // description all -----------------------------------
+  getEmployees: `${apiURL}getEmployees`,
+  addEmployee: `${apiURL}addEmployee`,
+  editDesignation: `${apiURL}editDesignation`,
+  deleteEmployee: `${apiURL}deleteEmployee`,
 };
 
 export default ApiConfig;

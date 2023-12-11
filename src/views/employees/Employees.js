@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
@@ -8,7 +8,6 @@ import CommonModal from '../../components/commonModal';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -18,7 +17,58 @@ import EditEmployee from "./edit-employees/editEmployee";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Link,useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import ApiConfig from "../../config/apiConfig";
+
 const Employees = () => {
+    const token = useSelector((state) => state.SuperAdmin.token);
+    const [getEmployees, setGetEmployees] = useState([]);
+    const [loading,setLoading] =useState(false);
+
+    // api integration --------------------------------
+    // get all employees ----------------------------
+    const getAllEmployees = async () => {
+      const res = await axios.get(ApiConfig.getEmployees, {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      if (res) {
+        setGetEmployees(()=>res.data.data)
+        // console.log("employess",getEmployees);
+    } else {
+        setGetEmployees([]);
+    }
+};
+    useEffect(() => {
+     getAllEmployees();
+    }, []);
+
+    //  end get all employees---------------------------------------
+
+    // delete emolpyees--------------------------------
+    const handleDeleteeEmployees= async () => {
+         setLoading(true);
+         console.log(delete_id)
+         const res = await axios.post(
+          ApiConfig.deleteEmployee, {delete_id},
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+        handleDeleteClose();
+        if (res.data.success == true) {
+            console.log(res)
+        }
+      };
+    // end delete emolpyees--------------------------------
+
+    // ------------------------------------------------
     const navigate = useNavigate();
     const sampleEmployees = [
         { id: 1, name: 'Bernardo Galaviz', employeeid: 'FT-0008', email: 'bernardogalaviz@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
@@ -29,6 +79,7 @@ const Employees = () => {
         { id: 6, name: 'Richard Miles', employeeid: 'FT-0013', email: 'richardmiles@example.com', mobile: 9876543210, joindate: '1 Jan 2013' },
         { id: 7, name: 'Wilmer Deluna', employeeid: 'FT-0014', email: 'wilmerdeluna@example.com', mobile: 9876543210, joindate: '1 Jan 2013' }
     ]
+
     const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: 'transparent',
         boxShadow: 'none'
@@ -45,10 +96,13 @@ const Employees = () => {
         handleEditOpen()
     };
 
-    console.log("name:"+ des)
-
+    // console.log("name:"+ des)
+    const [delete_id,setDelete_id]=useState({})
     const handleDeleteClick = (id) => () => {
         handleDeleteOpen()
+        setDelete_id(()=>id)
+        console.log("delete",delete_id)
+
     };
 
     const [open, setOpen] = useState(false);
@@ -73,18 +127,17 @@ const Employees = () => {
         setAge(event.target.value);
     };
 
-    const detailEmployee=(id)=>{
-        navigate(`/employees/${id}`);
-    }
+    const detailEmployee=() => {}
     const { id } = useParams();
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 50, options: { filter: true } },
+        // { field: 'id', headerName: 'ID', width: 50, options: { filter: true } },
         { field: 'name', headerName: 'Name', width: 200, options: { filter: true } },
-        { field: 'employeeid', headerName: 'Employeeid', width: 100, options: { filter: true } },
         { field: 'email', headerName: 'Email', width: 200, options: { filter: true } },
-        { field: 'mobile', headerName: 'Mobile', width: 150, options: { filter: true } },
-        { field: 'joindate', headerName: 'Joindate', width: 50, options: { filter: true } },
+        { field: 'joindate', headerName: 'Joindate', width: 100, options: { filter: true } ,valueGetter: (params) => params.row.user_meta.joining_date},
+        { field: 'role', headerName: 'Role', width: 150, options: { filter: true }, valueGetter: (params) => params.row.user_meta.designation
+    },
+        // { field: 'employeeid', headerName: 'Employeeid', width: 100, options: { filter: true } },
         {
             field: 'action',
             headerName: 'Action',
@@ -141,9 +194,10 @@ const Employees = () => {
                     <CommonModal isOpen={open} isClose={handleClose}>
                        <AddEmployee/>
                     </CommonModal>
+                    {getEmployees?.length>0 && 
                     <DataGrid
                         style={styles}
-                        rows={sampleEmployees}
+                        rows={getEmployees}
                         columns={columns}
                         initialState={{
                             pagination: {
@@ -151,8 +205,7 @@ const Employees = () => {
                             },
                         }}
                         pageSizeOptions={[5, 10]}
-                        checkboxSelection
-                    />
+                    />}
                 </Box>
             </Container>
             <CommonModal isOpen={editopen} isClose={handleEditClose}>
@@ -176,7 +229,7 @@ const Employees = () => {
                     maxWidth: '100%',
                 }}>
 
-                    <Button type='submit' variant="contained" sx={{ marginTop: '13px', marginRight: '13px' }}>Delete</Button>
+                    <Button type='submit' variant="contained" onClick={handleDeleteeEmployees} sx={{ marginTop: '13px', marginRight: '13px' }}>Delete</Button>
                     <Button type='submit' variant="contained" sx={{ marginTop: '13px' }} onClick={handleDeleteClose}>Cancel</Button>
                 </Box>
             </CommonModal>

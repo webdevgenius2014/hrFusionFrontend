@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import FormControl from '@mui/material/FormControl';
 import axios from "axios";
-import FormHelperText from '@mui/material/FormHelperText';
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -24,6 +22,8 @@ import ApiConfig from "../../config/apiConfig";
 
 const Designations = () => {
   const token = useSelector((state) => state.SuperAdmin.token);
+  const [loading, setLoading] = useState(false);
+
   // api integration ----------------------------------------------------
   // Getdepartments --------------------
   const [getdep, setGetdep] = useState([]);
@@ -61,48 +61,56 @@ const Designations = () => {
     getDepartmentfn();
   }, []);
   // end getdescription -------------------------
-  
+  // change department ------------------------
+  const [depart_id, setDepart_id] = useState("");
+  const handleChangeDep = (id) => {
+    setDepart_id(() => id);
+    // console.log(id)
+  };
+  //-------------------------------------------
   // add designations ------------------------
   const [addDesignation, setAddDesignation] = useState({});
+  // console.log("designations", addDesignation)
   const handleSubmit = async (e) => {
-    // e.preventDefault();
-    // const res = await axios.get(ApiConfig.addDesignation, {
-    //     headers: {
-    //       Accept: "application/json",
-    //       Authorization: "Bearer " + token,
-    //     },
-    //   });
-    //   if(res){
-    //     console.log(res)
-    //   }
+    e.preventDefault();
+    setLoading(true);
+    // console.log("depart_id",depart_id)
+    const res = await axios.post(
+      ApiConfig.addDesignation,
+      { designation_name: addDesignation, department_id: depart_id },
+      {
+        headers: {
+          Accept: "application/json",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    if (res.data.success == true) {
+      getDesignationsfn();
+      setLoading(false);
+      handleClose();
+    }
   };
   // end add designations ------------------------
-  
+
   // edit designations ------------------------
-  // department change
-  const [showDepartment, setShowDepartment] = useState("abc");
-  const [depart_id, setDepart_id] = useState("");
-  const handleChangeDep = (e) => {
-    setDepart_id(() => e.target.value);
-    // console.log("department chnange", depart_id)
-  };
-  
-  //----------------------------------
-  
-  const [showData, setShowData] = useState();
+
+  const [showDepartment, setShowDepartment] = useState("");
+  const [showDesignation, setshowDesignation] = useState();
   const [designation, setDesignation] = useState("");
   const [designation_id, setDesignation_id] = useState("");
 
   const handleEditClick = (id, desig, dep) => () => {
     setDesignation_id(() => id);
     setDesignation(() => desig);
-    setShowData(() => desig);
+    setshowDesignation(() => desig);
     setShowDepartment(() => dep);
     handleEditOpen();
   };
   const handleEditDasignation = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log(designation_id, depart_id, designation);
+    // console.log(designation_id, depart_id, designation);
     const res = await axios.post(
       ApiConfig.editDesignation,
       {
@@ -119,6 +127,7 @@ const Designations = () => {
     );
     if (res.data.success == true) {
       getDesignationsfn();
+      setLoading(false);
       handleEditClose();
     }
   };
@@ -132,7 +141,8 @@ const Designations = () => {
     handleDeleteOpen();
   };
   const handleDeleteDesignation = async (e) => {
-    console.log(deleteDesignations);
+    // console.log(deleteDesignations);
+    setLoading(true);
     e.preventDefault();
     const res = await axios.post(
       ApiConfig.deleteDesignation,
@@ -146,6 +156,7 @@ const Designations = () => {
     );
     handleDeleteClose();
     if (res.data.success == true) {
+      setLoading(false);
       getDesignationsfn();
     }
   };
@@ -227,8 +238,6 @@ const Designations = () => {
   const styles = {
     backgroundColor: "white",
   };
-  console.log(showDepartment);
-
 
   return (
     <>
@@ -283,13 +292,17 @@ const Designations = () => {
                   labelId="demo-simple-select-label"
                   sx={{ marginTop: "20px" }}
                   id="demo-simple-select"
-                  defaultValue={depart_id}
+                  defaultValue={"Select Department"}
                   label="Department"
-                  onChange={handleChangeDep}
+                  renderValue={(value) => value}
                 >
                   {getdep &&
                     getdep.map((item, index) => (
-                      <MenuItem key={index} value={item.id}>
+                      <MenuItem
+                        key={index}
+                        onClick={() => handleChangeDep(item.id)}
+                        value={item.department_name}
+                      >
                         {item.department_name}
                       </MenuItem>
                     ))}
@@ -300,7 +313,7 @@ const Designations = () => {
                   variant="contained"
                   sx={{ marginTop: "13px" }}
                 >
-                  Submit
+                  {loading ? <>Loading..</> : <>Submit</>}
                 </Button>
               </form>
             </Box>
@@ -334,15 +347,17 @@ const Designations = () => {
             maxWidth: "100%",
           }}
         >
-          <form onSubmit={handleEditDasignation}>  
+          <form onSubmit={handleEditDasignation}>
             <TextField
               fullWidth
               label="Edit Designation"
               id="fullWidth"
-              defaultValue={showData}
+              defaultValue={showDesignation}
               onChange={(e) => setDesignation(() => e.target.value)}
             />
-            <InputLabel id="demo-simple-select-helper-label">Department</InputLabel>
+            <InputLabel id="demo-simple-select-helper-label">
+              Department
+            </InputLabel>
 
             <Select
               fullWidth
@@ -351,13 +366,15 @@ const Designations = () => {
               id="demo-simple-select"
               defaultValue={showDepartment}
               label="Department"
-              renderValue={(value) =>value}
-              onChange={handleChangeDep}
-
+              renderValue={(value) => value}
             >
               {getdep &&
                 getdep.map((item, index) => (
-                  <MenuItem key={index}  value={item.id}>
+                  <MenuItem
+                    key={index}
+                    onClick={() => handleChangeDep(item.id)}
+                    value={item.department_name}
+                  >
                     {item.department_name}
                   </MenuItem>
                 ))}
@@ -367,7 +384,7 @@ const Designations = () => {
               variant="contained"
               sx={{ marginTop: "13px" }}
             >
-              Save
+              {loading ? <>Loading..</> : <>Save</>}
             </Button>
           </form>
         </Box>
@@ -395,7 +412,7 @@ const Designations = () => {
             onClick={handleDeleteDesignation}
             sx={{ marginTop: "13px", marginRight: "13px" }}
           >
-            Delete
+            {loading ? <>Loading..</> : <>Delete</>}
           </Button>
           <Button
             type="submit"

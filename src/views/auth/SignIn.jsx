@@ -1,7 +1,15 @@
 import * as React from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import {Grid,Card,CardContent,Box,Container,Avatar,Typography,} from "@mui/material";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  Container,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,9 +27,9 @@ const SignIn = () => {
   const [loading, setLoading] = useState(false);
 
   // redux
-  const sAdminData = useSelector((state) => state.SuperAdmin);
-  const dispatch = useDispatch();
+  // const sAdminData = useSelector((state) => state.SuperAdmin);
   // console.log("sAdminData",sAdminData)
+  const dispatch = useDispatch();
   //----------------------------------------------------------------
   const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
