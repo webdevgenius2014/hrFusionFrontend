@@ -16,60 +16,64 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
 import ApiConfig from "../../config/apiConfig";
+import DepartmentServices from "../../services/DepartmentServices";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Deartments = () => {
+  const navigate = useNavigate();
+  
   const token = useSelector((state) => state.SuperAdmin.token);
   const [loading, setLoading] = useState(false);
 
   // api integration -----------------------------------
 
   // add department-------------------------------------
-  const addDepartment = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.post(ApiConfig.addDepartment, depval, {
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
+  const addDepartment = () => {
+    setLoading(true);
+    DepartmentServices.addDepartment(depval)
+      .then((res) => {
+        if(res.status===200){
+        setLoading(false);
+        getDepartmentfn();
+        toast.success(res.data.message);
+        handleClose();
+      }
+      console.log(res)
+      if(res.status===403){
+        setLoading(false);
+        toast.error(res.data.message);
+      }
+      })
+      .catch((err) => {
+        console.log("addDepartment error: " + err);
       });
-      setLoading(false);
-      handleClose();
-
-      console.log("added ", res.data.data);
-    } catch (err) {
-      console.log(err);
-    }
   };
   const [depval, setDepVal] = useState(null);
-  const handleSubmit = (e) => {
+  const handleDepartmentValue = (e) => {
+    e.preventDefault();
     if (depval) {
-      e.preventDefault();
       addDepartment();
-      getDepartmentfn();
     } else {
-      handleClose();
-      return alert("Please fill details");
+      toast.error("Enter Department Name")
     }
   };
   //---- end add departments  --------------------------------------------------------
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = async () => {
-    const res = await axios.get(ApiConfig.getDepartments, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    if (res) {
-      setGetdep(res.data.data);
-    } else {
-      setGetdep([]);
-    }
-    setLoading(false);
-    handleEditClose();
-    handleDeleteClose();
+  const getDepartmentfn =  () => {
+    DepartmentServices.getDepartments()
+      .then((res) => {
+        if (res) {
+          setGetdep(res.data.data);
+        } else {
+          setGetdep([]);
+        }
+      })
+      .catch((err) => {
+        console.log("getdep error", err);
+      });
   };
   useEffect(() => {
     getDepartmentfn();
@@ -87,38 +91,57 @@ const Deartments = () => {
     handleEditOpen();
     setEditDep({ ...editdep, id: id });
   };
-  const handleEdit = async (e) => {
-    setLoading(true);
+  const handleEdit = (e) => {
     e.preventDefault();
-    const res = await axios.post(ApiConfig.editDepartment, editdep, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    console.log(res);
-    getDepartmentfn();
+    setLoading(true);
+    DepartmentServices.editDepartment(editdep)
+      .then((res) => {
+        if(res.data.success==true){
+          console.log(res);
+        getDepartmentfn();
+        handleEditClose();
+        setLoading(false);
+        }
+        
+        if(res.data.success==false ||res.status==403){
+          setLoading(false)
+          Object.values(res.data.errors).map((e, i) => {
+            toast.error(e[0]);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log("editDepartment error: " + err);
+      });
   };
 
   // end edit department -------------------------------
   // delete department -------------------------------
-  const [deleteDep, setDeleteDep] = useState({});
-  const handleDeleteClick = (id) => () => {
-    setDeleteDep({ id: id });
+  const [deleteDep, setDeleteDep] = useState();
+  const handleDeleteClick = (id)  => {
+    setDeleteDep(id);
     handleDeleteOpen();
+    console.log(id)
   };
-  const handleDelete = async (e) => {
+  const handleDelete =  (e) => {
+    let id={id:deleteDep}
     setLoading(true);
+    console.log("delete payload: ", id);
     e.preventDefault();
-    const res = await axios.post(ApiConfig.deleteDepartment, deleteDep, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    // console.log(res);
-
-    getDepartmentfn();
+    DepartmentServices.deleteDepartment(id)
+      .then((res) => {
+        
+        if (res.status == 200 || res.status == 404) {
+          handleDeleteClose();
+          toast.success("Department deleted successfully")
+          getDepartmentfn();
+        }
+        else if (res.status == 401) {
+          // navigate("/")
+          toast.error("please login again");
+        }
+      })
+      .catch((err) => {console.log("delete department error: " , err)});
   };
   // end deleteDepartment ------------
   //---- end api ------------------
@@ -161,6 +184,7 @@ const Deartments = () => {
       headerName: "Action",
       type: "actions",
       getActions: (params) => {
+        // let id=params?.id
         // console.log("prams",params)
         return [
           <GridActionsCellItem
@@ -173,7 +197,9 @@ const Deartments = () => {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(params?.id)}
+            onClick={()=>{
+              console.log("first")
+              handleDeleteClick(params?.id)}}
             color="inherit"
           />,
         ];
@@ -186,7 +212,9 @@ const Deartments = () => {
     backgroundColor: "white",
   };
   return (
+
     <>
+    <ToastContainer />
       <Container>
         <Box>
           <Grid container spacing={2}>
@@ -222,7 +250,7 @@ const Deartments = () => {
                 maxWidth: "100%",
               }}
             >
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleDepartmentValue}>
                 <TextField
                   fullWidth
                   name="department_name"
@@ -278,7 +306,7 @@ const Deartments = () => {
           <form onSubmit={handleEdit}>
             <TextField
               fullWidth
-              label="Add Department"
+              label="Edit Department"
               name="department_name"
               id="fullWidth"
               defaultValue={dep}

@@ -18,7 +18,10 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import { useSelector } from "react-redux";
-import ApiConfig from "../../config/apiConfig";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DesignationServices from "../../services/DesignationServices";
+import DepartmentServices from "../../services/DepartmentServices";
 
 const Designations = () => {
   const token = useSelector((state) => state.SuperAdmin.token);
@@ -27,34 +30,35 @@ const Designations = () => {
   // api integration ----------------------------------------------------
   // Getdepartments --------------------
   const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = async () => {
-    const res = await axios.get(ApiConfig.getDepartments, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    if (res) {
-      setGetdep(res.data.data);
-    } else {
-      setGetdep([]);
-    }
+  const getDepartmentfn = () => {
+    DepartmentServices.getDepartments()
+      .then((res) => {
+        if (res) {
+          setGetdep(res.data.data);
+        } else {
+          setGetdep([]);
+        }
+      })
+      .catch((err) => {
+        console.log("getDepartment", err);
+      });
   };
   //-------------------------
   // get designations --------------------------------
   const [getDesig, setGetDesig] = useState([]);
-  const getDesignationsfn = async () => {
-    const res = await axios.get(ApiConfig.getDesignations, {
-      headers: {
-        Accept: "application/json",
-        Authorization: "Bearer " + token,
-      },
-    });
-    if (res) {
-      setGetDesig(() => res.data.data);
-    } else {
-      setGetDesig([]);
-    }
+  const getDesignationsfn = () => {
+    DesignationServices.getDesignations()
+      .then((res) => {
+        if (res) {
+          setGetDesig(res.data.data);
+          // EmployeServices.getEmployee();
+        } else {
+          setGetDesig([]);
+        }
+      })
+      .catch((err) => {
+        console.log("getDesignations", err);
+      });
   };
   useEffect(() => {
     getDesignationsfn();
@@ -69,32 +73,37 @@ const Designations = () => {
   };
   //-------------------------------------------
   // add designations ------------------------
-  const [addDesignation, setAddDesignation] = useState({});
-  // console.log("designations", addDesignation)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [addDesignation, setAddDesignation] = useState();
+  const handleAddDesignation = (e) => {
     setLoading(true);
-    // console.log("depart_id",depart_id)
-    const res = await axios.post(
-      ApiConfig.addDesignation,
-      { designation_name: addDesignation, department_id: depart_id },
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    if (res.data.success == true) {
-      getDesignationsfn();
-      setLoading(false);
-      handleClose();
-    }
+    e.preventDefault();
+    const payload = {
+      designation_name: addDesignation,
+      department_id: depart_id,
+    };
+    console.log("payload", payload);
+    DesignationServices.addDesignation(payload)
+      .then((res) => {
+        console.log(res)
+        if (res.data.success == true) {
+          // getDesignationsfn();
+          DesignationServices.getDesignations();
+          toast.success(res.data.message)
+          setLoading(false);
+          handleClose();
+        }else if (res.data.success==false){
+          setLoading(false);
+          
+            toast.error(res.data.message);
+          
+        }
+      })
+      .catch((error) => {
+        console.log("add designation error", error);
+      });
   };
   // end add designations ------------------------
-
   // edit designations ------------------------
-
   const [showDepartment, setShowDepartment] = useState("");
   const [showDesignation, setshowDesignation] = useState();
   const [designation, setDesignation] = useState("");
@@ -107,29 +116,38 @@ const Designations = () => {
     setShowDepartment(() => dep);
     handleEditOpen();
   };
-  const handleEditDasignation = async (e) => {
+  const handleEditDasignation = (e) => {
     setLoading(true);
     e.preventDefault();
-    // console.log(designation_id, depart_id, designation);
-    const res = await axios.post(
-      ApiConfig.editDesignation,
-      {
-        id: designation_id,
-        designation_name: designation,
-        department_id: depart_id,
-      },
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    if (res.data.success == true) {
-      getDesignationsfn();
-      setLoading(false);
-      handleEditClose();
-    }
+    let payload = {
+      id: designation_id,
+      designation_name: designation,
+      department_id: depart_id ||showDepartment,
+    };
+    // console.log("payload", payload);
+    DesignationServices.editDesignation(payload)
+      .then((res) => {
+        // console.log("editDesignation", res);
+        if (res.data.success == true) {
+          getDesignationsfn();
+          toast.success(res.data.message
+            )
+          setLoading(false);
+          handleEditClose();
+        }
+        if(res.data.success == false) {
+        setLoading(false);
+        toast.error(res.data.message);
+        }
+        if(res.status== 403){
+          Object.values(res.data.errors).map((e, i) => {
+            toast.error(e[0])})
+       
+          }
+      })
+      .catch((error) => {
+        console.log("edit designation err",error)
+      });
   };
 
   // end edit designations ------------------------
@@ -140,25 +158,27 @@ const Designations = () => {
     setDeleteDesignations({ id: id });
     handleDeleteOpen();
   };
-  const handleDeleteDesignation = async (e) => {
-    // console.log(deleteDesignations);
+  const handleDeleteDesignation = () => {
     setLoading(true);
-    e.preventDefault();
-    const res = await axios.post(
-      ApiConfig.deleteDesignation,
-      deleteDesignations,
-      {
-        headers: {
-          Accept: "application/json",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
-    handleDeleteClose();
-    if (res.data.success == true) {
-      setLoading(false);
-      getDesignationsfn();
-    }
+    DesignationServices.deleteDesignation(deleteDesignations)
+      .then((res) => {
+        if (res.data.success == true) {
+          toast.success(res.data.message)
+          setLoading(false);
+          getDesignationsfn();
+          handleDeleteClose();
+        }
+        if(res.data.success == false) {
+        setLoading(false);
+        toast.error(res.data.message);
+        }
+        if(res.status== 403){
+          toast.error(res.data.message);
+
+       
+          }
+      })
+      .catch((err) => {console.log("delete  designation error: " , err)});
   };
   // end delete designations ------------------------
 
@@ -237,10 +257,10 @@ const Designations = () => {
 
   const styles = {
     backgroundColor: "white",
-  };
-
+  }
   return (
     <>
+    <ToastContainer />
       <Container>
         <Box>
           <Grid container spacing={2}>
@@ -276,7 +296,7 @@ const Designations = () => {
                 maxWidth: "100%",
               }}
             >
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleAddDesignation}>
                 <TextField
                   fullWidth
                   label="Add designation"

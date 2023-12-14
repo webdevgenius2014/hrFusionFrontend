@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { Controller } from "react-hook-form";
-export const FormInputText= ({name, control, label, required=false, error, ...rest}) => {       
+export const FormInputText= ({name, control, label, required=false,focused=false ,error, ...rest}) => {       
     return (
         <Controller
             control={control}
@@ -12,9 +12,10 @@ export const FormInputText= ({name, control, label, required=false, error, ...re
                     ref={ref}              
                     label={label}
                     varient={"filled"}
+                    focused={focused}
                     type="text"
                     autoComplete='off'
-                    value={value?value:''}
+                    //value={value?value:''}
                     onChange={onChange} 
                     fullWidth={true}
                     size="small" 

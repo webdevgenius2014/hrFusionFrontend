@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { Controller } from "react-hook-form";
-export const FormInputEmail= ({name, control, label, required=false, error, ...rest}) => {      
+export const FormInputEmail= ({name, control, label, required,focused, error, ...rest}) => {      
     return (
         <Controller
             control={control}
@@ -16,11 +16,11 @@ export const FormInputEmail= ({name, control, label, required=false, error, ...r
                     key={name} 
                     ref={ref}
                     type="email"  
-                    focused                                                 
+                    focused={focused}                                                 
                     label={label}
                     varient={"filled"}                    
                     autoComplete='chrome-off'                                                                       
-                    value={value?value:''}
+                    // value={value?value:''}
                     onChange={onChange}                    
                     fullWidth={true}                    
                     error={!!error}

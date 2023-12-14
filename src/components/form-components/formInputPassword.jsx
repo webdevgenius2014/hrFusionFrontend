@@ -1,7 +1,7 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import { Controller } from "react-hook-form";
-export const FormInputPassword= ({name, control, label, required=false, error, ...rest}) => {       
+export const FormInputPassword= ({name, control, label, required=false,focused=false, error, ...rest}) => {       
     return (
         <Controller
             control={control}
@@ -10,20 +10,14 @@ export const FormInputPassword= ({name, control, label, required=false, error, .
             render={({field:{onChange, value, ref}}) => (
                 <TextField                                                                          
                     ref={ref}      
-                    focused        
+                    focused={focused}     
                     label={label}
                     varient="filled"                                                        
-                    value={value?value:''}
+                    // value={value?value:''}
                     onChange={onChange} 
                     fullWidth={true}                    
                     type="password" 
-                    autoComplete="current-password"                 
-                    // inputProps={{  
-                    //     autoComplete: 'new-password',                      
-                    //     form: {
-                    //         autocomplete: 'new-password',
-                    //     },
-                    // }}                                   
+                    autoComplete="current-password"                                                
                     error={!!error}                    
                     helperText={error && `${error.message}`}
                     margin='normal'

@@ -22,6 +22,9 @@ import ApiConfig from "../../config/apiConfig";
 import { useSelector, useDispatch } from "react-redux";
 import { superAdminData } from "../../redux/SuperAdminSlice";
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import LoginServices from "../../services/loginServices/LoginServices";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
@@ -49,36 +52,42 @@ const SignIn = () => {
   } = useForm({ resolver: yupResolver(validationSchema) });
 
   // login api ---------------------------------------
-  const onSubmit = async (formdata) => {
+  const onSubmit =  (formdata) => {
     setLoading(true);
     let data = {
       email: formdata.useremail,
       password: formdata.password,
     };
-    await axios
-      .post(ApiConfig.login, data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+
+    // console.log("data",data)
+     LoginServices.superAdminLogin(data)
       .then(function (response) {
-        if (response.data.success === true) {
-          setLoading(false);
+        console.log(response);
+        if (response.status === 200) {
+          if(response.data.success==true) {
+          toast.success("Login Success")
           dispatch(superAdminData(response.data.user));
+          sessionStorage.setItem("token", response.data.user.token);
+          setLoading(false);
           navigate("/dashboard");
+        }else {
+          toast.error(response.data.message)
+          setLoading(false);
+        }
         } else {
           setLoading(false);
-          alert(response.data.message);
+          toast.error("please login again");
         }
       })
-      .catch(function (error) {
+      .catch((error)=> {
         setLoading(false);
-        console.log(error);
+        console.log("sign in catch",error);
       });
     // end api --------------------------------
   };
-  return (
+  return (<>    <ToastContainer />
     <Container component="main" maxWidth="xs">
+
       <Card
         sx={{
           marginTop: 8,
@@ -104,7 +113,7 @@ const SignIn = () => {
               name="useremail"
               control={control}
               label="Email Address"
-              error={errors && errors.email}
+              error={errors && errors.useremail}
               required
               autoComplete="email"
               // size="small"
@@ -130,6 +139,8 @@ const SignIn = () => {
         </CardContent>
       </Card>
     </Container>
+    </>
+
   );
 };
 export default SignIn;

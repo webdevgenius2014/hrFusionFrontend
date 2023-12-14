@@ -15,10 +15,10 @@ const ApiConfig = {
   addDesignation: `${apiURL}addDesignation`,
   editDesignation: `${apiURL}editDesignation`,
   deleteDesignation: `${apiURL}deleteDesignation`,
-  // description all -----------------------------------
+  // employee all -----------------------------------
   getEmployees: `${apiURL}getEmployees`,
   addEmployee: `${apiURL}addEmployee`,
-  editDesignation: `${apiURL}editDesignation`,
+  editEmployee: `${apiURL}editEmployee`,
   deleteEmployee: `${apiURL}deleteEmployee`,
 };
 
