@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import BeatLoader from "react-spinners/ClipLoader";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -15,27 +16,26 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import AddEmployee from "./add-employees/addEmployee";
 import EditEmployee from "./edit-employees/editEmployee";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import ApiConfig from "../../config/apiConfig";
 import EmployeServices from "../../services/EmployeServices";
 import {ToastContainer, toast } from "react-toastify";
 
 const Employees = () => {
-  const token = useSelector((state) => state.SuperAdmin.token);
   const [getEmployees, setGetEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
 
   // api integration --------------------------------
   // get all employees ----------------------------
   const getAllEmployees = () => {
+    setLoading(true);
   EmployeServices.getEmployee()
     .then((res) => {
       if (res.status == 200) {
         setGetEmployees(() => res.data.data);
+        setLoading(false);
       } else {
+        setLoading(false);
         console.log("getemployee if", res);
         setGetEmployees([]);
       }
@@ -61,8 +61,18 @@ const Employees = () => {
           setLoading(false);
           handleDeleteClose();
         }
+        if(res.status ==403){
+          toast.error(res.data.error);
+          setLoading(false);
+        }
+        if(res.status ==401)
+        {
+          toast.error(res.data.error);
+          setLoading(false);
+        }
       })
       .catch((err) => { 
+
         console.log("handleDeleteeEmployees", err);
         setLoading(false);
       })
@@ -136,9 +146,6 @@ const Employees = () => {
     boxShadow: "none",
   }));
 
-  const [des, setDes] = useState({});
-  const [emailedit, setEmailEdit] = useState({});
-  const [passedit, setPassEdit] = useState({});
   const [employeeData, SetEmployeeData] = useState({});
   const handleEditClick = (data) => () => {
     //ID - current Row ID
@@ -168,24 +175,13 @@ const Employees = () => {
   const handleDeleteOpen = () => setDeleteOpen(true);
   const handleDeleteClose = () => setDeleteOpen(false);
 
-  const [depval, setDepVal] = useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    //console.log(depval);
-  };
-  const [age, setAge] = useState("");
-  const handleChangel = (event) => {
-    setAge(event.target.value);
-  };
+ 
+ 
 
   const detailEmployee = () => {};
   const { id } = useParams();
 
-  const [employeData, setEmployeData] = useState({});
-  const getAddEmployee = (data) => {
-    setEmployeData(() => data);
-    console.log(employeData);
-  };
+ 
   const columns = [
     // { field: 'id', headerName: 'ID', width: 50, options: { filter: true } },
     {
@@ -213,7 +209,7 @@ const Employees = () => {
       width: 150,
       options: { filter: true },
       valueGetter: (params) =>
-        params?.row?.user_meta?.designation?.designation_name,
+        params?.row?.user_role?.role,
     },
     {
       field: "action",
@@ -280,7 +276,7 @@ const Employees = () => {
               getAllEmployees={getAllEmployees}
             />
           </CommonModal>
-          {getEmployees?.length > 0 && (
+          {getEmployees?.length > 0 ? (
             <DataGrid
               style={styles}
               rows={getEmployees}
@@ -292,6 +288,22 @@ const Employees = () => {
               }}
               pageSizeOptions={[5, 10]}
             />
+          ) : loading == true ? (
+            <BeatLoader
+              color="#2d94cb"
+              cssOverride={{
+                position: "absolute",
+                display: "block",
+                top: "45%",
+                left: "55%",
+                transform: "translate(-50%, -50%)",
+              }}
+              loading
+              margin={4}
+              size={90}
+            />
+          ) : (
+            <h2><u>No Employee found</u></h2>
           )}
         </Box>
       </Container>
@@ -310,7 +322,7 @@ const Employees = () => {
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Delete Designation
+          Delete Employee
         </Typography>
         <p>Are you sure want to delete?</p>
         <Box

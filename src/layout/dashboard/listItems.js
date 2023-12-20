@@ -17,7 +17,7 @@ export const MainListItems = ()=>{
   const dispatch = useDispatch();
 
   return(<>
-    <ListItemButton component= {NavLink} to='/'>
+    <ListItemButton component= {NavLink} to='/dashboard'>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>

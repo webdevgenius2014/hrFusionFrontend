@@ -13,5 +13,10 @@ class DesignationServices {
   getDesignations() {
     return instance.get(ApiConfig.getDesignations);
   }
+  designationsByDep(payload) {
+    return instance.post(ApiConfig.designationList,payload);
+  }
+
 }
+
 export default new DesignationServices();

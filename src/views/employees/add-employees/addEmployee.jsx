@@ -8,23 +8,23 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../../components/form-components/formInputText";
 import { FormInputEmail } from "../../../components/form-components/formInputEmail";
 import { FormInputPassword } from "../../../components/form-components/formInputPassword";
-import Select from "@mui/material/Select";
 import { useForm } from "react-hook-form";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import validationSchema from "../validation";
 import EmployeServices from "../../../services/EmployeServices";
 import DesignationServices from "../../../services/DesignationServices";
-import DepartmentServices from "../../../services/DepartmentServices";
+import DepartmentServices from '../../../services/DepartmentServices'
+import commonServices  from '../../../services/CommonServices'
+import { FormSelect } from "../../../components/form-components/FormSelect";
 
 const AddEmployee = ({ getAllEmployees, handleClose }) => {
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   // api integration --------------------------------
-  
+
   // add employee --------------------------------
   const handleSubmitData = (data) => {
     setLoading(true);
@@ -33,41 +33,43 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       designation: addDesignation_id,
       email: data.useremail,
       department: addDepartment_id,
-    };
+      role: addRole,
+        };
     EmployeServices.addEmployee(payload)
       .then((data) => {
         if (data?.status === 200) {
-          toast.success(data.data.message);
+          toast.success(data.data?.message);
           getAllEmployees();
           setLoading(false);
           handleClose();
         }
-        if(data.status==403 ){
-          console.log(data)
-          setLoading(false);
-          console.log(Object.values(data.data.errors))
-          Object.values(data.data.errors).map((i) => {
-            toast.error(i[0])
+        if (data.status == 403) {
+          Object.keys(data.data.errors).forEach((field) => {
+            setError(field, {
+              type: "manual",
+              message: data.data.errors[field],
+            });
           });
         }
+        setLoading(false);
       })
       .catch((err) => {
         // console.log(err;
         if (err.response.status === 401) {
           toast.error("please login again");
           navigate("/");
-        } 
+        }
 
         setLoading(false);
       });
   };
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn =  () => {
+  const getDepartmentfn = () => {
     DepartmentServices.getDepartments()
       .then((res) => {
         if (res) {
-          setGetdep(res.data.data);
+          setGetdep(()=>res.data.data);
         } else {
           setGetdep([]);
         }
@@ -79,11 +81,12 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
   // end all department --------------------
   // get all designations --------------------
   const [getDesig, setGetDesig] = useState([]);
-    const getDesignationsfn = () => {
-    DesignationServices.getDesignations()
+  const desigByDep = (id) => {
+      setGetDesig(()=>[])
+    DesignationServices.designationsByDep(id)
       .then((res) => {
-        if (res) {
-          setGetDesig(res.data.data);
+        if (res.status==200) {
+          setGetDesig(()=>res?.data?.data);
           // EmployeServices.getEmployee();
         } else {
           setGetDesig([]);
@@ -92,33 +95,68 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       .catch((err) => {
         console.log("getDesignations", err);
       });
+
   };
+
+  // get roles ---------------------------------------------------
+  const [getRole,setRole]=useState([]);
+  const getRoles = () => {
+    setRole(()=>[])
+    commonServices.getRole()
+    .then((res) => {
+      if (res.status==200) {
+        setRole(()=>res?.data?.data);
+        console.log(res.data.data)
+        // EmployeServices.getEmployee();
+      } else {
+        setRole([]);
+      }
+    })
+    .catch((err) => {
+      console.log("get roles", err);
+    });
+
+};
+
   // end all designations --------------------
   // end get  all department -------------------------------
 
   // end add employee --------------------------------
   useEffect(() => {
     getDepartmentfn();
-    getDesignationsfn();
+    getRoles();
+
   }, []);
 
   // end api integration --------------------------------
+
   const [addDesignation_id, setAddDesignation_id] = useState("");
   const [addDepartment_id, setAddDepartment_id] = useState("");
+  const [addRole, setAddRole] = useState("");
+
   const handleChangeDep = (id) => {
     setAddDepartment_id(() => id);
+    console.log(id)
+    desigByDep({department_id:id});
+
+    
   };
   // console.log("dep", addDepartment_id);
   const handleChangeDesig = (id) => {
     setAddDesignation_id(() => id);
   };
+  const handleChangeRole = (id) => {
+    setAddRole(() => id);
+  };
   // console.log("desig", addDesignation_id);
   const {
-    register,
     control,
+    setError,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(validationSchema) });
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
   return (
     <>
       <ToastContainer />
@@ -167,7 +205,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
                   label="First Name"
                   required
                   fullWidth
-                  error={errors && errors.first_name}
+                  error={errors && errors?.first_name}
                   control={control}
                   autoFocus
                 />
@@ -179,7 +217,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
                   id="lastName"
                   label="Last Name"
                   name="last_name"
-                  error={errors && errors.last_name}
+                  error={errors && errors?.last_name}
                   control={control}
                   autoComplete="family-name"
                 />
@@ -191,7 +229,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
                   label="Email Address"
                   name="useremail"
                   required
-                  error={errors && errors.useremail}
+                  error={errors && errors?.email}
                   control={control}
                   size="small"
                   margin="normal"
@@ -250,6 +288,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
                   required
                   fullWidth
                   focused
+                  // format="MM/dd/yyyy"
                   type="date"
                   id="joining_date"
                   label="joining_date"
@@ -265,6 +304,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
                   fullWidth
                   focused
                   type="date"
+                  format="DD/MM/yyyy"
                   id="date_of_birth"
                   label="Date of Birth"
                   name="dob"
@@ -286,57 +326,58 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <InputLabel id="demo-simple-select-label">
-                  Designation
-                </InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  defaultValue={"Select Department"}
-                  label="Department"
-                  size="small"
-                  // onChange={handleChange}
-                  // renderValue={(value) => value}
-                >
-                  {getDesig &&
-                    getDesig.map((item, index) => (
-                      <MenuItem
-                        key={index}
-                        onClick={() => handleChangeDesig(item.id)}
-                        value={item.id}
-                      >
-                        {item.designation_name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <InputLabel id="demo-simple-select-label">
-                  Department
-                </InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  defaultValue={"Select Department"}
-                  label="Department"
-                  size="small"
-                  renderValue={(value) => value}
-                >
-                  {getdep &&
-                    getdep.map((item, index) => (
-                      <MenuItem
-                        key={index}
-                        onClick={() => handleChangeDep(item.id)}
-                        value={item.department_name}
-                      >
-                        {item.department_name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </Grid>
+              
+              {getdep && getdep?.length>0 && 
+              <FormSelect 
+                name="department"
+                data={getdep}
+                label='Department Name'
+                control={control}
+                onchange={onchange}
+                fieldaname='department_name'
+                def='Select Department'
+                pass_fun={handleChangeDep}
+                error={errors && errors.department}   
+                required
+              />
+              
+              }
             </Grid>
+              <Grid item xs={12} sm={6}>
+              {getRole && getRole?.length>0 && 
+              <FormSelect 
+                name="role"
+                data={getRole}
+                label='Role'
+                control={control}
+                fieldaname='role'
+                pass_fun={handleChangeRole}
+                def='Select Role'
+                error={errors && errors.role}   
+                required
+              />
+              
+              }
+            </Grid>
+              <Grid item xs={12} sm={6}> 
+              {getDesig && getDesig?.length>0 && 
+              <FormSelect 
+                name="designation"
+                data={getDesig}
+                pass_fun={handleChangeDesig}
+                label='Designation'
+                control={control}
+                fieldaname='designation_name'
+                def='Select Designation'
+                error={errors && errors.designation}   
+                required
+              />
+              }
+            </Grid>
+             
+           
+            </Grid>
+
             <Grid container justifyContent="flex-end">
               <Grid item></Grid>
             </Grid>
@@ -356,3 +397,5 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
 };
 
 export default AddEmployee;
+
+

@@ -20,6 +20,11 @@ const ApiConfig = {
   addEmployee: `${apiURL}addEmployee`,
   editEmployee: `${apiURL}editEmployee`,
   deleteEmployee: `${apiURL}deleteEmployee`,
+
+  // designations acording to the department 
+  designationList : `${apiURL}designationList`,
+  // role ---------------------------------------------
+  getRoles:`${apiURL}getRoles`,
 };
 
 export default ApiConfig;

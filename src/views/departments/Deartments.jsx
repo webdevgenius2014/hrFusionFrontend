@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import BeatLoader from "react-spinners/ClipLoader";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -15,18 +15,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { useSelector } from "react-redux";
-import ApiConfig from "../../config/apiConfig";
 import DepartmentServices from "../../services/DepartmentServices";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Deartments = () => {
   const navigate = useNavigate();
-  
-  const token = useSelector((state) => state.SuperAdmin.token);
   const [loading, setLoading] = useState(false);
-
   // api integration -----------------------------------
 
   // add department-------------------------------------
@@ -63,11 +60,14 @@ const Deartments = () => {
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
   const getDepartmentfn =  () => {
+    setLoading(true);
     DepartmentServices.getDepartments()
       .then((res) => {
         if (res) {
           setGetdep(res.data.data);
+          setLoading(false);
         } else {
+          loading(false)
           setGetdep([]);
         }
       })
@@ -84,9 +84,8 @@ const Deartments = () => {
   const [editdep, setEditDep] = useState({});
   const [dep, setDep] = useState("");
 
-  const handleEditClick = (id, department) => () => {
+  const handleChangedDepVal = (id, department) => () => {
     setDep(() => department);
-
     console.log("dep", department, "id", id);
     handleEditOpen();
     setEditDep({ ...editdep, id: id });
@@ -96,19 +95,20 @@ const Deartments = () => {
     setLoading(true);
     DepartmentServices.editDepartment(editdep)
       .then((res) => {
+        console.log(res)
         if(res.data.success==true){
           console.log(res);
         getDepartmentfn();
         handleEditClose();
         setLoading(false);
+        toast.success(res.data.message)
+        }
+       if(res.data.success==false ||res.status==403){
+          setLoading(false)
+          toast.error(res.data.message)
+          
         }
         
-        if(res.data.success==false ||res.status==403){
-          setLoading(false)
-          Object.values(res.data.errors).map((e, i) => {
-            toast.error(e[0]);
-          });
-        }
       })
       .catch((err) => {
         console.log("editDepartment error: " + err);
@@ -132,16 +132,27 @@ const Deartments = () => {
       .then((res) => {
         
         if (res.status == 200 || res.status == 404) {
+          setLoading(false);
           handleDeleteClose();
           toast.success("Department deleted successfully")
           getDepartmentfn();
         }
         else if (res.status == 401) {
-          // navigate("/")
+          navigate("/")
+          setLoading(false);
+
           toast.error("please login again");
         }
+        if(res.status ==403)
+        {
+          setLoading(false);
+
+          toast.error(res.data.message);
+        }
       })
-      .catch((err) => {console.log("delete department error: " , err)});
+      .catch((err) => {console.log("delete department error: " , err)
+      setLoading(false);
+    });
   };
   // end deleteDepartment ------------
   //---- end api ------------------
@@ -170,7 +181,11 @@ const Deartments = () => {
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
   const handleDeleteClose = () => setDeleteOpen(false);
-
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };
   const columns = [
     // {  headerName: "ID", width: 100, options: { filter: true } },
     {
@@ -191,7 +206,7 @@ const Deartments = () => {
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(params?.id, params?.row.department_name)}
+            onClick={handleChangedDepVal(params?.id, params?.row.department_name)}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -270,7 +285,7 @@ const Deartments = () => {
               </form>
             </Box>
           </CommonModal>
-          {getdep && getdep?.length > 0 && (
+          {getdep && getdep?.length > 0 ? (
             <>
               <DataGrid
                 style={styles}
@@ -285,7 +300,19 @@ const Deartments = () => {
               />
               {/* checkboxSelection  upline */}
             </>
-          )}
+          ):((loading == true)?<BeatLoader
+          color="#2d94cb"
+          cssOverride={{
+            position: "absolute",
+            display: "block",
+            top: "45%",
+            left: "55%",
+            transform: "translate(-50%, -50%)",
+          }}
+          loading
+          margin={4}
+          size={90}
+        />:<p>No department found</p>)}
         </Box>
       </Container>
       <CommonModal isOpen={editopen} isClose={handleEditClose}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Box from "@mui/material/Box";
+import BeatLoader from "react-spinners/ClipLoader";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -17,24 +17,25 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
-import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 import DesignationServices from "../../services/DesignationServices";
 import DepartmentServices from "../../services/DepartmentServices";
 
 const Designations = () => {
-  const token = useSelector((state) => state.SuperAdmin.token);
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
 
   // api integration ----------------------------------------------------
   // Getdepartments --------------------
   const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = () => {
-    DepartmentServices.getDepartments()
+  const getDepartmentfn = async () => {
+    await DepartmentServices.getDepartments()
       .then((res) => {
         if (res) {
-          setGetdep(res.data.data);
+          setGetdep(res?.data?.data);
         } else {
           setGetdep([]);
         }
@@ -46,13 +47,17 @@ const Designations = () => {
   //-------------------------
   // get designations --------------------------------
   const [getDesig, setGetDesig] = useState([]);
-  const getDesignationsfn = () => {
-    DesignationServices.getDesignations()
+  const getDesignationsfn = async () => {
+    setLoading(true);
+    await DesignationServices.getDesignations()
       .then((res) => {
-        if (res) {
-          setGetDesig(res.data.data);
+        if (res.status == 200) {
+          setGetDesig(res?.data?.data);
+          setLoading(false);
           // EmployeServices.getEmployee();
-        } else {
+        }
+        if (res.status == 401) {
+          navigate("/");
           setGetDesig([]);
         }
       })
@@ -84,18 +89,25 @@ const Designations = () => {
     console.log("payload", payload);
     DesignationServices.addDesignation(payload)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         if (res.data.success == true) {
-          // getDesignationsfn();
-          DesignationServices.getDesignations();
-          toast.success(res.data.message)
+          getDesignationsfn();
+          // DesignationServices.getDesignations();
+          toast.success(res.data.message);
           setLoading(false);
           handleClose();
-        }else if (res.data.success==false){
+        } else if (res.data.success == false) {
           setLoading(false);
-          
-            toast.error(res.data.message);
-          
+
+          toast.error(res.data.message);
+        }
+        if (res.status == 403) {
+          let allErrorMessages = Object.values(res.data.errors)
+            .flat()
+            .filter(Boolean);
+          allErrorMessages.map((e) => {
+            toast.error(e);
+          });
         }
       })
       .catch((error) => {
@@ -122,7 +134,7 @@ const Designations = () => {
     let payload = {
       id: designation_id,
       designation_name: designation,
-      department_id: depart_id ||showDepartment,
+      department_id: depart_id || showDepartment,
     };
     // console.log("payload", payload);
     DesignationServices.editDesignation(payload)
@@ -130,23 +142,22 @@ const Designations = () => {
         // console.log("editDesignation", res);
         if (res.data.success == true) {
           getDesignationsfn();
-          toast.success(res.data.message
-            )
+          toast.success(res.data.message);
           setLoading(false);
           handleEditClose();
         }
-        if(res.data.success == false) {
-        setLoading(false);
-        toast.error(res.data.message);
+        if (res.data.success == false) {
+          setLoading(false);
+          toast.error(res.data.message);
         }
-        if(res.status== 403){
+        if (res.status == 403) {
           Object.values(res.data.errors).map((e, i) => {
-            toast.error(e[0])})
-       
-          }
+            toast.error(e[0]);
+          });
+        }
       })
       .catch((error) => {
-        console.log("edit designation err",error)
+        console.log("edit designation err", error);
       });
   };
 
@@ -163,34 +174,28 @@ const Designations = () => {
     DesignationServices.deleteDesignation(deleteDesignations)
       .then((res) => {
         if (res.data.success == true) {
-          toast.success(res.data.message)
+          toast.success(res.data.message);
           setLoading(false);
           getDesignationsfn();
           handleDeleteClose();
         }
-        if(res.data.success == false) {
-        setLoading(false);
-        toast.error(res.data.message);
-        }
-        if(res.status== 403){
+        if (res.data.success == false) {
+          setLoading(false);
           toast.error(res.data.message);
-
-       
-          }
+        }
+        if (res.status == 403) {
+          toast.error(res.data.message);
+        }
       })
-      .catch((err) => {console.log("delete  designation error: " , err)});
+      .catch((err) => {
+        console.log("delete  designation error: ", err);
+      });
   };
   // end delete designations ------------------------
 
   // end api integration ------------------------------------------------
   const sampleData = [
     { id: 1, designation: "Web Designer", department: "Web Development" },
-    { id: 2, designation: "Web Developer", department: "Marketing" },
-    { id: 3, designation: "Android Developer", department: "App Development" },
-    { id: 4, designation: "IOS Developer", department: "Support" },
-    { id: 5, designation: "UI Designer", department: "Accounts" },
-    { id: 6, designation: "UX Designer", department: "PHP Open Source" },
-    { id: 7, designation: "IT Technician", department: "Design and Printing" },
   ];
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "transparent",
@@ -257,10 +262,10 @@ const Designations = () => {
 
   const styles = {
     backgroundColor: "white",
-  }
+  };
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <Container>
         <Box>
           <Grid container spacing={2}>
@@ -321,9 +326,9 @@ const Designations = () => {
                       <MenuItem
                         key={index}
                         onClick={() => handleChangeDep(item.id)}
-                        value={item.department_name}
+                        value={item?.department_name}
                       >
-                        {item.department_name}
+                        {item?.department_name}
                       </MenuItem>
                     ))}
                 </Select>
@@ -338,17 +343,36 @@ const Designations = () => {
               </form>
             </Box>
           </CommonModal>
-          <DataGrid
-            style={styles}
-            rows={getDesig}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 7 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
-          />
+          {getDesig && getDesig?.length > 0 ? (
+            <DataGrid
+              style={styles}
+              rows={getDesig}
+              columns={columns}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 7 },
+                },
+              }}
+              pageSizeOptions={[5, 10]}
+            />
+          ) : loading == true ? (
+            <BeatLoader
+              color="#2d94cb"
+              cssOverride={{
+                position: "absolute",
+                display: "block",
+                top: "45%",
+                left: "55%",
+                transform: "translate(-50%, -50%)",
+              }}
+              loading
+              margin={4}
+              size={90}
+            />
+          ) : (
+            <p>No Designation found</p>
+          )}
+
           {/*checkboxSelection */}
         </Box>
       </Container>
@@ -393,9 +417,9 @@ const Designations = () => {
                   <MenuItem
                     key={index}
                     onClick={() => handleChangeDep(item.id)}
-                    value={item.department_name}
+                    value={item?.department_name}
                   >
-                    {item.department_name}
+                    {item?.department_name}
                   </MenuItem>
                 ))}
             </Select>
