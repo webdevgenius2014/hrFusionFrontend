@@ -18,15 +18,17 @@ import DesignationServices from "../../../services/DesignationServices";
 import DepartmentServices from '../../../services/DepartmentServices'
 import commonServices  from '../../../services/CommonServices'
 import { FormSelect } from "../../../components/form-components/FormSelect";
-
+import EmployeesForm from '../EmployeeForm'
 const AddEmployee = ({ getAllEmployees, handleClose }) => {
+  const [serverError,setServerError]=useState();
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   // api integration --------------------------------
 
   // add employee --------------------------------
-  const handleSubmitData = (data) => {
+  const addEmployees = (data) => {
+
     setLoading(true);
     let payload = {
       ...data,
@@ -44,12 +46,13 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
           handleClose();
         }
         if (data.status == 403) {
-          Object.keys(data.data.errors).forEach((field) => {
-            setError(field, {
-              type: "manual",
-              message: data.data.errors[field],
-            });
-          });
+          setServerError(()=>data.data.errors)
+          // Object.keys(data.data.errors).forEach((field) => {
+          //   setError(field, {
+          //     type: "manual",
+          //     message: data.data.errors[field],
+          //   });
+          // });
         }
         setLoading(false);
       })
@@ -69,7 +72,8 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
     DepartmentServices.getDepartments()
       .then((res) => {
         if (res) {
-          setGetdep(()=>res.data.data);
+          setGetdep(()=>res.data.data.data);
+          console.log(res.data.data)
         } else {
           setGetdep([]);
         }
@@ -133,7 +137,6 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const [addDesignation_id, setAddDesignation_id] = useState("");
   const [addDepartment_id, setAddDepartment_id] = useState("");
   const [addRole, setAddRole] = useState("");
-
   const handleChangeDep = (id) => {
     setAddDepartment_id(() => id);
     console.log(id)
@@ -164,8 +167,9 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
         id="modal-modal-title"
         variant="h6"
         // sx={{
-        //   mb: 2,
-        //   display: "flex",
+          //   mb: 2,
+          //   display: "flex",
+        //   border: "1px solid",
         //   flexDirection: "column",
         //   overflow: "hidden",
         //   overflowY: "scroll",
@@ -181,8 +185,8 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
           mb: 2,
           width: 800,
           display: "flex",
+          height:480,
           flexDirection: "column",
-          height: 530,
           overflow: "hidden",
           overflowY: "scroll",
           // justifyContent="flex-end" # DO NOT USE THIS WITH 'scroll'
@@ -190,206 +194,16 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       >
         <CssBaseline />
         <Box sx={{ flexGrow: 1 }}>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit(handleSubmitData)}
-            sx={{ mt: 1 }}
-          >
-            <Grid container spacing={1}>
-              <Grid item xs={12} sm={6} lg={6}>
-                <FormInputText
-                  autoComplete="given-name"
-                  name="first_name"
-                  id="firstName"
-                  label="First Name"
-                  required
-                  fullWidth
-                  error={errors && errors?.first_name}
-                  control={control}
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputText
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="last_name"
-                  error={errors && errors?.last_name}
-                  control={control}
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputEmail
-                  fullWidth
-                  id="username"
-                  label="Email Address"
-                  name="useremail"
-                  required
-                  error={errors && errors?.email}
-                  control={control}
-                  size="small"
-                  margin="normal"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputText
-                  name="username"
-                  control={control}
-                  label="username"
-                  error={errors && errors.username}
-                  required
-                  size="small"
-                  autoComplete="email"
-                  // size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputPassword
-                  name="password"
-                  control={control}
-                  label="Password"
-                  required
-                  size="small"
-                  error={errors && errors.password}
-                  // autoComplete="current-password"
-                  // size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputPassword
-                  name="confirm_password"
-                  control={control}
-                  label="confirm_password"
-                  size="small"
-                  required
-                  error={errors && errors.confirm_password}
-                  // autoComplete="current-password"
-                  // size="small"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputText
-                  required
-                  fullWidth
-                  id="employee_id"
-                  label="employee_id"
-                  name="employee_id"
-                  size="small"
-                  error={errors && errors.employee_id}
-                  control={control}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputText
-                  required
-                  fullWidth
-                  focused
-                  // format="MM/dd/yyyy"
-                  type="date"
-                  id="joining_date"
-                  label="joining_date"
-                  name="joining_date"
-                  size="small"
-                  error={errors && errors.joining_date}
-                  control={control}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputText
-                  required
-                  fullWidth
-                  focused
-                  type="date"
-                  format="DD/MM/yyyy"
-                  id="date_of_birth"
-                  label="Date of Birth"
-                  name="dob"
-                  size="small"
-                  error={errors && errors.dob}
-                  control={control}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormInputText
-                  required
-                  fullWidth
-                  id="phone"
-                  label="Phone Number"
-                  name="phone"
-                  size="small"
-                  error={errors && errors.phone}
-                  control={control}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-              
-              {getdep && getdep?.length>0 && 
-              <FormSelect 
-                name="department"
-                data={getdep}
-                label='Department Name'
-                control={control}
-                onchange={onchange}
-                fieldaname='department_name'
-                def='Select Department'
-                pass_fun={handleChangeDep}
-                error={errors && errors.department}   
-                required
-              />
-              
-              }
-            </Grid>
-              <Grid item xs={12} sm={6}>
-              {getRole && getRole?.length>0 && 
-              <FormSelect 
-                name="role"
-                data={getRole}
-                label='Role'
-                control={control}
-                fieldaname='role'
-                pass_fun={handleChangeRole}
-                def='Select Role'
-                error={errors && errors.role}   
-                required
-              />
-              
-              }
-            </Grid>
-              <Grid item xs={12} sm={6}> 
-              {getDesig && getDesig?.length>0 && 
-              <FormSelect 
-                name="designation"
-                data={getDesig}
-                pass_fun={handleChangeDesig}
-                label='Designation'
-                control={control}
-                fieldaname='designation_name'
-                def='Select Designation'
-                error={errors && errors.designation}   
-                required
-              />
-              }
-            </Grid>
-             
-           
-            </Grid>
-
-            <Grid container justifyContent="flex-end">
-              <Grid item></Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              {loading ? <>Loading..</> : <>Sign Up</>}
-            </Button>
-          </Box>
+          
+          <EmployeesForm 
+       getdep={getdep}
+       getRole={getRole}
+       getDesig={getDesig}
+       handleChangeDep={handleChangeDep}
+       handleChangeRole={handleChangeRole}
+       handleChangeDesig={handleChangeDesig}
+       apiFunc={addEmployees}
+       />
         </Box>
       </Box>
     </>

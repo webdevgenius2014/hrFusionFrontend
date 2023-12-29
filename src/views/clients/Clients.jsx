@@ -2,131 +2,140 @@ import React, { useEffect, useState } from "react";
 import BeatLoader from "react-spinners/ClipLoader";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";  
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
-import DepartmentForm from "./DepartmentForm";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import CommonModal from "../../components/commonModal";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import DepartmentServices from "../../services/DepartmentServices";
+import ClientsServices from '../../services/clientsServices/ClientsServices'
+import ClientsForm from "./ClientsForm";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const Deartments = () => {
+
+const Clients = () => {
+  const apiURL = `${process.env.REACT_APP_API_BASE_URL}/`; 
+  console.log("apiurl: " , apiURL);
   const navigate = useNavigate();
-  const [serverError,setServerError] =useState();
+  const [serverError,setServerError] =useState([]);
   const [loading, setLoading] = useState(false);
   // api integration -----------------------------------
 
-  // add department-------------------------------------
-  const addDepartment = (data) => {
+  // add Clients-------------------------------------
+  const handleAddClients = (data) => {
+    console.log(data);
+    let payload={...data ,email: data.useremail}
+    console.log("Add Client payload",payload)
     setLoading(true);
-    DepartmentServices.addDepartment(data)
+    const formData = new FormData();
+    // formData.append('profile_image', data.profile_image[0]);
+    console.log("payload",payload)
+    ClientsServices.addClient(payload)
       .then((res) => {
         if (res.status === 200) {
           setLoading(false);
-          getDepartmentfn();
+          getClientsfn();
           toast.success(res.data.message);
           handleClose();
         }
         if (res.status == 403) {
-          setServerError(res.data);
+          setServerError(res.data.errors);
           setLoading(false);
         }
       })
       .catch((err) => {
-        console.log("addDepartment error: " + err);
+        console.log("AddClients error: " + err);
       });
   };
-
-  //---- end add departments  --------------------------------------------------------
-  // get all departments --------------------------------
-  const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = () => {
+  // get all Clients --------------------------------
+  const [getClients, setgetClients] = useState([]);
+  const getClientsfn = () => {
     setLoading(true);
-    DepartmentServices.getDepartments()
+    ClientsServices.getClients()
       .then((res) => {
         if (res) {
-          setGetdep(res.data.data.data);
+          setgetClients(res?.data?.data?.data);
           setLoading(false);
         } else {
           loading(false);
-          setGetdep([]);
+          setgetClients([]);
+        }
+        if(res.status === 403) {
+          console.log('first')
+          setLoading(false);
+
         }
       })
       .catch((err) => {
-        console.log("getdep error", err);
+        console.log("getClients error", err);
       });
   };
   useEffect(() => {
-    getDepartmentfn();
+    getClientsfn();
   }, []);
 
-  // end get  all department -------------------------------
-  // edit department -------------------------------
-  const [dep_id, setDepId] = useState();
-  const [dep_name, setDepName] = useState();
+  // edit Clients -------------------------------
+  const [Client_id, setClientId] = useState();
+  const [clientData, setClientData] = useState();
 
-  const handleChangedDepVal = (id, department) => {
-    reset();
-    console.log(id, department);
-    setDepId(id);
-    setDepName(() => department);
+  const handleClientData = (id, clientData) => {
+    
+    console.log(id, clientData);
+    setClientId(id);
+    setClientData(() => clientData);
       handleEditOpen();
     
   };
-  const handleEdit = (data) => {
+  const handleClientEdit = (data) => {
     console.log(data);
-    let payload = { ...data, id: dep_id };
+    let payload = { ...data, email:data.useremail, id: Client_id };
     console.log(payload);
     setLoading(true);
-    DepartmentServices.editDepartment(payload)
+    ClientsServices.editClient(payload)
       .then((res) => {
         if (res.data.success == true) {
           setLoading(false);
           handleEditClose();
-          getDepartmentfn();
+          getClientsfn();
           toast.success(res.data.message);
         }
-        if (res.status == 403) {
-          setServerError(res.data);
+        
+        if (res.status === 403) {
+        
+          setServerError(()=>res.data.errors);
           setLoading(false);
         }
       })
       .catch((err) => {
-        console.log("editDepartment error: " + err);
+        console.log("edit client error: " + err);
       });
   };
 
-  // end edit department -------------------------------
-  // delete department -------------------------------
-  const [deleteDep, setDeleteDep] = useState();
+  // delete Clients -------------------------------
   const handleDeleteClick = (id) => {
-    setDeleteDep(id);
+    setClientId(id);
     handleDeleteOpen();
   };
   const handleDelete = (e) => {
-    let id = { id: deleteDep };
+    let id = { id: Client_id };
     setLoading(true);
     e.preventDefault();
-    DepartmentServices.deleteDepartment(id)
+    ClientsServices.deleteClient(id)
       .then((res) => {
         if (res.status == 200 || res.status == 404) {
           setLoading(false);
           handleDeleteClose();
-          toast.success("Department deleted successfully");
-          getDepartmentfn();
+          toast.success("Client deleted successfully");
+          getClientsfn();
         } else if (res.status == 401) {
           navigate("/");
           setLoading(false);
@@ -135,52 +144,54 @@ const Deartments = () => {
         }
         if (res.status == 403) {
           setLoading(false);
-
+          setServerError(res.data.message); 
           toast.error(res.data.message);
         }
       })
       .catch((err) => {
-        console.log("delete department error: ", err);
+        console.log("delete Client error: ", err);
         setLoading(false);
-      });
-  };
+    });
+};
 
-  // end deleteDepartment ------------
-  //---- end api ------------------
+//---- end api ------------------
+const [leadP,setLeadP]= useState(``)
+const handleLeadPlat = (value) => {
+  setLeadP (() => value);
+};
+
 
   const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "transparent",
-    boxShadow: "none",
-  }));
-
-  const override = {
-    display: "block",
-    margin: "0 auto",
-    borderColor: "red",
-  };
-  const validationSchema = Yup.object().shape({
-    department_name: Yup.string().required("Department name is required"),
-  });
-
-  const {
-    control,
-    setError,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: { department_name: dep_name },
-    resolver: yupResolver(validationSchema, {
-      stripUnknown: true,
-      abortEarly: false,
-    }),
-  });
-
-  const columns = [
-    // {  headerName: "ID", width: 100, options: { filter: true } },
+      backgroundColor: "transparent",
+      boxShadow: "none",
+    }));
+    const detailEmployee = () => {};
+    const columns = [
+        // {  headerName: "ID", width: 100, options: { filter: true } },
+        {
+          field: "profile_image",
+          headerName: "profile ",
+          width: 100,
+          options: { filter: true },
+          renderCell: (params) => (
+            <Avatar alt="Profile Image" src={apiURL+params?.value} sx={{ width: 40, height: 40 }} />
+          ),
+        },
+        {
+            field: "name",
+            headerName: "Name",
+            width: 200,
+            options: { filter: true },
+        },
+        {
+            field: "email",
+      headerName: "Email Id",
+      width: 200,
+      options: { filter: true },
+    },
     {
-      field: "department_name",
-      headerName: "Departments",
+      field: "communication_channel",
+      headerName: "Communication ",
       width: 200,
       options: { filter: true },
     },
@@ -197,7 +208,7 @@ const Deartments = () => {
             label="Edit"
             className="textPrimary"
             onClickCapture={() => {
-              handleChangedDepVal(params?.id, params?.row.department_name);
+              handleClientData(params?.id, params?.row);
             }}
             color="inherit"
           />,
@@ -209,9 +220,15 @@ const Deartments = () => {
             }}
             color="inherit"
           />,
+          <GridActionsCellItem
+            icon={<VisibilityIcon />}
+            label="View"
+            color="inherit"
+            onClick={() => detailEmployee(params?.id)}
+          />
         ];
       },
-      width: 500,
+      width: 200,
     },
   ];
   const [open, setOpen] = useState(false);
@@ -237,7 +254,7 @@ const Deartments = () => {
           <Grid container spacing={2}>
             <Grid item xs={6}>
               <Item>
-                <h2>Department</h2>
+                <h2>Clients</h2>
               </Item>
             </Grid>
             <Grid item xs={6}>
@@ -259,27 +276,31 @@ const Deartments = () => {
               component="h2"
               sx={{ marginBottom: "20px", fontWeight: "600" }}
             >
-              Add Department
+              Add Client
             </Typography>
             <Box
-              sx={{
-                width: 500,
-                maxWidth: "100%",
-              }}
+            sx={{
+              mb: 2,
+              width: 700,
+              display: "flex",
+              height:440,
+              flexDirection: "column",
+              overflow: "hidden",
+              overflowY: "scroll",
+            }}
             >
-            <DepartmentForm
-              // dep_name={dep_name}
-              apiFun={addDepartment}
-              loading={loading}
-              error={serverError}
-            />
+              <ClientsForm 
+              apiFunc={handleAddClients}
+              handleLeadPlat={handleLeadPlat}
+              serverError={serverError}
+              />
             </Box>
           </CommonModal>
-          {getdep && getdep?.length > 0 ? (
+          {getClients && getClients?.length > 0 ? (
             <>
               <DataGrid
                 style={styles}
-                rows={getdep}
+                rows={getClients}
                 columns={columns}
                 initialState={{
                   pagination: {
@@ -305,7 +326,7 @@ const Deartments = () => {
               size={90}
             />
           ) : (
-            <p>No department found</p>
+            <p>No Client found</p>
           )}
         </Box>
       </Container>
@@ -316,22 +337,25 @@ const Deartments = () => {
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Edit Department
+          Edit Client
         </Typography>
         <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
+        sx={{
+          mb: 2,
+              width: 700,
+              display: "flex",
+              height:440,
+              flexDirection: "column",
+              overflow: "hidden",
+              overflowY: "scroll",
+        }}
         >
-        <DepartmentForm
-        dep_name={dep_name}
-        apiFun={handleEdit}
-        loading={loading}
-        def={dep_name}
-        error={serverError}
-        
-      />
+        <ClientsForm 
+              apiFunc={handleClientEdit}
+              handleLeadPlat={handleLeadPlat}
+              clientData={clientData}
+              serverError={serverError}
+              />
         </Box>
       </CommonModal>
 
@@ -342,7 +366,7 @@ const Deartments = () => {
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Delete Department
+          Delete Client
         </Typography>
         <p>Are you sure want to delete?</p>
         <Box
@@ -372,4 +396,4 @@ const Deartments = () => {
     </>
   );
 };
-export default Deartments;
+export default Clients;

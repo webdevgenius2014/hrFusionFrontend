@@ -11,3 +11,53 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.wid{
+  width : 386px;
+  height :40px ;
+  caret-color: transparent;
+  font-size: 16px;
+  outline: none;
+  border: 1px solid #c6b8b8;
+  border-radius: 5px;
+}
+.error-message{
+  width : 386px;
+  caret-color: transparent;
+  height :40px ;
+  font-size: 16px;
+  outline: none;
+  border : 1px solid #f79277;
+  border-radius: 5px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+/* input[type=number] {
+  -moz-appearance: textfield;
+} */
+.wid:focus{
+  outline: none;
+  border: 1px solid black;
+}
+.red{
+  border-color:"red" ;
+}
+
+.uploaded-row{
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 5px;
+  background-color: #e9f0ff;
+}
+
+.upload-content{
+  display: flex;
+  align-items: center;
+}

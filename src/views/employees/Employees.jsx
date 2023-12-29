@@ -32,7 +32,7 @@ const Employees = () => {
   EmployeServices.getEmployee()
     .then((res) => {
       if (res.status == 200) {
-        setGetEmployees(() => res.data.data);
+        setGetEmployees(() => res.data.data.data);
         setLoading(false);
       } else {
         setLoading(false);
@@ -82,64 +82,7 @@ const Employees = () => {
 
 
   const navigate = useNavigate();
-  const sampleEmployees = [
-    {
-      id: 1,
-      name: "Bernardo Galaviz",
-      employeeid: "FT-0008",
-      email: "bernardogalaviz@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-    {
-      id: 2,
-      name: "Jeffrey Warden",
-      employeeid: "FT-0009",
-      email: "jeffreywarden@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-    {
-      id: 3,
-      name: "John Doe",
-      employeeid: "FT-0010",
-      email: "johndoe@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-    {
-      id: 4,
-      name: "John Smith",
-      employeeid: "FT-0011",
-      email: "johnsmith@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-    {
-      id: 5,
-      name: "Mike Litorus",
-      employeeid: "FT-0012",
-      email: "mikelitorus@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-    {
-      id: 6,
-      name: "Richard Miles",
-      employeeid: "FT-0013",
-      email: "richardmiles@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-    {
-      id: 7,
-      name: "Wilmer Deluna",
-      employeeid: "FT-0014",
-      email: "wilmerdeluna@example.com",
-      mobile: 9876543210,
-      joindate: "1 Jan 2013",
-    },
-  ];
+ 
 
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: "transparent",
@@ -283,7 +226,7 @@ const Employees = () => {
               columns={columns}
               initialState={{
                 pagination: {
-                  paginationModel: { page: 0, pageSize: 7 },
+                  paginationModel: { page: 0, pageSize: 10 },
                 },
               }}
               pageSizeOptions={[5, 10]}

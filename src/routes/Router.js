@@ -21,6 +21,7 @@ const Profile = Loadable(
 
 const Error = Loadable(lazy(() => import("../views/auth/Error")));
 const SignIn = Loadable(lazy(() => import("../views/auth/SignIn")));
+const Clients = Loadable(lazy(() => import("../views/clients/Clients")));
 const ResetPassword = Loadable(
   lazy(() => import("../views/auth/ResetPassword"))
 );
@@ -65,6 +66,10 @@ const Router = [
       {
         path: "/employees/:id",
         element: <Profile />,
+      },
+      {
+        path: "/clients",
+        element: <Clients />,
       },
     ],
   },

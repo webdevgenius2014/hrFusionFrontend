@@ -2,8 +2,8 @@ import * as Yup from "yup";
 import YupPassword from "yup-password";
 YupPassword(Yup);
 
-const validationSchema = Yup.object().shape({
-  useremail: Yup.string().email('Must be a valid email').max(255).required("Email is required").email("Email is invalid"),
+const clientVlidationSchema = Yup.object().shape({
+  useremail: Yup.string().required("Email is required").email("Email is invalid"),
   password: Yup.string()
     .required("Password is required")
     // .matches(passwordRules, { message: "must constain uppercase lower case numer and symbol" }),
@@ -29,4 +29,4 @@ const validationSchema = Yup.object().shape({
 
 });
 
-export default validationSchema;
+export default clientVlidationSchema;

@@ -25,6 +25,13 @@ const ApiConfig = {
   designationList : `${apiURL}designationList`,
   // role ---------------------------------------------
   getRoles:`${apiURL}getRoles`,
+
+  // Clients --------------------------------
+  getClients: `${apiURL}getClients`,
+  addClient: `${apiURL}addClient`,
+  editClient: `${apiURL}editClient`,
+  deleteClient: `${apiURL}deleteClient`,
+  searchClient: `${apiURL}searchClient`,
 };
 
 export default ApiConfig;

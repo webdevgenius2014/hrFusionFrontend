@@ -4,19 +4,21 @@ import BeatLoader from "react-spinners/ClipLoader";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
+import DesignationForm from "./DesignationForm";
+import { FormInputText } from "../../components/form-components/formInputText";
+import { FormSelect } from "../../components/form-components/FormSelect";
 import { styled } from "@mui/material/styles";
 import CommonModal from "../../components/commonModal";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +26,8 @@ import DesignationServices from "../../services/DesignationServices";
 import DepartmentServices from "../../services/DepartmentServices";
 
 const Designations = () => {
+  const [serverError,setServerError] =useState();
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
 
   // api integration ----------------------------------------------------
@@ -35,7 +37,7 @@ const Designations = () => {
     await DepartmentServices.getDepartments()
       .then((res) => {
         if (res) {
-          setGetdep(res?.data?.data);
+          setGetdep(res?.data?.data.data);
         } else {
           setGetdep([]);
         }
@@ -52,7 +54,8 @@ const Designations = () => {
     await DesignationServices.getDesignations()
       .then((res) => {
         if (res.status == 200) {
-          setGetDesig(res?.data?.data);
+          setGetDesig(res?.data?.data.data);
+
           setLoading(false);
           // EmployeServices.getEmployee();
         }
@@ -78,15 +81,14 @@ const Designations = () => {
   };
   //-------------------------------------------
   // add designations ------------------------
-  const [addDesignation, setAddDesignation] = useState();
-  const handleAddDesignation = (e) => {
+  const handleAddDesignation = (data) => {
     setLoading(true);
-    e.preventDefault();
+    console.log("data", data);
+
     const payload = {
-      designation_name: addDesignation,
+      designation_name: data.designation_name,
       department_id: depart_id,
     };
-    console.log("payload", payload);
     DesignationServices.addDesignation(payload)
       .then((res) => {
         console.log(res);
@@ -97,44 +99,48 @@ const Designations = () => {
           setLoading(false);
           handleClose();
         } else if (res.data.success == false) {
+          console.log(res.data.message);
           setLoading(false);
-
-          toast.error(res.data.message);
+          setServerError(res.data)
+          // setError("department_name", {
+          //   type: "manual",
+          //   message: res.data.message,
+          // });
         }
         if (res.status == 403) {
-          let allErrorMessages = Object.values(res.data.errors)
-            .flat()
-            .filter(Boolean);
-          allErrorMessages.map((e) => {
-            toast.error(e);
-          });
+          // setError("designation_name", {
+          //   type: "manual",
+          //   message: res.data.message,
+          // });
+          setLoading(false);
         }
       })
       .catch((error) => {
         console.log("add designation error", error);
       });
+      setServerError('')
   };
   // end add designations ------------------------
   // edit designations ------------------------
   const [showDepartment, setShowDepartment] = useState("");
-  const [showDesignation, setshowDesignation] = useState();
-  const [designation, setDesignation] = useState("");
+  const [showDesignation, setshowDesignation] = useState("");
   const [designation_id, setDesignation_id] = useState("");
+  const [dep_id, setDep_id] = useState("");
 
-  const handleEditClick = (id, desig, dep) => () => {
+  const handleEditClick = (id, desig, dep, dep_id) => () => {
     setDesignation_id(() => id);
-    setDesignation(() => desig);
     setshowDesignation(() => desig);
     setShowDepartment(() => dep);
+    setDep_id(() => dep_id);
     handleEditOpen();
   };
-  const handleEditDasignation = (e) => {
+  const handleEditDasignation = (data) => {
     setLoading(true);
-    e.preventDefault();
+    console.log(depart_id, showDepartment);
     let payload = {
       id: designation_id,
-      designation_name: designation,
-      department_id: depart_id || showDepartment,
+      designation_name: data.designation_name,
+      department_id: depart_id || dep_id,
     };
     // console.log("payload", payload);
     DesignationServices.editDesignation(payload)
@@ -146,14 +152,10 @@ const Designations = () => {
           setLoading(false);
           handleEditClose();
         }
-        if (res.data.success == false) {
-          setLoading(false);
-          toast.error(res.data.message);
-        }
+
         if (res.status == 403) {
-          Object.values(res.data.errors).map((e, i) => {
-            toast.error(e[0]);
-          });
+         setServerError(()=>res.data)
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -184,8 +186,9 @@ const Designations = () => {
           toast.error(res.data.message);
         }
         if (res.status == 403) {
-          toast.error(res.data.message);
+          toast.error(res?.data?.message);
         }
+
       })
       .catch((err) => {
         console.log("delete  designation error: ", err);
@@ -194,6 +197,8 @@ const Designations = () => {
   // end delete designations ------------------------
 
   // end api integration ------------------------------------------------
+
+
   const sampleData = [
     { id: 1, designation: "Web Designer", department: "Web Development" },
   ];
@@ -235,7 +240,8 @@ const Designations = () => {
       getActions: (params) => {
         let currentId = params?.id;
         let dep = params?.row?.department_name;
-        // console.log(params.row)
+        let dep_id = params?.row?.department.id;
+        // console.log(dep_id)
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
@@ -244,7 +250,8 @@ const Designations = () => {
             onClick={handleEditClick(
               params?.id,
               params?.row?.designation_name,
-              dep
+              dep,
+              dep_id
             )}
             color="inherit"
           />,
@@ -291,7 +298,7 @@ const Designations = () => {
               id="modal-modal-title"
               variant="h6"
               component="h2"
-              sx={{ marginBottom: "20px", fontWeight: "600" }}
+              
             >
               Add Designation
             </Typography>
@@ -301,46 +308,13 @@ const Designations = () => {
                 maxWidth: "100%",
               }}
             >
-              <form onSubmit={handleAddDesignation}>
-                <TextField
-                  fullWidth
-                  label="Add designation"
-                  id="fullWidth"
-                  name="designation_name"
-                  onChange={(e) => setAddDesignation(e.target.value)}
-                />
-                <InputLabel id="demo-simple-select-label">
-                  Department
-                </InputLabel>
-                <Select
-                  fullWidth
-                  labelId="demo-simple-select-label"
-                  sx={{ marginTop: "20px" }}
-                  id="demo-simple-select"
-                  defaultValue={"Select Department"}
-                  label="Department"
-                  renderValue={(value) => value}
-                >
-                  {getdep &&
-                    getdep.map((item, index) => (
-                      <MenuItem
-                        key={index}
-                        onClick={() => handleChangeDep(item.id)}
-                        value={item?.department_name}
-                      >
-                        {item?.department_name}
-                      </MenuItem>
-                    ))}
-                </Select>
-
-                <Button
-                  type="submit"
-                  variant="contained"
-                  sx={{ marginTop: "13px" }}
-                >
-                  {loading ? <>Loading..</> : <>Submit</>}
-                </Button>
-              </form>
+              <DesignationForm
+              getdep={getdep }
+                handleChangeDep={handleChangeDep}
+                loading={loading}
+                apiFun={handleAddDesignation}
+                error={serverError}
+              />
             </Box>
           </CommonModal>
           {getDesig && getDesig?.length > 0 ? (
@@ -350,7 +324,7 @@ const Designations = () => {
               columns={columns}
               initialState={{
                 pagination: {
-                  paginationModel: { page: 0, pageSize: 7 },
+                  paginationModel: { page: 0, pageSize: 10 },
                 },
               }}
               pageSizeOptions={[5, 10]}
@@ -391,46 +365,15 @@ const Designations = () => {
             maxWidth: "100%",
           }}
         >
-          <form onSubmit={handleEditDasignation}>
-            <TextField
-              fullWidth
-              label="Edit Designation"
-              id="fullWidth"
-              defaultValue={showDesignation}
-              onChange={(e) => setDesignation(() => e.target.value)}
-            />
-            <InputLabel id="demo-simple-select-helper-label">
-              Department
-            </InputLabel>
-
-            <Select
-              fullWidth
-              labelId="demo-simple-select-helper-label"
-              sx={{ marginTop: "20px" }}
-              id="demo-simple-select"
-              defaultValue={showDepartment}
-              label="Department"
-              renderValue={(value) => value}
-            >
-              {getdep &&
-                getdep.map((item, index) => (
-                  <MenuItem
-                    key={index}
-                    onClick={() => handleChangeDep(item.id)}
-                    value={item?.department_name}
-                  >
-                    {item?.department_name}
-                  </MenuItem>
-                ))}
-            </Select>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ marginTop: "13px" }}
-            >
-              {loading ? <>Loading..</> : <>Save</>}
-            </Button>
-          </form>
+          <DesignationForm
+            showDesignation={showDesignation}
+            showDepartment={showDepartment}
+            getdep={getdep}
+            handleChangeDep={handleChangeDep}
+            loading={loading}
+            apiFun={handleEditDasignation}
+            error={serverError}
+          />
         </Box>
       </CommonModal>
 

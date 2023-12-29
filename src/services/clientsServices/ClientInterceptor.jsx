@@ -12,7 +12,7 @@ const requestHandler = async request => {
     let token =sessionStorage.getItem("token");
     request.headers = {
         Accept: "application/json",
-        
+        'Content-Type': 'multipart/form-data',
             Authorization: "Bearer " + token,
     } 
     return request;
