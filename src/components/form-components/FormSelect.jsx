@@ -6,8 +6,16 @@ import { Controller } from "react-hook-form";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from '@mui/material/FormControl';
 
-import { FormInputText } from "../../components/form-components/formInputText";
-
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 export const FormSelect = ({
   name,
   control,
@@ -56,12 +64,13 @@ export const FormSelect = ({
             error={!!error}
             helperText={error && `${error.message}`}
             renderValue={(value) => value}
+            MenuProps={MenuProps}
           >
             {data &&
               data.map((item, index) => (
                 <MenuItem
                   key={index}
-                  onClick={() => pass_fun(item?.id)}
+                  onClick={() =>{if(pass_fun){ pass_fun(item?.id)}}}
                   value={item[fieldaname]}
                 >
                   {item[fieldaname]}

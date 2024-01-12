@@ -10,6 +10,8 @@ import { FormDate } from "../../components/form-components/FormDate";
 import { FormInputEmail } from "../../components/form-components/formInputEmail";
 import { FormInputPassword } from "../../components/form-components/formInputPassword";
 import Button from "@mui/material/Button";
+import { FormImage } from "../../components/form-components/FormImage";
+
 
 const EmployeesForm = (props)=>{
  useEffect (()=>{
@@ -33,6 +35,7 @@ const EmployeesForm = (props)=>{
 
   let showRole=props.showRole;
   const[data,setData]=useState(()=>props.data)
+  console.log(data)
     const {
       formState,
       control,
@@ -51,9 +54,10 @@ const EmployeesForm = (props)=>{
         joining_date: data?.joining_date,
         dob: data?.dob,
         phone: data?.phone,
-        designation: data?.designation?.id,
+        designation: data?.designation_id,
         role: showRole,
-        department: data?.department?.id,
+        department: data?.department_id,
+        profile_image:data?.profile_image,
       },
     });
   // ?console.log(data.departent)
@@ -209,9 +213,43 @@ const EmployeesForm = (props)=>{
                   d_value={data?.dob}
                   defaultValue={data?.dob }
                 />
+                
               </Grid>
-             
-             
+              {data && (<>
+              <Grid item xs={12} sm={6}>
+              <div style={{marginTop:'8px'}}>
+              <FormInputText    
+                fullWidth
+                id="Leaving Reason"
+                label="Leaving Reason"
+                name="Leaving_reason"
+                size="small"
+                // error={errors && errors.employee_id}
+                control={control}
+                // defaultValue={data?.employee_id }
+              />
+              </div>
+              </Grid>
+            
+              <Grid item xs={12} sm={6}>
+                <FormDate
+                  
+                  fullWidth
+                  focused
+                  type="date"
+                  id="dob"
+                  format="yyyy-MM-dd" 
+                  label="Date of Leaving"
+                  name="Leaving_date" 
+                  size="small"
+                  setValue={setValue}
+                  control={control}
+                  // error={errors && errors.dob}
+                  // d_value={data?.dob}
+                  // defaultValue={data?.dob }
+                />
+              </Grid></>)
+              }
               <Grid item xs={12} sm={6}>
               {props?.getdep && props?.getdep?.length>0 && 
                 <FormSelect 
@@ -245,8 +283,25 @@ const EmployeesForm = (props)=>{
                 }
            
             </Grid>
+            <Grid item xs={12} sm={6}>
+            <FormImage
+              required
+              fullWidth
+              focused
+              id="profile_image"
+              label="Profile Image"
+              name="profile_image"
+              size="small"
+              setValue={setValue}
+              setError={setError}
+              error={errors && errors.profile_image}
+              control={control}
+              d_value={data?.profile_image}
+              defaultValue={data?.profile_image || ""}
+            />
+            </Grid>
               <Grid item xs={12} sm={6}>
-              {props?.getDesig && props?.getDesig?.length>0 && 
+              {props?.getDesig && props?.getDesig?.length>0 ?(
                 <FormSelect 
                   name="designation"
                   data={props?.getDesig}
@@ -258,10 +313,21 @@ const EmployeesForm = (props)=>{
                   error={errors && errors?.designation}   
                   required
                 />
-                }
+                ):( <FormSelect 
+                  name="designation"
+                  data={[]}
+                  pass_fun={props?.handleChangeDesig}
+                  label='Select Designation'
+                  control={control}
+                  value={'No Designation'}
+                  fieldaname='designation_name'
+                  def={props?.showDesig }
+                  error={errors && errors?.designation}   
+                  required
+                />)}
            
             </Grid>
-            </Grid>
+                       </Grid>
             <Grid container justifyContent="flex-end">
               <Grid item></Grid>
             </Grid>
@@ -271,7 +337,7 @@ const EmployeesForm = (props)=>{
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+            {props.loading ? <>Loading..</> : <>{props.BtnName}</>}
             </Button>
           </Box>
         </Box>

@@ -1,5 +1,8 @@
 import React, { lazy } from "react";
 import Loadable from "../layout/dashboard/Lodable";
+import { useSelector } from "react-redux";
+import { Navigate } from 'react-router-dom';
+
 /* ***Layouts**** */
 const DashboardLayout = Loadable(
   lazy(() => import("../layout/dashboard/DashboardLayout"))
@@ -15,20 +18,44 @@ const Designations = Loadable(
   lazy(() => import("../views/designations/Designations"))
 );
 const Employees = Loadable(lazy(() => import("../views/employees/Employees")));
-const Profile = Loadable(
-  lazy(() => import("../views/employees/profile-employee/profile"))
+const EmployeeView = Loadable(
+  lazy(() => import("../views/employees/EmployeeView"))
 );
 
 const Error = Loadable(lazy(() => import("../views/auth/Error")));
 const SignIn = Loadable(lazy(() => import("../views/auth/SignIn")));
 const Clients = Loadable(lazy(() => import("../views/clients/Clients")));
+const Projects = Loadable(lazy(() => import("../views/projects/Projects")));
 const ResetPassword = Loadable(
   lazy(() => import("../views/auth/ResetPassword"))
 );
+const ClientProfile = Loadable(
+  lazy(() => import("../views/clients/ClientProfile"))
+);
 
-const Router = [
+const PrivateRoute = ({ element, ...rest }) => {
+  const isAuthenticated = useSelector((state) => state?.SuperAdmin?.token);
+
+  return isAuthenticated ? (
+    element
+  ) : (
+    <Navigate to="/" />
+  );
+};
+
+const PublicRoute = ({ element, ...rest }) => {
+  const isAuthenticated = useSelector((state) => state?.SuperAdmin?.token);
+
+  return isAuthenticated ? (
+    <Navigate to="/dashboard" />
+    ) : (
+      element
+  );
+};
+// public routes
+const publicRoutes = [
   {
-    element: <BlankLayout />,
+    element: <PublicRoute element={<BlankLayout />} />,
     children: [
       {
         path: "/",
@@ -40,12 +67,12 @@ const Router = [
       },
     ],
   },
+];
+
+// private routes
+const privateRoutes = [
   {
-    path: "*",
-    element: <Error />,
-  },
-  {
-    element: <DashboardLayout />,
+    element: <PrivateRoute element={<DashboardLayout />} />,
     children: [
       {
         path: "/dashboard",
@@ -65,13 +92,23 @@ const Router = [
       },
       {
         path: "/employees/:id",
-        element: <Profile />,
+        element: <EmployeeView />,
       },
       {
         path: "/clients",
         element: <Clients />,
       },
+      {
+        path: "/clients/:id",
+        element: <ClientProfile />,
+      },
+      {
+        path: "/Projects",
+        element: <Projects />,
+      },
     ],
   },
 ];
+
+const Router = [...publicRoutes, ...privateRoutes];
 export default Router;

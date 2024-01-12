@@ -3,6 +3,7 @@ import { Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 import { Button, TextField, Typography } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from "@mui/material/FormHelperText";
 
 
 export const FormImage = ({
@@ -12,6 +13,8 @@ export const FormImage = ({
   setValue,
   control,
   label,
+  getValues,
+  setError,
   required = false,
   focused = false,
   error,
@@ -25,13 +28,13 @@ export const FormImage = ({
 
   const onDrop = (e) => {
     const fileInput = e.target;        
-    console.log("file",fileInput.files[0])
-    const file = fileInput.files[0];
-    setSelectedFile(URL.createObjectURL(file));
-    console.log("inage file",file)
-    setValue( name, file);
-};
-  
+    const file = fileInput.files[0];   
+      setSelectedFile(URL.createObjectURL(file));
+      setValue( name,file );
+      // console.log("image file",e.target.files[0])
+
+    };
+    
 
   return (
     <>
@@ -42,7 +45,6 @@ export const FormImage = ({
         render={({ field }) => (
           <div>
           <FormControl size="small" fullWidth  sx={{ mt: 2,}}>
-
             <input {...field.input} type="hidden" />
             <label htmlFor="image">
               <TextField
@@ -52,6 +54,8 @@ export const FormImage = ({
                 size="small"
                 label={label}
                 focused
+                placeholder={d_value}
+                fullWidth="true"
                 defaultValue={""}
                 accept="image/*"
                 onChange={(e) => onDrop(e)}
@@ -59,13 +63,16 @@ export const FormImage = ({
               />
              
             </label>
-            {error && <Typography color="error">{error.message}</Typography>}
+            {error && <FormHelperText style={{ color: error?.message ? "#f79277" : "" }}>
+            {error?.message}
+          </FormHelperText>}
 
             { selectedFile && selectedFile?.length>0 &&            
               <img
                 src={selectedFile || URL.createObjectURL(selectedFile)}
                 alt="Preview"
-                style={{ maxWidth: "100%", marginTop: "10px" }}
+
+                style={{ maxWidth: "150px", marginTop: "10px" }}
               />
             }
             </FormControl >

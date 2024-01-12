@@ -26,11 +26,10 @@ const DesignationForm = (props) => {
   });
   const newErrors = props?.error;
   useEffect(()=>{
-    if(newErrors !== undefined)
+    if(newErrors)
     setError ("designation_name", {
       type: "manual",
-      message:newErrors?.message
-      ,
+      message:newErrors?.message,
     });
   },[newErrors])
 
@@ -71,7 +70,7 @@ const DesignationForm = (props) => {
     variant="contained"
     sx={{ marginTop: "13px" }}
   >
-    {props?.loading ? <>Loading..</> : <>Submit</>}
+    {props?.loading ? <>Loading..</> : <>{props.BtnName}</>}
   </Button>
         </form>
   

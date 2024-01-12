@@ -19,6 +19,7 @@ export const FormInputText= ({name,f_type, control, label, required=false,focuse
                     onChange={onChange} 
                     fullWidth={true}
                     size="small" 
+                
                     error={!!error}                                       
                     helperText={error && `${error.message}`} 
                     margin="normal" 

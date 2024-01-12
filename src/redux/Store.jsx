@@ -1,10 +1,12 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import SuperAdmin from "./SuperAdminSlice";
+import DepRole from "./DepRoleSlice";
 import { PERSIST, persistReducer, persistStore } from "redux-persist";
 import localStorage from "redux-persist/lib/storage";
 
 const reducers = combineReducers({
   SuperAdmin,
+  DepRole,
 });
 
 const persistConfig = {
@@ -16,6 +18,7 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 
 const store = configureStore({
   reducer: persistedReducer,
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -23,6 +26,6 @@ const store = configureStore({
       },
     }),
 });
-
+ 
 const persistor = persistStore(store);
 export { store, persistor };

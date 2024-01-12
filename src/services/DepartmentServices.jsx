@@ -10,8 +10,11 @@ class DepartmentServices {
   addDepartment(payload) {
     return instance.post(ApiConfig.addDepartment, payload);
   }
-  getDepartments() {
-    return instance.get(ApiConfig.getDepartments);
+  getDepartments(page) {
+    return instance.get(`${ApiConfig.getDepartments}?page=${page}`);
+  }
+  getAllDepartments() {
+    return instance.get(ApiConfig.getAllDepartments);
   }
 }
 export default new DepartmentServices();

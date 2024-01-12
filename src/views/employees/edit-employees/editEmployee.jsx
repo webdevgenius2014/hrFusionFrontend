@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import { yupResolver } from "@hookform/resolvers/yup";
 import CssBaseline from "@mui/material/CssBaseline";
-import Button from "@mui/material/Button";
 import EmployeesForm  from '../EmployeeForm'
-import { FormInputText } from "../../../components/form-components/formInputText";
-import { FormInputEmail } from "../../../components/form-components/formInputEmail";
-import { FormDate } from "../../../components/form-components/formInputEmail";
-import { FormInputPassword } from "../../../components/form-components/formInputPassword";
 import Typography from "@mui/material/Typography";
-import { useForm } from "react-hook-form";
-import validationSchema from "../validation";
 import EmployeServices from "../../../services/EmployeServices";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -22,15 +13,17 @@ import commonServices  from '../../../services/CommonServices'
 
 const EditEmployee = (props) => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   const [serverError , setServerError] = useState('')
   const [id, setId] = useState(() => props?.data?.id);
   const [data, setData] = useState(() => props.data.row?.user_meta);
   const [showRole, setShowRole] = useState(() => props.data.row?.user_role.role);
   const [showDesig,setshowDesig]= useState(() => props.data.row?.user_meta.designation.designation_name)
-console.log(showRole)
   // api integration --------------------------------
   // Edit employee --------------------------------
   const handleEditEmployee = (formData) => {
+    setLoading(true);
+    console.log(formData)
     let payload = {
       id: id,
       ...formData,
@@ -42,17 +35,18 @@ console.log(showRole)
     console.log(formData)
     EmployeServices.editEmployee(payload)
       .then((res) => {
+
         if (res.status == 200) {
           props.handleEditClose();
           toast.success(res.data.message);
           EmployeServices.getEmployee();
-          // setLoading(false);
+          setLoading(false);
         }
         if (res.status == 403) {
           setServerError(res.data.errors)
          
         }
-        // setLoading(false);
+        setLoading(false);
       })
       .catch((err) => {
         if (err.response.status === 401) {
@@ -67,11 +61,11 @@ console.log(showRole)
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
   const getDepartmentfn = async () => {
-    DepartmentServices.getDepartments()
+    DepartmentServices.getAllDepartments()
       .then((res) => {
         if (res) {
-          
-          setGetdep(res.data.data.data);
+          // console.log(res.data.data)
+          setGetdep(res.data.data);
         } else {
           setGetdep([]);
         }
@@ -146,7 +140,7 @@ console.log(showRole)
   useEffect(() => {
     getDepartmentfn();
     getRoles();
-   desigByDep({department_id:addDepartment_id});
+   desigByDep({id:addDepartment_id});
 
   }, []);
  
@@ -160,7 +154,7 @@ console.log(showRole)
         component="h2"
         sx={{ fontWeight: "600" }}
       >
-        Edit Designation
+        Edit Employee
       </Typography>
       <Box
         sx={{
@@ -186,6 +180,8 @@ console.log(showRole)
        handleChangeDesig={handleChangeDesig}
        apiFunc={handleEditEmployee}
        serverError={serverError}
+       BtnName={"Save Changes"}
+       loading={loading}
        />
       </Box>
     </>

@@ -1,43 +1,41 @@
 import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import BeatLoader from "react-spinners/ClipLoader";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
 import DesignationForm from "./DesignationForm";
-import { FormInputText } from "../../components/form-components/formInputText";
-import { FormSelect } from "../../components/form-components/FormSelect";
-import { styled } from "@mui/material/styles";
 import CommonModal from "../../components/commonModal";
+import { CustDataGrid } from "../../components/form-components/CustDataGrid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import DesignationServices from "../../services/DesignationServices";
 import DepartmentServices from "../../services/DepartmentServices";
+import { DatagridHeader } from "../../components/DatagridHeader";
+import { CustomPagination } from "../../components/PaginationMui";
 
+
+import "react-toastify/dist/ReactToastify.css";
 const Designations = () => {
-  const [serverError,setServerError] =useState();
-  const navigate = useNavigate();
+  const [totalPages, setTotalPages] = useState();
+  const [page, setPage] = useState(1);
+  const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
+  const [formLoader, setFormLoader] = useState(false);
+
+  const navigate = useNavigate();
 
   // api integration ----------------------------------------------------
   // Getdepartments --------------------
   const [getdep, setGetdep] = useState([]);
   const getDepartmentfn = async () => {
-    await DepartmentServices.getDepartments()
+    await DepartmentServices.getAllDepartments()
       .then((res) => {
         if (res) {
-          setGetdep(res?.data?.data.data);
+          setGetdep(res?.data?.data);
         } else {
           setGetdep([]);
         }
@@ -50,28 +48,33 @@ const Designations = () => {
   // get designations --------------------------------
   const [getDesig, setGetDesig] = useState([]);
   const getDesignationsfn = async () => {
-    setLoading(true);
-    await DesignationServices.getDesignations()
+    setFormLoader(true);
+    await DesignationServices.getDesignations(page)
       .then((res) => {
         if (res.status == 200) {
+          setTotalPages(res?.data?.data?.last_page);
           setGetDesig(res?.data?.data.data);
-
-          setLoading(false);
+          setFormLoader(false);
           // EmployeServices.getEmployee();
         }
         if (res.status == 401) {
           navigate("/");
           setGetDesig([]);
         }
+        setFormLoader(false);
       })
       .catch((err) => {
         console.log("getDesignations", err);
+        setFormLoader(false);
       });
   };
   useEffect(() => {
     getDesignationsfn();
     getDepartmentfn();
   }, []);
+  useEffect(() => {
+    getDesignationsfn();
+  }, [page]);
   // end getdescription -------------------------
   // change department ------------------------
   const [depart_id, setDepart_id] = useState("");
@@ -101,24 +104,16 @@ const Designations = () => {
         } else if (res.data.success == false) {
           console.log(res.data.message);
           setLoading(false);
-          setServerError(res.data)
-          // setError("department_name", {
-          //   type: "manual",
-          //   message: res.data.message,
-          // });
+          setServerError(res.data);
         }
         if (res.status == 403) {
-          // setError("designation_name", {
-          //   type: "manual",
-          //   message: res.data.message,
-          // });
           setLoading(false);
         }
       })
       .catch((error) => {
         console.log("add designation error", error);
       });
-      setServerError('')
+    setServerError("");
   };
   // end add designations ------------------------
   // edit designations ------------------------
@@ -136,7 +131,7 @@ const Designations = () => {
   };
   const handleEditDasignation = (data) => {
     setLoading(true);
-    console.log(depart_id, showDepartment);
+    // console.log(depart_id, showDepartment);
     let payload = {
       id: designation_id,
       designation_name: data.designation_name,
@@ -154,7 +149,7 @@ const Designations = () => {
         }
 
         if (res.status == 403) {
-         setServerError(()=>res.data)
+          setServerError(() => res.data);
           setLoading(false);
         }
       })
@@ -188,7 +183,6 @@ const Designations = () => {
         if (res.status == 403) {
           toast.error(res?.data?.message);
         }
-
       })
       .catch((err) => {
         console.log("delete  designation error: ", err);
@@ -196,16 +190,7 @@ const Designations = () => {
   };
   // end delete designations ------------------------
 
-  // end api integration ------------------------------------------------
-
-
-  const sampleData = [
-    { id: 1, designation: "Web Designer", department: "Web Development" },
-  ];
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "transparent",
-    boxShadow: "none",
-  }));
+  // end api integration -----------------------------------------------
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -220,22 +205,40 @@ const Designations = () => {
   const handleDeleteClose = () => setDeleteOpen(false);
 
   const columns = [
+    {
+      field: "id",
+      headerName: "No. ",
+      filterable: false,
+      width: 100,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
+    },
     // { field: 'id', headerName: 'ID', width: 100, options: { filter: true } },
     {
       field: "designation_name",
       headerName: "Designation",
       width: 200,
+      headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "department_name",
       headerName: "Department",
       width: 200,
+      headerClassName: "super-app-theme--header",
+      options: { filter: true },
+    },
+    {
+      field: "emmployees_count",
+      headerName: "Employess",
+      width: 100,
+      headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "action",
       headerName: "Action",
+      headerClassName: "super-app-theme--header",
       type: "actions",
       getActions: (params) => {
         let currentId = params?.id;
@@ -263,7 +266,7 @@ const Designations = () => {
           />,
         ];
       },
-      width: 500,
+      width: 374,
     },
   ];
 
@@ -273,33 +276,19 @@ const Designations = () => {
   return (
     <>
       <ToastContainer />
-      <Container>
+      <Container style={{ padding: 0 }}>
         <Box>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Item>
-                <h2>Designation</h2>
-              </Item>
-            </Grid>
-            <Grid item xs={6}>
-              <Item align="right">
-                <Button
-                  startIcon={<AddIcon />}
-                  variant="contained"
-                  onClick={handleOpen}
-                >
-                  Add
-                </Button>
-              </Item>
-            </Grid>
-          </Grid>
+          <DatagridHeader name={"Designation"} >
+          <Button
+          startIcon={<AddIcon />}
+          variant="contained"
+          onClick={handleOpen}
+        >
+          Add
+        </Button>
+          </DatagridHeader>
           <CommonModal isOpen={open} isClose={handleClose}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              
-            >
+            <Typography id="modal-modal-title" variant="h6" component="h2">
               Add Designation
             </Typography>
             <Box
@@ -309,45 +298,16 @@ const Designations = () => {
               }}
             >
               <DesignationForm
-              getdep={getdep }
+                getdep={getdep}
                 handleChangeDep={handleChangeDep}
                 loading={loading}
                 apiFun={handleAddDesignation}
                 error={serverError}
+                BtnName={"Save "}
               />
             </Box>
           </CommonModal>
-          {getDesig && getDesig?.length > 0 ? (
-            <DataGrid
-              style={styles}
-              rows={getDesig}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-              }}
-              pageSizeOptions={[5, 10]}
-            />
-          ) : loading == true ? (
-            <BeatLoader
-              color="#2d94cb"
-              cssOverride={{
-                position: "absolute",
-                display: "block",
-                top: "45%",
-                left: "55%",
-                transform: "translate(-50%, -50%)",
-              }}
-              loading
-              margin={4}
-              size={90}
-            />
-          ) : (
-            <p>No Designation found</p>
-          )}
-
-          {/*checkboxSelection */}
+          <CustDataGrid data={getDesig} loading={formLoader}  columns={columns} setPage={setPage} totalPages={totalPages}/>
         </Box>
       </Container>
       <CommonModal isOpen={editopen} isClose={handleEditClose}>
@@ -373,10 +333,10 @@ const Designations = () => {
             loading={loading}
             apiFun={handleEditDasignation}
             error={serverError}
+            BtnName={"Save Changes "}
           />
         </Box>
       </CommonModal>
-
       <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
         <Typography
           id="modal-modal-title"
@@ -411,6 +371,11 @@ const Designations = () => {
           </Button>
         </Box>
       </CommonModal>
+      {  getDesig &&  getDesig.length>0 && <div
+        style={{ width: "100%", marginTop: "10px", background: "white" }}
+      >
+        <CustomPagination totalPages={totalPages} setPage={setPage} />
+      </div>}
     </>
   );
 };

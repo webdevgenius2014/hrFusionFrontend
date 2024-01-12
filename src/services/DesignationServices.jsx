@@ -10,11 +10,14 @@ class DesignationServices {
   addDesignation(payload) {
     return instance.post(ApiConfig.addDesignation, payload);
   }
-  getDesignations() {
-    return instance.get(ApiConfig.getDesignations);
-  }
   designationsByDep(payload) {
     return instance.post(ApiConfig.designationList,payload);
+  }
+  getDesignations(page) {
+    return instance.get(`${ApiConfig.getDesignations}?page=${page}`);
+  }
+  getAllDesignations() {
+    return instance.get(ApiConfig.getAllDesignations);
   }
 
 }

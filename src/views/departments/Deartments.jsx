@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from "react";
-import BeatLoader from "react-spinners/ClipLoader";
-import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm } from "react-hook-form";
-import * as Yup from "yup";
+import Box from "@mui/material/Box";
+import { DatagridHeader } from "../../components/DatagridHeader";
+import { CustDataGrid } from "../../components/form-components/CustDataGrid";
 import DepartmentForm from "./DepartmentForm";
 import CommonModal from "../../components/commonModal";
 import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import DepartmentServices from "../../services/DepartmentServices";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
+import { CustomPagination } from "../../components/PaginationMui";
+
 
 const Deartments = () => {
   const navigate = useNavigate();
-  const [serverError,setServerError] =useState();
+  const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState();
+  const [page, setPage] = useState(1);
+  const [formLoader, setFormLoader] = useState(false);
+
   // api integration -----------------------------------
 
   // add department-------------------------------------
@@ -36,9 +35,9 @@ const Deartments = () => {
       .then((res) => {
         if (res.status === 200) {
           setLoading(false);
-          getDepartmentfn();
-          toast.success(res.data.message);
           handleClose();
+          toast.success(res.data.message);
+          getDepartmentfn();
         }
         if (res.status == 403) {
           setServerError(res.data);
@@ -54,21 +53,27 @@ const Deartments = () => {
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
   const getDepartmentfn = () => {
-    setLoading(true);
-    DepartmentServices.getDepartments()
+    setFormLoader(true);
+    DepartmentServices.getDepartments(page)
       .then((res) => {
         if (res) {
+          console.log(res.data);
+          setTotalPages(res.data.data.last_page);
           setGetdep(res.data.data.data);
-          setLoading(false);
+          setFormLoader(false);
         } else {
-          loading(false);
+          setFormLoader(false);
           setGetdep([]);
         }
       })
       .catch((err) => {
+        setFormLoader(false);
         console.log("getdep error", err);
       });
   };
+  useEffect(() => {
+    getDepartmentfn();
+  }, [page]);
   useEffect(() => {
     getDepartmentfn();
   }, []);
@@ -79,17 +84,15 @@ const Deartments = () => {
   const [dep_name, setDepName] = useState();
 
   const handleChangedDepVal = (id, department) => {
-    reset();
-    console.log(id, department);
+    // console.log(id, department);
     setDepId(id);
     setDepName(() => department);
-      handleEditOpen();
-    
+    handleEditOpen();
   };
   const handleEdit = (data) => {
-    console.log(data);
+    // console.log(data); 
     let payload = { ...data, id: dep_id };
-    console.log(payload);
+    // console.log(payload);
     setLoading(true);
     DepartmentServices.editDepartment(payload)
       .then((res) => {
@@ -144,49 +147,56 @@ const Deartments = () => {
         setLoading(false);
       });
   };
-
   // end deleteDepartment ------------
   //---- end api ------------------
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "transparent",
-    boxShadow: "none",
-  }));
-
-  const override = {
-    display: "block",
-    margin: "0 auto",
-    borderColor: "red",
-  };
-  const validationSchema = Yup.object().shape({
-    department_name: Yup.string().required("Department name is required"),
-  });
-
-  const {
-    control,
-    setError,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: { department_name: dep_name },
-    resolver: yupResolver(validationSchema, {
-      stripUnknown: true,
-      abortEarly: false,
-    }),
-  });
-
+    const search=(e)=>{
+      let input=e.target.value;
+      const filteredData = getdep.filter((el) => {
+        //if no input the return the original
+        if (input === '') {
+            return el;
+        }
+        //return the item which contains the user input
+        else {
+            return el.toLowerCase().includes(input)
+        }
+    })
+    }
   const columns = [
-    // {  headerName: "ID", width: 100, options: { filter: true } },
+    {
+      field: "id",
+      headerName: "No.",
+      filterable: false,
+      width: 100,
+      headerClassName: "super-app-theme--header",
+      renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
+    },
     {
       field: "department_name",
       headerName: "Departments",
-      width: 200,
+      headerClassName: "super-app-theme--header",
+      width: 298,
+      options: { filter: true },
+    },
+    {
+      field: "designations_count",
+      headerName: "No. Designations",
+      headerClassName: "super-app-theme--header",
+      width: 150,
+      options: { filter: true },
+    },
+    {
+      field: "employees_count",
+      headerName: " No. Employess",
+      width: 100,
+      headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "action",
       headerName: "Action",
+      headerClassName: "super-app-theme--header",
       type: "actions",
       getActions: (params) => {
         // let id=params?.id
@@ -211,7 +221,7 @@ const Deartments = () => {
           />,
         ];
       },
-      width: 500,
+      width: 325,
     },
   ];
   const [open, setOpen] = useState(false);
@@ -226,32 +236,20 @@ const Deartments = () => {
   const handleDeleteOpen = () => setDeleteOpen(true);
   const handleDeleteClose = () => setDeleteOpen(false);
 
-  const styles = {
-    backgroundColor: "white",
-  };
   return (
     <>
       <ToastContainer />
-      <Container>
+      <Container style={{ padding: 0 }}>
         <Box>
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Item>
-                <h2>Department</h2>
-              </Item>
-            </Grid>
-            <Grid item xs={6}>
-              <Item align="right">
-                <Button
-                  startIcon={<AddIcon />}
-                  variant="contained"
-                  onClick={handleOpen}
-                >
-                  Add
-                </Button>
-              </Item>
-            </Grid>
-          </Grid>
+          <DatagridHeader name={"Department"} >
+          <Button
+          startIcon={<AddIcon />}
+          variant="contained"
+          onClick={handleOpen}
+        >
+          Add
+        </Button>
+          </DatagridHeader>
           <CommonModal isOpen={open} isClose={handleClose}>
             <Typography
               id="modal-modal-title"
@@ -267,46 +265,24 @@ const Deartments = () => {
                 maxWidth: "100%",
               }}
             >
-            <DepartmentForm
-              // dep_name={dep_name}
-              apiFun={addDepartment}
-              loading={loading}
-              error={serverError}
-            />
+              <DepartmentForm
+                // dep_name={dep_name}
+                apiFun={addDepartment}
+                loading={loading}
+                error={serverError}
+                btnName={"Save"}
+              />
             </Box>
           </CommonModal>
-          {getdep && getdep?.length > 0 ? (
-            <>
-              <DataGrid
-                style={styles}
-                rows={getdep}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 10 },
-                  },
-                }}
-                pageSizeOptions={[5, 10]}
-              />
-              {/* checkboxSelection  upline */}
-            </>
-          ) : loading == true ? (
-            <BeatLoader
-              color="#2d94cb"
-              cssOverride={{
-                position: "absolute",
-                display: "block",
-                top: "45%",
-                left: "55%",
-                transform: "translate(-50%, -50%)",
-              }}
-              loading
-              margin={4}
-              size={90}
-            />
-          ) : (
-            <p>No department found</p>
-          )}
+
+          <CustDataGrid
+            data={getdep}
+            loading={formLoader}
+            setPage={setPage}
+            columns={columns}
+            totalPages={totalPages}
+          />
+          {/* checkboxSelection  upline */}
         </Box>
       </Container>
       <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
@@ -324,14 +300,14 @@ const Deartments = () => {
             maxWidth: "100%",
           }}
         >
-        <DepartmentForm
-        dep_name={dep_name}
-        apiFun={handleEdit}
-        loading={loading}
-        def={dep_name}
-        error={serverError}
-        
-      />
+          <DepartmentForm
+            dep_name={dep_name}
+            apiFun={handleEdit}
+            loading={loading}
+            def={dep_name}
+            error={serverError}
+            btnName={"Save Changes"}
+          />
         </Box>
       </CommonModal>
 
@@ -357,6 +333,7 @@ const Deartments = () => {
             sx={{ marginTop: "13px", marginRight: "13px" }}
             onClick={handleDelete}
           >
+
             {loading ? <>Loading..</> : <>Delete</>}
           </Button>
           <Button
@@ -369,6 +346,11 @@ const Deartments = () => {
           </Button>
         </Box>
       </CommonModal>
+      {  getdep &&  getdep.length>0 && <div
+        style={{ width: "100%", marginTop: "10px", background: "white" }}
+      >
+        <CustomPagination totalPages={totalPages} setPage={setPage} />
+      </div>}
     </>
   );
 };

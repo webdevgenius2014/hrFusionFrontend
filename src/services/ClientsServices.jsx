@@ -1,5 +1,5 @@
-import instance from "./ClientInterceptor";
-import ApiConfig from "../../config/apiConfig";
+import instance from "./ImageInterceptor";
+import ApiConfig from "../config/apiConfig";
 class ClientService {
   deleteClient(payload) {
     return instance.post(ApiConfig.deleteClient, payload);
@@ -15,8 +15,14 @@ class ClientService {
   searchClient(payload) {
     return instance.post(ApiConfig.searchClient, payload);
   }
-  getClients() {
-    return instance.get(ApiConfig.getClients);
+  getClients(page) {
+    // console.log(`${ApiConfig.getClients}?page=${page}`)
+    return instance.get(`${ApiConfig.getClients}?page=${page}`);
+  }
+  viewClient(payload) {
+    // console.log(`${ApiConfig.getClients}?page=${page}`)
+    return instance.post(ApiConfig.viewClient,payload);
   }
 }
+
 export default new ClientService();

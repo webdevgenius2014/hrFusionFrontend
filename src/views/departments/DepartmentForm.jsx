@@ -51,7 +51,7 @@ return (
         />
 
         <Button type="submit" variant="contained" sx={{ marginTop: "13px" }}>
-          {props.loading ? <>Loading..</> : <>Save</>}
+          {props.loading ? <>Loading..</> : <>{props.btnName}</>}
         </Button>
       </form>
     </>

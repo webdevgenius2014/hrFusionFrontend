@@ -8,6 +8,18 @@ const hrDashboardStyles = styled({
         "& .brand_text span": {
             color: red,
         }
-    }
+    },
+    field: {
+        // paddingTop: '20px',
+        padding: "100px",
+        backgroundColor: "red",
+    
+        "&&": {
+          marginBottom: "100px"
+        }
+        // margin: 100
+        // display: 'block'
+      }
+    
 });
 export default hrDashboardStyles

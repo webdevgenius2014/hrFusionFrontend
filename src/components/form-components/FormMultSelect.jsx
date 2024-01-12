@@ -11,6 +11,8 @@ export const FormMultiSelect = ({
   label,
   options,
   def,
+  pass_fun,
+  fieldaname,
   setValue,
   required = false,
   error,
@@ -48,18 +50,20 @@ export const FormMultiSelect = ({
         onChange={handleChange}
         input={<OutlinedInput  label={label}/>}
         renderValue={(selected) => {
-          return selected.join(', ');
+          return selected.join(',');
         }}
         inputProps={{ 'aria-label': 'Without label' }}
       >
         
         {options.map((i) => (
           <MenuItem
-            key={i.value}
-            value={i.value}
+            key={i[fieldaname]}
+            value={i[fieldaname]}
+            onClick={() =>{if(pass_fun){ pass_fun(i?.id)}}}
+
             // style={getStyles(name, apiData, theme)}
           >
-            {i.value}
+            {i[fieldaname]}
           </MenuItem>
         ))}
       </Select>

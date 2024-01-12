@@ -1,8 +1,11 @@
-import instance from "./AppInterceptor";
+import instance from "./ImageInterceptor";
 import ApiConfig from "../config/apiConfig";
 class EmployeService {
   addEmployee(payload) {
     return instance.post(ApiConfig.addEmployee, payload);
+  }
+  searchEmployee(payload) {
+    return instance.post(ApiConfig.searchEmployee, payload);
   }
   editEmployee(payload) {
     return instance.post(ApiConfig.editEmployee, payload);
@@ -10,9 +13,8 @@ class EmployeService {
   deleteEmployee(payload) {
     return instance.post(ApiConfig.deleteEmployee, payload);
   }
-  getEmployee() {
-    console.log("updating get employee data...");
-    return instance.get(ApiConfig.getEmployees);
+  getEmployee(page) {
+    return instance.get(`${ApiConfig.getEmployees}?page=${page}`);
   }
 }
 export default new EmployeService();
