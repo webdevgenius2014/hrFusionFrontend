@@ -3,7 +3,14 @@ const apiURL = process.env.REACT_APP_API_BASE_URL + "/api/";
 const ApiConfig = {
   login: `${apiURL}login`,
   logout: `${apiURL}logout`,
-  "update-password": `${apiURL}update-password`,
+  updatepassword: `${apiURL}update-password`,
+  getBirthday: `${apiURL}sixMonthUpcoming-birthday`,
+
+  // Dashboard ----------------------------------------------------------------
+
+  dashboard: `${apiURL}dashboard`,
+
+   
 
   // department all --------------------------------
   getDepartments: `${apiURL}getDepartments`,
@@ -25,6 +32,7 @@ const ApiConfig = {
   editEmployee: `${apiURL}editEmployee`,
   deleteEmployee: `${apiURL}deleteEmployee`,
   searchEmployee: `${apiURL}searchEmployee`,
+  viewEmployee: `${apiURL}viewEmployee`,
   
 
   // designations acording to the department 
@@ -48,6 +56,13 @@ const ApiConfig = {
   deleteProject: `${apiURL}deleteProject`,
   viewProject: `${apiURL}viewProject`,
   searchProject: `${apiURL}searchProject`,
+
+  // Tamplate 
+  getTemplate: `${apiURL}getTemplate`,
+  addTemplate: `${apiURL}addTemplate`,
+  editTemplate: `${apiURL}editTemplate`,
+  deleteTemplate: `${apiURL}deleteTemplate`,
+  viewTemplate: `${apiURL}viewTemplate`,
 
 };
 

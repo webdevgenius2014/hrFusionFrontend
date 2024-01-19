@@ -26,8 +26,9 @@ export const FormInputEmail= ({name, control, label, required,focused, error, ..
                     error={!!error}
                     helperText={error && `${error.message}`}
                     margin="normal" 
+                    sx={{margin:'5px'}}
                     {...rest}
-                />
+                    />
             )}
         />
     );

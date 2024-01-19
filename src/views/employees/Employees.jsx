@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";  
-import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
-import {DatagridHeader} from '../../components/DatagridHeader'
-import { styled } from "@mui/material/styles";
-import CommonModal from "../../components/commonModal";
+import {DatagridHeader} from '../../components/dataGrid/DatagridHeader'
+import CommonModal from "../../components/modal/commonModal";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import { CustDataGrid } from "../../components/form-components/CustDataGrid";
-import Typography from "@mui/material/Typography";
+import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
@@ -19,14 +15,12 @@ import AddEmployee from "./add-employees/addEmployee";
 import EditEmployee from "./edit-employees/editEmployee";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import EmployeServices from "../../services/EmployeServices";
 import { ToastContainer, toast } from "react-toastify";
 import {Searching} from "../../components/Searching";
 import DesignationServices from "../../services/DesignationServices";
-import { EmployeeView } from "./EmployeeView";
-import { CustomPagination } from "../../components/PaginationMui";
-
+import { CustomPagination } from "../../components/CustomPagination";
+import { DeleteDilagBox } from "../../components/modal/DeleteModal";
 
 
 const Employees = () => {
@@ -46,8 +40,8 @@ const Employees = () => {
     setFormLoader(true);
     EmployeServices.getEmployee(page)
       .then((res) => {
-        if (res.status == 200) {
-          setGetEmployees(() => res.data.data.data);
+        if (res.status === 200) {
+          setGetEmployees(() => res?.data?.data?.data);
           setTotalPages(res?.data?.data?.last_page);
           setFormLoader(false);
         } else {
@@ -71,23 +65,23 @@ const Employees = () => {
   }, [page]);
   //  end get all employees---------------------------------------
   // delete emolpyees--------------------------------
-  const handleDeleteeEmployees = () => {
+  const handleDelete = () => {
     setLoading(true);
     EmployeServices.deleteEmployee({ id: delete_id })
       .then((res) => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           getAllEmployees();
-          console.log(res.data.message);
-          toast.success(res.data.message);
+          console.log(res?.data?.message);
+          toast.success(res?.data?.message);
           setLoading(false);
           handleDeleteClose();
         }
-        if (res.status == 403) {
-          toast.error(res.data.error);
+        if (res.status === 403) {
+          toast.error(res?.data?.error);
           setLoading(false);
         }
-        if (res.status == 401) {
-          toast.error(res.data.error);
+        if (res.status === 401) {
+          toast.error(res?.data?.error);
           setLoading(false);
         }
       })
@@ -101,10 +95,7 @@ const Employees = () => {
 
   const navigate = useNavigate();
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "transparent",
-    boxShadow: "none",
-  }));
+  
 
   const [employeeData, SetEmployeeData] = useState({});
   const handleEditClick = (data) => () => {
@@ -123,18 +114,17 @@ const Employees = () => {
   // search employees -----------------------------
   const searchEmployee = (data) => {
     setFormLoader(true);
-    setSerchBtn(true);
-    let payload ={ ...data , designation: addDesignation_id}
+    console.log("search payload:",data)
+    let payload ={ ...data}
     EmployeServices.searchEmployee(payload)
       .then((res) => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           console.log(res)
-          setGetEmployees(() => res.data.data.data);
+          setTotalPages(res?.data?.data?.last_page);
+          setGetEmployees(() => res?.data?.data?.data);
           setFormLoader(false);
-          handleSearchClose();
         } else {
           setFormLoader(false);
-          handleSearchClose();
           console.log("getemployee if", res);
           setGetEmployees([]);
         }
@@ -151,7 +141,7 @@ const Employees = () => {
       setGetDesig(()=>[])
     DesignationServices.getAllDesignations()
       .then((res) => {
-        if (res.status==200) {
+        if (res.status===200) {
           // console.log(res)
           setGetDesig(()=>res?.data?.data);
           // EmployeServices.getEmployee();
@@ -171,9 +161,6 @@ const Employees = () => {
 
 
   // end api intefration ---------------------------
-  const handleNavigate = (id) => {
-    navigate(`/employees/${id}`);
-  };
   const handleChangeDesig = (id) => {
     setAddDesignation_id(() => id);
   };
@@ -192,17 +179,11 @@ const Employees = () => {
   const handleSearchClose =() => setSearchFlag(false);
   const handleSearchOpen =() => setSearchFlag(true);
 
-  const [viewopen, setViewOpen] = useState(false);
-  const handleViewOpen = () => setViewOpen(true);
-  const handleViewClose = () => setViewOpen(false);
-
   const [srchbtn, setSerchBtn] = useState(false);
-  const [viewData,setVewData] = useState();
   const detailEmployee = (data) => {
-    // console.log(data)
-    setVewData(()=>data)
-    handleViewOpen();
-
+    let id=data.id ;
+    navigate(`/employees/${id}`);
+    // setVewData(()=>data)
   };
   
 
@@ -211,7 +192,7 @@ const Employees = () => {
       field: 'id' , 
       headerName: 'No.', 
       filterable: false,
-      width: 50,
+      width: 100 ,
       headerClassName: 'super-app-theme--header',
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id)+1
   },
@@ -219,7 +200,7 @@ const Employees = () => {
     field: "profile_image",
     headerName: "Profile ",
     headerClassName: 'super-app-theme--header',
-    width: 100,
+    flex: 1 ,
     options: { filter: true },
     renderCell: (params) => (
       <Avatar alt="Profile Image" src={apiURL+params?.row?.user_meta?.profile_image} sx={{ width: 40, height: 40 }} />
@@ -229,21 +210,21 @@ const Employees = () => {
       field: "name",
       headerName: "Name",
       headerClassName: "super-app-theme--header",
-      width: 200,
+      flex: 1 ,
       options: { filter: true },
     },
     {
       field: "email",
       headerName: "Email",
       headerClassName: "super-app-theme--header",
-      width: 248,
+      flex: 1 ,
       options: { filter: true },
     },
     {
       field: "joindate",
       headerName: "Joindate",
       headerClassName: "super-app-theme--header",
-      width: 125,
+      flex: 1 ,
       options: { filter: true },
       valueGetter: (params) => params.row.user_meta?.joining_date,
     },
@@ -251,7 +232,7 @@ const Employees = () => {
       field: "role",
       headerName: "Role",
       headerClassName: "super-app-theme--header",
-      width: 125,
+      flex: 1 ,
       options: { filter: true },
       valueGetter: (params) => params?.row?.user_role?.role,
     },
@@ -283,14 +264,11 @@ const Employees = () => {
           />,
         ];
       },
-      width: 125,
+      flex: 1 ,
     },
   ];
 
-  const styles = {
-    backgroundColor: "white",
-  };
-
+  
   return (
     <>
       <ToastContainer />
@@ -306,6 +284,8 @@ const Employees = () => {
                 <Button
                   onClick={() => {
                     handleSearchOpen(true); 
+                    setSerchBtn(true);
+
                   }}
                   startIcon={<SearchIcon />}
                   variant="contained"
@@ -317,6 +297,7 @@ const Employees = () => {
                   onClick={() => {
                     getAllEmployees();
                     setSerchBtn(false);
+                    handleSearchClose()
                   }}
                   variant="contained"
                 >
@@ -334,26 +315,7 @@ const Employees = () => {
             </>
 
         </DatagridHeader>
-        { searchFlag && searchFlag==true && 
-          <CommonModal isOpen={searchFlag} noValidate isClose={handleSearchClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          > 
-            Search Employee
-          </Typography>
-          <Box
-            sx={{
-              mb: 2,
-              width: '400px',
-              display: "flex",
-            
-              flexDirection: "column",
-              overflow: "hidden",
-            }}
-          >
+        { searchFlag && searchFlag === true &&  
           <Searching 
           fieldLable = {['Employee Id','Employee Name']}
           filedName={['employee_id','employee_name']}
@@ -361,8 +323,6 @@ const Employees = () => {
           apiFun={searchEmployee}
           handleChangeDesig={handleChangeDesig}
         />
-          </Box>
-        </CommonModal>
         }
         
         <CommonModal isOpen={open} isClose={handleClose}>
@@ -387,63 +347,11 @@ const Employees = () => {
           data={employeeData}
         />
       </CommonModal>
-      <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Delete Employee
-        </Typography>
-        <p>Are you sure want to delete?</p>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={handleDeleteeEmployees}
-            sx={{ marginTop: "13px", marginRight: "13px" }}
-          >
-            {loading ? <>Loading..</> : <>Delete</>}
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ marginTop: "13px" }}
-            onClick={handleDeleteClose}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </CommonModal>
-      <CommonModal isOpen={viewopen} noValidate isClose={handleViewClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Employee Profile
-        </Typography>
-        <Box
-          sx={{
-            mb: 2,
-            width: 800,
-            display: "flex",
-            // height: 440,
-            flexDirection: "column",
-            // overflow: "hidden",
-            // overflowY: "scroll",
-          }}
-        >
-          <EmployeeView data={viewData} />
-        </Box>
-      </CommonModal>
+      <DeleteDilagBox title='Delete Employee' 
+      handleDeleteClose={handleDeleteClose}
+      handleDelete={handleDelete}
+      loading={loading}
+      deleteopen={deleteopen} />
       {  getEmployees &&  getEmployees.length>0 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >

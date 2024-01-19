@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import FormControl from '@mui/material/FormControl';
 import * as Yup from "yup";
 import { FormInputText } from "../../components/form-components/formInputText";
-import Button from "@mui/material/Button";
+import SubmitButton from "../../components/form-components/submitButton";
 import { FormSelect } from "../../components/form-components/FormSelect";
 
 
@@ -16,6 +15,7 @@ const DesignationForm = (props) => {
   const {
     control,
     setError,
+    setValue,
     handleSubmit,
     formState: { errors },
   } = useForm ({ defaultValues: {
@@ -40,7 +40,6 @@ const DesignationForm = (props) => {
 
         <FormInputText
         required
-        fullWidth4
         id="designation_name"
         label="Designation Name"
         defaultValue={props?.showDesignation}
@@ -56,6 +55,7 @@ const DesignationForm = (props) => {
           label='Department Name'
           control={control}
           onchange={onchange}
+          setValue={setValue}
           fieldaname='department_name'
           def={props?.showDepartment }
           pass_fun={props?.handleChangeDep}
@@ -65,13 +65,8 @@ const DesignationForm = (props) => {
         
         }
 
-    <Button
-    type="submit"
-    variant="contained"
-    sx={{ marginTop: "13px" }}
-  >
-    {props?.loading ? <>Loading..</> : <>{props.BtnName}</>}
-  </Button>
+        <SubmitButton loading={props?.loading} btnName={props?.btnName}/>
+
         </form>
   
   

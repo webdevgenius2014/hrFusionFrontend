@@ -5,5 +5,14 @@ class CommonServices {
   getRole() {
     return instance.get(ApiConfig.getRoles);
   }
+  changePass(payload) {
+    return instance.post(ApiConfig.updatepassword,payload);
+  }
+  dashboard() {
+    return instance.get(ApiConfig.dashboard);
+  }
+  empBirthday() {
+    return instance.get(ApiConfig.getBirthday);
+  }
 }
 export default new CommonServices();

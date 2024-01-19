@@ -33,9 +33,7 @@ export default function LinearWithValueLabel() {
     setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
   }
   React.useEffect(() => {
-    
     processbar();
-  
   }, []);
 
   return (

@@ -5,7 +5,7 @@ import EmployeesForm  from '../EmployeeForm'
 import Typography from "@mui/material/Typography";
 import EmployeServices from "../../../services/EmployeServices";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import {toast } from "react-toastify";
 import DesignationServices from "../../../services/DesignationServices";
 import DepartmentServices from "../../../services/DepartmentServices";
 import commonServices  from '../../../services/CommonServices'
@@ -15,9 +15,9 @@ const EditEmployee = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
   const [serverError , setServerError] = useState('')
-  const [id, setId] = useState(() => props?.data?.id);
-  const [data, setData] = useState(() => props.data.row?.user_meta);
-  const [showRole, setShowRole] = useState(() => props.data.row?.user_role.role);
+  const [id] = useState(() => props?.data?.id);
+  const [data] = useState(() => props.data.row?.user_meta);
+  const [showRole] = useState(() => props.data.row?.user_role.role);
   const [showDesig,setshowDesig]= useState(() => props.data.row?.user_meta.designation.designation_name)
   // api integration --------------------------------
   // Edit employee --------------------------------
@@ -36,13 +36,13 @@ const EditEmployee = (props) => {
     EmployeServices.editEmployee(payload)
       .then((res) => {
 
-        if (res.status == 200) {
+        if (res.status === 200) {
           props.handleEditClose();
           toast.success(res.data.message);
           EmployeServices.getEmployee();
           setLoading(false);
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setServerError(res.data.errors)
          
         }
@@ -81,7 +81,7 @@ const EditEmployee = (props) => {
     setRole(()=>[])
     commonServices.getRole()
     .then((res) => {
-      if (res.status==200) {
+      if (res.status===200) {
         setRole(()=>res?.data?.data);
         // EmployeServices.getEmployee();
       } else {
@@ -147,7 +147,6 @@ const EditEmployee = (props) => {
  
   return (
     <>
-      <ToastContainer />
       <Typography
         id="modal-modal-title"
         variant="h6"
@@ -159,10 +158,11 @@ const EditEmployee = (props) => {
       <Box
         sx={{
           mb: 2,
-          width: 800,
+          minWidth: {lg:750,md:425,sm:425,xs:300,xl:900},
+          maxWidth: {lg:900,md:768,sm:568,xs:425,xl:1100},
           display: "flex",
           flexDirection: "column",
-          height: 480,
+          height: 470,
           overflow: "hidden",
           overflowY: "scroll",
         }}
@@ -180,7 +180,7 @@ const EditEmployee = (props) => {
        handleChangeDesig={handleChangeDesig}
        apiFunc={handleEditEmployee}
        serverError={serverError}
-       BtnName={"Save Changes"}
+       btnName={"Save Changes"}
        loading={loading}
        />
       </Box>

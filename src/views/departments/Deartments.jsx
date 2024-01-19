@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { DatagridHeader } from "../../components/DatagridHeader";
-import { CustDataGrid } from "../../components/form-components/CustDataGrid";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
+import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import DepartmentForm from "./DepartmentForm";
-import CommonModal from "../../components/commonModal";
+import CommonModal from "../../components/modal/commonModal";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,11 +12,11 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import DepartmentServices from "../../services/DepartmentServices";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
-import { CustomPagination } from "../../components/PaginationMui";
-
+import { CustomPagination } from "../../components/CustomPagination";
+import { DeleteDilagBox } from "../../components/modal/DeleteModal";
 
 const Deartments = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Deartments = () => {
           toast.success(res.data.message);
           getDepartmentfn();
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setServerError(res.data);
           setLoading(false);
         }
@@ -57,7 +57,7 @@ const Deartments = () => {
     DepartmentServices.getDepartments(page)
       .then((res) => {
         if (res) {
-          console.log(res.data);
+          // console.log(res.data);
           setTotalPages(res.data.data.last_page);
           setGetdep(res.data.data.data);
           setFormLoader(false);
@@ -96,13 +96,13 @@ const Deartments = () => {
     setLoading(true);
     DepartmentServices.editDepartment(payload)
       .then((res) => {
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           setLoading(false);
           handleEditClose();
           getDepartmentfn();
           toast.success(res.data.message);
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setServerError(res.data);
           setLoading(false);
         }
@@ -125,18 +125,18 @@ const Deartments = () => {
     e.preventDefault();
     DepartmentServices.deleteDepartment(id)
       .then((res) => {
-        if (res.status == 200 || res.status == 404) {
+        if (res.status === 200 || res.status === 404) {
           setLoading(false);
           handleDeleteClose();
           toast.success("Department deleted successfully");
           getDepartmentfn();
-        } else if (res.status == 401) {
+        } else if (res.status === 401) {
           navigate("/");
           setLoading(false);
 
           toast.error("please login again");
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setLoading(false);
 
           toast.error(res.data.message);
@@ -150,25 +150,13 @@ const Deartments = () => {
   // end deleteDepartment ------------
   //---- end api ------------------
 
-    const search=(e)=>{
-      let input=e.target.value;
-      const filteredData = getdep.filter((el) => {
-        //if no input the return the original
-        if (input === '') {
-            return el;
-        }
-        //return the item which contains the user input
-        else {
-            return el.toLowerCase().includes(input)
-        }
-    })
-    }
+   
   const columns = [
     {
       field: "id",
       headerName: "No.",
       filterable: false,
-      width: 100,
+      flex: 1 ,
       headerClassName: "super-app-theme--header",
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
@@ -176,20 +164,20 @@ const Deartments = () => {
       field: "department_name",
       headerName: "Departments",
       headerClassName: "super-app-theme--header",
-      width: 298,
+      flex: 1 ,
       options: { filter: true },
     },
     {
       field: "designations_count",
       headerName: "No. Designations",
       headerClassName: "super-app-theme--header",
-      width: 150,
+      flex: 1 ,
       options: { filter: true },
     },
     {
       field: "employees_count",
       headerName: " No. Employess",
-      width: 100,
+      flex: 1 ,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
@@ -221,7 +209,7 @@ const Deartments = () => {
           />,
         ];
       },
-      width: 325,
+      flex: 1 ,
     },
   ];
   const [open, setOpen] = useState(false);
@@ -238,7 +226,6 @@ const Deartments = () => {
 
   return (
     <>
-      <ToastContainer />
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader name={"Department"} >
@@ -261,8 +248,8 @@ const Deartments = () => {
             </Typography>
             <Box
               sx={{
-                width: 500,
-                maxWidth: "100%",
+                minWidth: {lg:350,md:250,sm:150,xs:70,xl:500},
+                maxWidth: {lg:500,md:400,sm:350,xs:200,xl:700},
               }}
             >
               <DepartmentForm
@@ -295,10 +282,10 @@ const Deartments = () => {
           Edit Department
         </Typography>
         <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
+        sx={{
+          minWidth: {lg:350,md:250,sm:150,xs:70,xl:500},
+          maxWidth: {lg:500,md:400,sm:350,xs:200,xl:700},
+        }}
         >
           <DepartmentForm
             dep_name={dep_name}
@@ -311,41 +298,11 @@ const Deartments = () => {
         </Box>
       </CommonModal>
 
-      <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Delete Department
-        </Typography>
-        <p>Are you sure want to delete?</p>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ marginTop: "13px", marginRight: "13px" }}
-            onClick={handleDelete}
-          >
-
-            {loading ? <>Loading..</> : <>Delete</>}
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ marginTop: "13px" }}
-            onClick={handleDeleteClose}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </CommonModal>
+      <DeleteDilagBox title='Delete Depeartment' 
+      handleDeleteClose={handleDeleteClose}
+      handleDelete={handleDelete}
+      loading={loading}
+      deleteopen={deleteopen} />
       {  getdep &&  getdep.length>0 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >

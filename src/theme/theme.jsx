@@ -2,6 +2,16 @@ import { createTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme({
   overrides: {
+    MUIRichTextEditor: {
+      editor: {
+        height: "35vh",
+        maxHeight: "35vh",
+        overflow: "auto",
+        borderRadius: "5px",
+        border: "1px solid lightgrey",
+        padding: "15px",
+      },
+    },
     MuiCssBaseline: {
       '@global': {
         '*::-webkit-scrollbar': {
@@ -71,7 +81,6 @@ const defaultTheme = createTheme({
       400: '#7C8FAC',
       500: '#5A6A85',
       600: '#2A3547',
-
     },
     white: {
       100: '#FFFFFF',

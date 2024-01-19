@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import { CustomPagination } from "../../components/PaginationMui";
-import { styled } from "@mui/material/styles";
+import { CustomPagination } from "../../components/CustomPagination";
 import BeatLoader from "react-spinners/ClipLoader";
-import CommonModal from "../../components/commonModal";
+import CommonModal from "../../components/modal/commonModal";
 import Button from "@mui/material/Button";
-import { DatagridHeader } from "../../components/DatagridHeader";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import { CustDataGrid } from "../../components/form-components/CustDataGrid";
 import ProjectForm from "./ProjectForm";
-import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { GridActionsCellItem } from "@mui/x-data-grid";
 import EmployeServices from "../../services/EmployeServices";
 import ProjectServices from "../../services/ProjectServices";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +18,7 @@ import ClientsServices from "../../services/ClientsServices";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectCard } from "./ProjectCard";
 import { Searching } from "../../components/Searching";
+import { DeleteDilagBox } from "../../components/modal/DeleteModal";
 
 const Projects = () => {
   const navigate = useNavigate();
@@ -33,8 +27,7 @@ const Projects = () => {
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [searchFlag, setSearchFlag] = useState(false);
-  const  [record,setRecord]=useState();
-
+  const [record, setRecord] = useState();
 
   // api integration -----------------------------------
   // all clients =------------------------------------------
@@ -68,7 +61,7 @@ const Projects = () => {
     setLoading(true);
     EmployeServices.getEmployee()
       .then((res) => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           setGetEmployees(() => res.data.data.data);
           setLoading(false);
         } else {
@@ -93,7 +86,7 @@ const Projects = () => {
           toast.success(res.data.message);
           handleClose();
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setServerError(res.data);
           setLoading(false);
         }
@@ -117,12 +110,12 @@ const Projects = () => {
         } else {
           loading(false);
           setGetProj([]);
-          setRecord(res?.data?.message)
+          setRecord(res?.data?.message);
         }
         if (res.status === 404) {
-          setRecord(res.data.message)
-        setLoading(false);
-      }
+          setRecord(res.data.message);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         console.log("getProjects error", err);
@@ -156,13 +149,13 @@ const Projects = () => {
     setLoading(true);
     ProjectServices.editProjects(payload)
       .then((res) => {
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           setLoading(false);
           handleEditClose();
           getProjectsFn();
           toast.success(res.data.message);
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setServerError(res.data);
           setLoading(false);
         }
@@ -185,18 +178,18 @@ const Projects = () => {
     e.preventDefault();
     ProjectServices.deleteProjects(id)
       .then((res) => {
-        if (res.status == 200 || res.status == 404) {
+        if (res.status === 200 || res.status === 404) {
           setLoading(false);
           handleDeleteClose();
           toast.success("Project deleted successfully");
           getProjectsFn();
-        } else if (res.status == 401) {
+        } else if (res.status === 401) {
           navigate("/");
           setLoading(false);
 
           toast.error("please login again");
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setLoading(false);
 
           toast.error(res.data.message);
@@ -210,26 +203,25 @@ const Projects = () => {
 
   // end deleteProjectartment ------------
   // search project ---------------------
-
+  const [searchPage,setSearchPage]=useState()
   const searchProject = (payload) => {
     setLoading(true);
-    setSerchBtn(true);
     ProjectServices.searchProjects(payload)
       .then((res) => {
         if (res) {
           setGetProj(res?.data?.data);
+          setSearchPage(() => res?.data?.data?.last_page);
+          console.log(res?.data)
           setLoading(false);
-          handleSearchClose()
         } else {
           loading(false);
           // setGetProj([]);
-          setRecord(res?.data?.message)
-          handleSearchClose()
+          setRecord(res?.data?.message);
         }
         if (res.status === 404) {
-          setRecord(res.data.message)
-        setLoading(false);
-      }
+          setRecord(res.data.message);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         console.log("searchProjects error", err);
@@ -238,80 +230,6 @@ const Projects = () => {
 
   //---- end api ------------------
 
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: "transparent",
-    boxShadow: "none",
-  }));
-
-  const columns = [
-    // {  headerName: "ID", width: 100, options: { filter: true } },
-    {
-      field: "id",
-      headerName: "No.",
-      filterable: false,
-      width: 100,
-      headerClassName: "super-app-theme--header",
-      renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
-    },
-    {
-      field: "project_name",
-      headerName: "Project Name",
-      headerClassName: "super-app-theme--header",
-      width: 150,
-      options: { filter: true },
-    },
-    {
-      field: "client_name",
-      headerName: "Client Name",
-      headerClassName: "super-app-theme--header",
-      width: 100,
-      options: { filter: true },
-    },
-    {
-      field: "team_members",
-      headerClassName: "super-app-theme--header",
-      headerName: "Team Members",
-      width: 250,
-      options: { filter: true },
-    },
-    {
-      field: "payment_status",
-      headerClassName: "super-app-theme--header",
-      headerName: "Payment Status",
-      width: 148,
-      options: { filter: true },
-    },
-    {
-      field: "action",
-      headerClassName: "super-app-theme--header",
-      headerName: "Action",
-      type: "actions",
-      getActions: (params) => {
-        // let id=params?.id
-        // console.log("prams",params)
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClickCapture={() => {
-              handleEditProject(params?.id, params?.row);
-            }}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={() => {
-              handleDeleteClick(params?.id);
-            }}
-            color="inherit"
-          />,
-        ];
-      },
-      width: 225,
-    },
-  ];
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -329,12 +247,11 @@ const Projects = () => {
 
   const [srchbtn, setSerchBtn] = useState(false);
 
-  const styles = {
-    backgroundColor: "white",
-  };
   return (
     <>
       <ToastContainer />
+      {/*  display header and search  */}
+
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader
@@ -347,6 +264,7 @@ const Projects = () => {
                 <Button
                   onClick={() => {
                     handleSearchOpen(true);
+                    setSerchBtn(true);
                   }}
                   startIcon={<SearchIcon />}
                   variant="contained"
@@ -358,6 +276,7 @@ const Projects = () => {
                   onClick={() => {
                     getProjectsFn();
                     setSerchBtn(false);
+                    handleSearchClose();
                   }}
                   variant="contained"
                 >
@@ -374,111 +293,85 @@ const Projects = () => {
               </Button>
             </>
           </DatagridHeader>
-          {searchFlag && searchFlag == true && (
-            <CommonModal
-              isOpen={searchFlag}
-              noValidate
-              isClose={handleSearchClose}
-            >
-              <Typography
-                id="modal-modal-title"
-                variant="h6"
-                component="h2"
-                sx={{ marginBottom: "20px", fontWeight: "600" }}
-              >
-                Search Client
-              </Typography>
-              <Box
-                sx={{
-                  mb: 2,
-                  width: "230px",
-                  display: "flex",
-
-                  flexDirection: "column",
-                  overflow: "hidden",
-                }}
-              >
-                <Searching
-                  fieldLable={["Project Name"]}
-                  filedName={["project_name"]}
-                  apiFun={searchProject}
-                />
-              </Box>
-            </CommonModal>
+          {searchFlag && searchFlag === true && (
+            <Searching
+              fieldLable={["Project Name", "Client Name", "Team Member"]}
+              filedName={["project_name", "client_name", "member_name"]}
+              apiFun={searchProject}
+            />
           )}
-          <CommonModal isOpen={open} isClose={handleClose}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ marginBottom: "20px", fontWeight: "600" }}
-            >
-              Add Projects
-            </Typography>
-            <Box
-              sx={{
-                mb: 2,
-                width: 800,
-                display: "flex",
-                flexDirection: "column",
-                overflow: "hidden",
-                overflowY: "scroll",
-              }}
-            >
-              <ProjectForm
-                apiFunc={addProjects}
-                serverError={serverError}
-                clientsData={getClients}
-                employeesData={getEmployees}
-                BtnName={"Save"}
-              />
-            </Box>
-          </CommonModal>
-          <box
-            maxWidth="sm"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "10px",
-              justifyContent: "space-around",
-            }}
-          >
-            {getProjects && getProjects?.length > 0 ? (
-              getProjects?.map((i) => {
-                return (
-                  <ProjectCard
-                    data={i}
-                    handleEditProject={handleEditProject}
-                    handleDeleteClick={handleDeleteClick}
-                    key={i.id}
-                  />
-                );
-              })
-            ) : loading == true ? (
-              <BeatLoader
-                color="#2d94cb"
-                cssOverride={{
-                  position: "absolute",
-                  display: "block",
-                  top: "45%",
-                  left: "55%",
-                  transform: "translate(-50%, -50%)",
-                }}
-                loading
-                margin={4}
-                size={90}
-              />
-            ) : (
-              <p>{record}</p>
-            )}
-          </box>
-         {  getProjects &&  getProjects.length>0 && <div
-            style={{ width: "100%", marginTop: "10px", background: "white" }}
-          >
-            <CustomPagination totalPages={totalPages} setPage={setPage} />
-          </div>}
         </Box>
       </Container>
+      {/*  display card */}
+      <Box
+        maxWidth="sm"
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px",
+          justifyContent: "space-around",
+        }}
+      >
+        {getProjects && getProjects?.length > 0 ? (
+          getProjects?.map((i) => {
+            return (
+              <ProjectCard
+                data={i}
+                handleEditProject={handleEditProject}
+                handleDeleteClick={handleDeleteClick}
+                key={i.id}
+              />
+            );
+          })
+        ) : loading === true ? (
+          <BeatLoader
+            color="#2d94cb"
+            cssOverride={{
+              position: "absolute",
+              display: "block",
+              top: "45%",
+              left: "55%",
+              transform: "translate(-50%, -50%)",
+            }}
+            loading
+            margin={4}
+            size={90}
+          />
+        ) : (
+          <p>{record}</p>
+        )}
+      </Box>
+      {/*  add modal */}
+      <CommonModal isOpen={open} isClose={handleClose}>
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          sx={{ marginBottom: "20px", fontWeight: "600" }}
+        >
+          Add Projects
+        </Typography>
+        <Box
+          sx={{
+            mb: 2,
+            width: 800,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            overflowY: "scroll",
+          }}
+        >
+          <ProjectForm
+            apiFunc={addProjects}
+            serverError={serverError}
+            clientsData={getClients}
+            employeesData={getEmployees}
+            btnName={"Save"}
+          />
+        </Box>
+      </CommonModal>
+      {/* edit  modal */}
+
       <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
         <Typography
           id="modal-modal-title"
@@ -504,45 +397,26 @@ const Projects = () => {
             serverError={serverError}
             clientsData={getClients}
             employeesData={getEmployees}
-            BtnName={"Save Changes "}
+            btnName={"Save Changes "}
           />
         </Box>
       </CommonModal>
+      {/* delete  component */}
 
-      <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Delete Project
-        </Typography>
-        <p>Are you sure want to delete?</p>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ marginTop: "13px", marginRight: "13px" }}
-            onClick={handleDelete}
-          >
-            {loading ? <>Loading..</> : <>Delete</>}
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ marginTop: "13px" }}
-            onClick={handleDeleteClose}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </CommonModal>
+      <DeleteDilagBox
+        title="Delete Project"
+        handleDeleteClose={handleDeleteClose}
+        handleDelete={handleDelete}
+        loading={loading}
+        deleteopen={deleteopen}
+      />
+      {/* pagination */}
+
+      {getProjects && getProjects.length > 0 && (
+        <div style={{ width: "100%", marginTop: "10px", background: "white" }}>
+          <CustomPagination totalPages={totalPages} setPage={setPage} />
+        </div>
+      )}
     </>
   );
 };

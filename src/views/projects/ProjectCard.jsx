@@ -10,31 +10,12 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Grid from "@mui/material/Grid";
 
 export const ProjectCard = (props) => {
-  const [data, setData] = React.useState(props?.data);
+  
+  const data = props?.data
   const [daysLeft, setDaysLeft] = React.useState();
-  const apiURL = `${process.env.REACT_APP_API_BASE_URL}/`;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const colorArray = [
-    "#fbe7e3",
-    "#CDF5FD",
-    "#F2F1EB",
-    "#EBF3E8",
-    "#fefff3",
-    "#d7f7fb",
-    "#fff9e7",
-    "#c9ffce",
-    "#c9e3ff",
-    "#cae4fb",
-    "#ffedf8",
-    "#f0edff",
-  ]; // Add your desired colors here
 
-  const getRandomColor = () => {
-    const randomIndex = Math.floor(Math.random() * colorArray.length);
-    return colorArray[randomIndex];
-  };
-  const cardBackgroundColor = getRandomColor();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -45,7 +26,7 @@ export const ProjectCard = (props) => {
 
   React.useEffect(() => {
     let date1 = new Date();
-    let date2 = new Date(data.deadline);
+    let date2 = new Date(data?.deadline);
     let Difference_In_Time = date2.getTime() - date1.getTime();
     let Difference_In_Days = Math.round(
       Difference_In_Time / (1000 * 3600 * 24)
@@ -146,6 +127,7 @@ export const ProjectCard = (props) => {
           </strong>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
+        
           <span>{data?.team_members.join(',')}</span>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>

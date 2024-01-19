@@ -8,7 +8,7 @@ import { FormMultiSelect } from "../../components/form-components/FormMultSelect
 import Box from "@mui/material/Box";
 import { FormDate } from "../../components/form-components/FormDate";
 import { FormInputText } from "../../components/form-components/formInputText";
-import Button from "@mui/material/Button";
+import SubmitButton from "../../components/form-components/submitButton";
 
 const ProjectForm = (props) => {
 
@@ -35,8 +35,6 @@ const ProjectForm = (props) => {
     setError,
     setValue,
     handleSubmit,
-    reset,
-    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -61,7 +59,7 @@ const ProjectForm = (props) => {
     if (serverErrors) {
       Object.keys(serverErrors).forEach((field) => {
         console.log(field);
-        if (field != "email")
+        if (field !== "email")
           setError(field, {
             type: "manual",
             message: serverErrors[field],
@@ -198,7 +196,7 @@ const ProjectForm = (props) => {
               />
             </Grid>
           
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} sx={{marginTop:'18px'}}>
               <FormInputText
                 required
                 fullWidth
@@ -232,14 +230,8 @@ const ProjectForm = (props) => {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            {props.BtnName}
-          </Button>
+          <SubmitButton loading={props.loading} btnName={props.btnName}/>
+
         </Box>
       </Box>
     </>

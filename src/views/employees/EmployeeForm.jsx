@@ -9,7 +9,7 @@ import { FormInputText } from "../../components/form-components/formInputText";
 import { FormDate } from "../../components/form-components/FormDate";
 import { FormInputEmail } from "../../components/form-components/formInputEmail";
 import { FormInputPassword } from "../../components/form-components/formInputPassword";
-import Button from "@mui/material/Button";
+import SubmitButton from "../../components/form-components/submitButton";
 import { FormImage } from "../../components/form-components/FormImage";
 
 
@@ -18,7 +18,7 @@ const EmployeesForm = (props)=>{
    if(props.serverError){
     Object.keys(props.serverError).forEach((field) => {
       console.log(field);
-      if (field != "email")
+      if (field !== "email")
         setError(field, {
           type: "manual",
           message: props.serverError[field],
@@ -34,10 +34,10 @@ const EmployeesForm = (props)=>{
   },[props.serverError])
 
   let showRole=props.showRole;
-  const[data,setData]=useState(()=>props.data)
+  const[data]=useState(()=>props.data)
   console.log(data)
     const {
-      formState,
+      
       control,
       setError,
       handleSubmit,  
@@ -63,7 +63,7 @@ const EmployeesForm = (props)=>{
   // ?console.log(data.departent)
     
     return <>
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 ,pr:2}}>
           <Box
             component="form"
             noValidate
@@ -85,7 +85,7 @@ const EmployeesForm = (props)=>{
                   defaultValue={data?.first_name }
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6}  >
                 <FormInputText
                   required
                   fullWidth
@@ -331,14 +331,7 @@ const EmployeesForm = (props)=>{
             <Grid container justifyContent="flex-end">
               <Grid item></Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-            {props.loading ? <>Loading..</> : <>{props.BtnName}</>}
-            </Button>
+            <SubmitButton loading={props.loading} btnName={props.btnName}/>
           </Box>
         </Box>
     </>

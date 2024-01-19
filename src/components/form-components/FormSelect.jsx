@@ -46,16 +46,16 @@ export const FormSelect = ({
       rules={{ required: required === true ? name + " is required" : required }}
       render={({ field: { onChange, value, ref } }) => (
         <>
-        <FormControl size="small" fullWidth  sx={{ mt: 2,}}>
+        <FormControl size="small" fullWidth  >
 
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
 
           <Select
-            fullWidth
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             defaultValue={def}
             label={label}
+            sx={{margin:'5px 0 0 7px'}}
             size="small"
             onChange={(e)=> {
               handleChange(e);

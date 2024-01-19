@@ -3,7 +3,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 
 const ODD_OPACITY = 0.2;
- export const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+ export const GridStyle = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.even`]: {
     backgroundColor: theme.palette.grey[200],
     '&:hover, &.Mui-hovered': {

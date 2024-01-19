@@ -1,10 +1,9 @@
 import Pagination from "@mui/material/Pagination";
-import MuiPagination from '@mui/material/Pagination';
 
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 
-export const CustomPagination = ({ totalPages, setPage, className }) => {
+export const CustomPagination = ({ totalPages, setPage, }) => {
   const [localTotalPages, setLocalTotalPages] = useState(totalPages);
 
   useEffect(() => {

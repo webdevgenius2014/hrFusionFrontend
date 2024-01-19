@@ -15,7 +15,8 @@ export const FormInputPassword= ({name, control, label, required=false,focused=f
                     varient="filled"                                                        
                     // value={value?value:''}
                     onChange={onChange} 
-                    fullWidth={true}                    
+                    fullWidth={true}  
+                    sx={{margin:'5px'}}                  
                     type="password" 
                     autoComplete="current-password"                                                
                     error={!!error}                    

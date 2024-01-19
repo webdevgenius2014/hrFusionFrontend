@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import DesignationForm from "./DesignationForm";
-import CommonModal from "../../components/commonModal";
-import { CustDataGrid } from "../../components/form-components/CustDataGrid";
+import CommonModal from "../../components/modal/commonModal";
+import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { ToastContainer, toast } from "react-toastify";
+import {toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DesignationServices from "../../services/DesignationServices";
 import DepartmentServices from "../../services/DepartmentServices";
-import { DatagridHeader } from "../../components/DatagridHeader";
-import { CustomPagination } from "../../components/PaginationMui";
-
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
+import { CustomPagination } from "../../components/CustomPagination";
+import { DeleteDilagBox } from "../../components/modal/DeleteModal";
 
 import "react-toastify/dist/ReactToastify.css";
 const Designations = () => {
@@ -51,13 +51,13 @@ const Designations = () => {
     setFormLoader(true);
     await DesignationServices.getDesignations(page)
       .then((res) => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           setTotalPages(res?.data?.data?.last_page);
           setGetDesig(res?.data?.data.data);
           setFormLoader(false);
           // EmployeServices.getEmployee();
         }
-        if (res.status == 401) {
+        if (res.status === 401) {
           navigate("/");
           setGetDesig([]);
         }
@@ -95,18 +95,18 @@ const Designations = () => {
     DesignationServices.addDesignation(payload)
       .then((res) => {
         console.log(res);
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           getDesignationsfn();
           // DesignationServices.getDesignations();
           toast.success(res.data.message);
           setLoading(false);
           handleClose();
-        } else if (res.data.success == false) {
+        } else if (res.data.success === false) {
           console.log(res.data.message);
           setLoading(false);
           setServerError(res.data);
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           setLoading(false);
         }
       })
@@ -141,14 +141,14 @@ const Designations = () => {
     DesignationServices.editDesignation(payload)
       .then((res) => {
         // console.log("editDesignation", res);
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           getDesignationsfn();
           toast.success(res.data.message);
           setLoading(false);
           handleEditClose();
         }
 
-        if (res.status == 403) {
+        if (res.status === 403) {
           setServerError(() => res.data);
           setLoading(false);
         }
@@ -166,21 +166,21 @@ const Designations = () => {
     setDeleteDesignations({ id: id });
     handleDeleteOpen();
   };
-  const handleDeleteDesignation = () => {
+  const handleDelete = () => {
     setLoading(true);
     DesignationServices.deleteDesignation(deleteDesignations)
       .then((res) => {
-        if (res.data.success == true) {
+        if (res.data.success === true) {
           toast.success(res.data.message);
           setLoading(false);
           getDesignationsfn();
           handleDeleteClose();
         }
-        if (res.data.success == false) {
+        if (res.data.success === false) {
           setLoading(false);
           toast.error(res.data.message);
         }
-        if (res.status == 403) {
+        if (res.status === 403) {
           toast.error(res?.data?.message);
         }
       })
@@ -209,7 +209,7 @@ const Designations = () => {
       field: "id",
       headerName: "No. ",
       filterable: false,
-      width: 100,
+      width: 100 ,
       headerClassName: "super-app-theme--header",
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
@@ -217,21 +217,21 @@ const Designations = () => {
     {
       field: "designation_name",
       headerName: "Designation",
-      width: 200,
+      flex: 1 ,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "department_name",
       headerName: "Department",
-      width: 200,
+      flex: 1 ,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "emmployees_count",
       headerName: "Employess",
-      width: 100,
+      flex: 1 ,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
@@ -266,16 +266,13 @@ const Designations = () => {
           />,
         ];
       },
-      width: 374,
+      flex: 1 ,
     },
   ];
 
-  const styles = {
-    backgroundColor: "white",
-  };
+ 
   return (
     <>
-      <ToastContainer />
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader name={"Designation"} >
@@ -292,10 +289,10 @@ const Designations = () => {
               Add Designation
             </Typography>
             <Box
-              sx={{
-                width: 500,
-                maxWidth: "100%",
-              }}
+            sx={{
+              minWidth: {lg:450,md:350,sm:150,xs:70,xl:600},
+              maxWidth: {lg:600,md:500,sm:400,xs:200,xl:800},
+            }}
             >
               <DesignationForm
                 getdep={getdep}
@@ -303,7 +300,7 @@ const Designations = () => {
                 loading={loading}
                 apiFun={handleAddDesignation}
                 error={serverError}
-                BtnName={"Save "}
+                btnName={"Save "}
               />
             </Box>
           </CommonModal>
@@ -320,10 +317,10 @@ const Designations = () => {
           Edit Designation
         </Typography>
         <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
+        sx={{
+          minWidth: {lg:450,md:350,sm:150,xs:70,xl:600},
+          maxWidth: {lg:600,md:500,sm:400,xs:200,xl:800},
+        }}
         >
           <DesignationForm
             showDesignation={showDesignation}
@@ -333,44 +330,15 @@ const Designations = () => {
             loading={loading}
             apiFun={handleEditDasignation}
             error={serverError}
-            BtnName={"Save Changes "}
+            btnName={"Save Changes "}
           />
         </Box>
       </CommonModal>
-      <CommonModal isOpen={deleteopen} isClose={handleDeleteClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Delete Designation
-        </Typography>
-        <p>Are you sure want to delete?</p>
-        <Box
-          sx={{
-            width: 500,
-            maxWidth: "100%",
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={handleDeleteDesignation}
-            sx={{ marginTop: "13px", marginRight: "13px" }}
-          >
-            {loading ? <>Loading..</> : <>Delete</>}
-          </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ marginTop: "13px" }}
-            onClick={handleDeleteClose}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </CommonModal>
+      <DeleteDilagBox title='Delete Designation' 
+      handleDeleteClose={handleDeleteClose}
+      handleDelete={handleDelete}
+      loading={loading}
+      deleteopen={deleteopen} />
       {  getDesig &&  getDesig.length>0 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >

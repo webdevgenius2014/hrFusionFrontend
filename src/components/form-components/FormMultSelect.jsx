@@ -36,7 +36,7 @@ export const FormMultiSelect = ({
 
   return (
     <>
-    <FormControl size="small" fullWidth  sx={{ mt: 2,}}>
+    <FormControl size="small" fullWidth  >
 
     <InputLabel id="demo-simple-select-label">{label}</InputLabel>
       <Select
@@ -45,7 +45,7 @@ export const FormMultiSelect = ({
         style={{width: '100%',height:'40px'}}
         value={apiData}
         error={!!error}
-       
+        sx={{margin:'5px'}}
         helperText={error && `${error.message}`}
         onChange={handleChange}
         input={<OutlinedInput  label={label}/>}

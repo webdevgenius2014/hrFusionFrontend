@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { ToastContainer, toast } from "react-toastify";
+import {toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import EmployeServices from "../../../services/EmployeServices";
@@ -34,7 +34,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
           setLoading(false);
           handleClose();
         }
-        if (data.status == 403) {
+        if (data.status === 403) {
           setServerError(()=>data.data.errors)
         }
         setLoading(false);
@@ -72,7 +72,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       setGetDesig(()=>[])
     DesignationServices.designationsByDep(id)
       .then((res) => {
-        if (res.status==200) {
+        if (res.status===200) {
           setGetDesig(()=>res?.data?.data);
           // EmployeServices.getEmployee();
         } else {
@@ -91,7 +91,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
     setRole(()=>[])
     commonServices.getRole()
     .then((res) => {
-      if (res.status==200) {
+      if (res.status===200) {
         setRole(()=>res?.data?.data);
         console.log(res.data.data)
         // EmployeServices.getEmployee();
@@ -138,7 +138,6 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
 
   return (
     <>
-      <ToastContainer />
       <Typography
         id="modal-modal-title"
         variant="h6"
@@ -150,9 +149,11 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       <Box
         sx={{
           mb: 2,
-          width: 800,
+              minWidth: {lg:750,md:650,sm:450,xs:260,xl:900},
+              maxWidth: {lg:900,md:800,sm:650,xs:400,xl:1100},
+       
           display: "flex",
-          height:450,
+          height:470,
           flexDirection: "column",
           overflow: "hidden",
           overflowY: "scroll",
@@ -171,7 +172,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
        handleChangeDesig={handleChangeDesig}
        apiFunc={addEmployees}
        loading={loading}
-       BtnName={"Save"}
+       btnName={"Save"}
        />
         </Box>
       </Box>

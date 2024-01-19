@@ -1,0 +1,26 @@
+.wid{
+    height :40px ;
+    caret-color: transparent;
+    font-size: 16px;
+    display: block;
+    outline: none;
+    border: 1px solid #c6b8b8;
+    border-radius: 5px;
+    margin:'0px';
+  }
+  .error-message{
+    caret-color: transparent;
+    height :40px ;
+    font-size: 16px;
+    outline: none;
+    display: block;
+    margin:'0px';
+    border : 1px solid #f79277;
+    border-radius: 5px;
+  }
+  .react-datepicker-wrapper,
+.react-datepicker__input-container,
+.react-datepicker__input-container input {
+    display: block;
+    width: 100%;
+}

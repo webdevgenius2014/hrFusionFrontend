@@ -32,6 +32,13 @@ const ResetPassword = Loadable(
 const ClientProfile = Loadable(
   lazy(() => import("../views/clients/ClientProfile"))
 );
+const Tamplates = Loadable(
+  lazy(() => import("../views/Templates/Templates"))
+);
+const EmpBirthday = Loadable(
+  lazy(() => import("../views/emp_birthday/EmpBirthday"))
+);
+
 
 const PrivateRoute = ({ element, ...rest }) => {
   const isAuthenticated = useSelector((state) => state?.SuperAdmin?.token);
@@ -64,6 +71,10 @@ const publicRoutes = [
       {
         path: "/reset-password",
         element: <ResetPassword />,
+      },
+      {
+        path: "/*",
+        element: <Error />,
       },
     ],
   },
@@ -105,6 +116,14 @@ const privateRoutes = [
       {
         path: "/Projects",
         element: <Projects />,
+      },
+      {
+        path: "/template",
+        element: <Tamplates />,
+      },
+      {
+        path: "/Employees-Birthday",
+        element: <EmpBirthday />,
       },
     ],
   },

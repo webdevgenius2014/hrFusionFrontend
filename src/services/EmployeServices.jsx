@@ -13,6 +13,9 @@ class EmployeService {
   deleteEmployee(payload) {
     return instance.post(ApiConfig.deleteEmployee, payload);
   }
+  viewEmployee(payload) {
+    return instance.post(ApiConfig.viewEmployee, payload);
+  }
   getEmployee(page) {
     return instance.get(`${ApiConfig.getEmployees}?page=${page}`);
   }

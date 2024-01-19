@@ -12,14 +12,14 @@ import { FormInputEmail } from "../../components/form-components/formInputEmail"
 import { FormInputText } from "../../components/form-components/formInputText";
 import { FormImage } from "../../components/form-components/FormImage";
 import FormHelperText from "@mui/material/FormHelperText";
-import { validImageType,maxImageSize } from "../../helperFunctions/imageValidation";
-import { Flag } from "@mui/icons-material";
+// import { validImageType,maxImageSize } from "../../helperFunctions/imageValidation";
+import SubmitButton from "../../components/form-components/submitButton";
 const ClientForm = (props) => {
     
 
 
   const [leadVal, setLeadVal] = React.useState();
-  const [data, setData] = useState(props?.clientData);
+  const [data] = useState(props?.clientData);
   const serverErrors = props?.serverError;
   const [inputFields, setInputFields] = useState([]);
   const [inputFieldsData, setInputFieldsData] = useState([]);
@@ -178,7 +178,7 @@ const combine =(data) => {
           onSubmit={handleSubmit((data)=>{combine(data); })}
           sx={{ mt: 1 }}
         >
-          <Grid container spacing={1}>
+          <Grid container justifyContent="space-between">
             <Grid item xs={12} sm={6}>
               <FormInputText
                 autoComplete="given-name"
@@ -267,29 +267,6 @@ const combine =(data) => {
                 </>
               )}
             </Grid>
-            <Grid item xs={12} mt={2} sm={6}>
-            <Button variant="contained" onClick={addInputField}>Add Social Media</Button> 
-              </Grid>
-                <Grid  container spacing={0}  >
-              <div  style={{width:'100%',}}>
-              {inputFields?.map((ivalue, index) =>{
-                return(
-                  <div key={index} style={{display:'flex',gap:'5px', margin:'10px'}}>
-                  <TextField id="outlined-basic" size='small' name={ivalue} defaultValue={ivalue} value={ivalue}  label='Platform Name' variant="outlined" fullWidth
-                  onChange={(e) => handleInputChange(index, e.target.value)}/>
-                  
-                  <TextField id="outlined-basic" size='small' name={inputFieldsData[index]} defaultValue={inputFieldsData[index]} label='Url of your Profile'  variant="outlined" fullWidth
-                  onChange={(e) => handleDatafield(index, e.target.value)}/>
-                  <Button variant="contained"  onClick={() => handleDeleteField(index)}>Delete</Button>
-                  </div>
-
-                )}
-              )}
-            </div>
-            {errors?.social_links &&  <FormHelperText style={{ marginLeft:'15px', color: errors?.social_links?.message ? "#f79277" : "" }}>
-            {errors?.social_links?.message}
-          </FormHelperText>}
-            </Grid>
             <Grid item xs={12} sm={6}>
               <FormImage
                 required
@@ -309,19 +286,35 @@ const combine =(data) => {
                 defaultValue={data?.profile_image || ""}
               />
               </Grid>
-            
+              <Grid item xs={12} mt={2} sm={12}>
+              <Button variant="contained" onClick={addInputField}>Add Social Media</Button> 
+                </Grid>
+                  <Grid  container spacing={0}  >
+                <div  style={{width:'100%',}}>
+                {inputFields?.map((ivalue, index) =>{
+                  return(
+                    <div key={index} style={{display:'flex',gap:'5px', margin:'10px'}}>
+                    <TextField id="outlined-basic" size='small' name={ivalue} defaultValue={ivalue} value={ivalue}  label='Platform Name' variant="outlined" fullWidth
+                    onChange={(e) => handleInputChange(index, e.target.value)}/>
+                    
+                    <TextField id="outlined-basic" size='small' name={inputFieldsData[index]} defaultValue={inputFieldsData[index]} label='Url of your Profile'  variant="outlined" fullWidth
+                    onChange={(e) => handleDatafield(index, e.target.value)}/>
+                    <Button variant="contained"  onClick={() => handleDeleteField(index)}>Delete</Button>
+                    </div>
+  
+                  )}
+                )}
+              </div>
+              {errors?.social_links &&  <FormHelperText style={{ marginLeft:'15px', color: errors?.social_links?.message ? "#f79277" : "" }}>
+              {errors?.social_links?.message}
+            </FormHelperText>}
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                {props.BtnName}
-               </Button>
-            
-            </Box>
-            </Box>
+              </Grid>
+              
+              <SubmitButton loading={props?.loading} btnName={props?.btnName}/>
+
+              </Box>
+              </Box>
             </>
             );
           };

@@ -5,25 +5,25 @@ import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import {useNavigate } from "react-router-dom";
-import PeopleIcon from "@mui/icons-material/People";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import LoginIcon from "@mui/icons-material/Login";
 import GroupsIcon from "@mui/icons-material/Groups";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import Person3Icon from '@mui/icons-material/Person3';
 import { useDispatch } from "react-redux";
 import WorkIcon from '@mui/icons-material/Work';
 import {superAdminLogout } from "../../redux/SuperAdminSlice";
 import LoginServices from "../../services/loginServices/LoginServices";
 import { persistor } from '../../redux/Store';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import CakeIcon from '@mui/icons-material/Cake';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import "react-toastify/dist/ReactToastify.css";
 
 
 
+
 export const MainListItems = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClearPersistedData = () => {
     persistor.purge(); 
@@ -31,27 +31,26 @@ export const MainListItems = () => {
     sessionStorage.clear();
   };
   // lougout ----------------------------
-  const onSubmit =  () => {
-    sessionStorage.clear();
-    handleClearPersistedData();
-     LoginServices.superAdminLogout()
-    .then((res) => {
-      console.log(res)
-      if(res.success===200) {
-        toast.success('logged out successfully')
-      }
-    })
-    .catch((err) =>{
-          console.log('error in logout', err)
-    })
-    // end api --------------------------------
-  };
+  // const onSubmit =  () => {
+  //   sessionStorage.clear();
+  //   handleClearPersistedData();
+  //    LoginServices.superAdminLogout()
+  //   .then((res) => {
+  //     console.log(res)
+  //     if(res.success===200) {
+  //       toast.success('logged out successfully')
+  //     }
+  //   })
+  //   .catch((err) =>{
+  //         console.log('error in logout', err)
+  //   })
+  //   // end api --------------------------------
+  // };
 
 
 
   return (
     <>
-    <ToastContainer />
       <ListItemButton component={NavLink} to="/dashboard">
         <ListItemIcon>
           <DashboardIcon />
@@ -88,7 +87,19 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText primary="Projects" />
       </ListItemButton>
-      <ListItemButton component={NavLink} to="/">
+      <ListItemButton component={NavLink} to="/template">
+        <ListItemIcon>
+          <AddCommentIcon />
+        </ListItemIcon>
+        <ListItemText primary="Template" />
+      </ListItemButton>
+      <ListItemButton component={NavLink} to="/Employees-Birthday">
+        <ListItemIcon>
+          <CakeIcon />
+        </ListItemIcon>
+        <ListItemText primary="Employee Birthday" />
+      </ListItemButton>
+     { /* <ListItemButton component={NavLink} to="/">
         <ListItemIcon>
           <LoginIcon />
         </ListItemIcon>
@@ -96,7 +107,7 @@ export const MainListItems = () => {
           onClick={onSubmit}
           primary="Logout"
         />
-      </ListItemButton>
+  </ListItemButton>  */}
     </>
   );
 };

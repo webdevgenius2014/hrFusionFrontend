@@ -1,18 +1,13 @@
 import React from 'react'
-import {StripedDataGrid} from '../GridStripedDataGrid'
-import {CustomPagination}  from '../PaginationMui' 
+import {GridStyle} from './GridStyle'
 
 export const CustDataGrid = (props) => {
     const styles = {
         backgroundColor: "white",
       };
-  const NewPagination=()=>{
-    return(
-      <CustomPagination  ActionsComponent={CustomPagination} setPage={props?.setPage} totalPages={props?.totalPages} />    )
-  }
+
   return (
-    <StripedDataGrid
-    
+    <GridStyle
     sx={{
       height: 300,
       width: '100%',
@@ -35,11 +30,11 @@ export const CustDataGrid = (props) => {
       initialState={{
         pagination: {
           paginationModel: {
-            pageSize: 10 // Adjust the pageSize according to your needs
+            pageSize: 10 
           },
         },
       }}
-      pageSizeOptions={[5, 10]}
+      
     />
   )
 }

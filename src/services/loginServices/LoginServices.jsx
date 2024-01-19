@@ -5,7 +5,10 @@ class LoginService{
     return instance.post(ApiConfig.login, payload);
   }
     superAdminLogout() {
-    return instance.get(ApiConfig.logout);
+    return instance.post(ApiConfig.logout);
+  }
+    changePass(payload) {
+    return instance.post(ApiConfig.updatepassword, payload);
   }
 }
 export default new LoginService();

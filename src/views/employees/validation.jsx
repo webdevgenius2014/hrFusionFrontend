@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 import YupPassword from "yup-password";
-import { validImageType,maxImageSize } from "../../helperFunctions/imageValidation";
 YupPassword(Yup);
 const validationSchema = Yup.object().shape({
   useremail: Yup.string().email('Must be a valid email').max(255).required("Email is required").email("Email is invalid"),
