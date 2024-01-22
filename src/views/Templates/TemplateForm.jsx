@@ -15,6 +15,8 @@ import ReactHtmlParser from "react-html-parser";
 import { convertFromHTML, ContentState, convertToRaw } from 'draft-js'
 import parser from "react-html-parser";
 import JoditEditor from 'jodit-react';
+import FormHelperText from "@mui/material/FormHelperText";
+
 
 
 const TemplateForm = (props) => {
@@ -25,7 +27,11 @@ const TemplateForm = (props) => {
   const onChange = (data) => {
     setHtml(data)
   };
- 
+  const validationSchema = Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    subject: Yup.string().required("subject is required"),
+    message: Yup.string().required("message is required"),
+  });
   const {
     control,
     setError,
@@ -33,13 +39,19 @@ const TemplateForm = (props) => {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: { title: data?.title ||" " ,
+    subject: data?.subject || " ",
+    message: data?.message || " ",
+  },
+    
+  } );
 
   return (
     <>
-      <Box sx={{ flexGrow: 2 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={7}>
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
             <Box
               component="form"
               noValidate
@@ -84,21 +96,18 @@ const TemplateForm = (props) => {
                 // onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
                 onChange={newContent => { onChange(newContent)}}
               />
+              <FormHelperText style={{ color: errors?.message ? "#f79277" : "" }}>
+                   {errors?.message}
+              </FormHelperText>
+                </Grid>
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                <span style={{ fontSize: "10px" }}> %CLIENT_NAME%  ,</span>
+                <span style={{ fontSize: "10px" }}> %CLIENT_EMAIL%  ,</span>
+                <span style={{ fontSize: "10px" }}> %CLIENT_PHONE%  ,</span>
                 </Grid>
               </Grid>
               <SubmitButton loading={props?.loading} btnName={props?.btnName} />
             </Box>
-          </Grid>
-          <Grid item xs={5}>
-            <h4 style={{ margin: "10px  auto" }}>
-              {" "}
-              Use these Keywords for dynamic data
-            </h4>
-            <p style={{ fontSize: "12px" }}>Client Name = %CLIENT_NAME% </p>
-            <p style={{ fontSize: "12px" }}>Client Email = %CLIENT_EMAIL% </p>
-            <p style={{ fontSize: "12px" }}>
-              Client Phone No. = %CLIENT_PHONE%
-            </p>
           </Grid>
         </Grid>
       </Box>

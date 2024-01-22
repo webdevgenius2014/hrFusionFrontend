@@ -85,17 +85,9 @@ const Clients = () => {
       });
   };
   useEffect(() => {
-    paginate()
+    getClientsfn();
   }, [page]);
 
-  function paginate(){
-   
-   if(searchFlag === false)
-    getClientsfn();
-   else 
-   ClientSearch();
-
-  }
   // edit Clients -------------------------------
   const [Client_id, setClientId] = useState();
   const [clientData, setClientData] = useState();

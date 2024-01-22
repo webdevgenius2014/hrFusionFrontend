@@ -82,7 +82,7 @@ import Box from "@mui/material/Box";
       },
       {
         field: "birthday",
-        headerName: "Date of Birth",
+        headerName: "Birth Date",
         headerClassName: "super-app-theme--header",
         flex: 1 ,
         options: { filter: true },

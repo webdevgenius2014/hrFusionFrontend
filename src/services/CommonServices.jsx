@@ -14,5 +14,8 @@ class CommonServices {
   empBirthday() {
     return instance.get(ApiConfig.getBirthday);
   }
+  logout() {
+    return instance.post(ApiConfig.logout);
+  }
 }
 export default new CommonServices();

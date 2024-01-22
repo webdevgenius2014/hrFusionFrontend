@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const superAdminSlice = createSlice({
-  name: "counter",
+  name: "adminLogin",
   initialState,
   reducers: {
     superAdminData: (state, action) => {
@@ -21,15 +21,11 @@ export const superAdminSlice = createSlice({
       state.status = action.payload.status;
       state.token = action.payload.token;
     },
-    superAdminLogout: (state, action) => {
+    superAdminLogout: (state) => {
       console.log(" redux log out");
-      state.id = "";
-      state.name = "";
-      state.email = "";
-      state.role = "";
-      state.status = "";
-      state.token = "";
+      state= { };
     },
+    
   },
 });
 

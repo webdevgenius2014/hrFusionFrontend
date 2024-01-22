@@ -226,7 +226,7 @@ useEffect(() => {
           size={90}
         />
       ) : (
-        <p>{noRecord}</p>
+        <span>{noRecord}</span>
       )}
     </Box>
       <CommonModal isOpen={open} isClose={handleClose}>

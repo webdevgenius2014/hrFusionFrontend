@@ -23,7 +23,6 @@ import Sidenav from "./Sidenav";
 import { Footer } from "./Footer";
 import Brand from "../../components/Brand";
 import { defaultTheme } from "../../theme/theme";
-import LoginServices from "../../services/loginServices/LoginServices";
 import CommonServices from "../../services/CommonServices";
 import { persistor } from "../../redux/Store";
 import {ToastContainer, toast } from "react-toastify";
@@ -34,6 +33,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import YupPassword from "yup-password";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 import { FormInputText } from "../../components/form-components/formInputText";
 import Button from "@mui/material/Button";
 YupPassword(Yup);
@@ -94,6 +94,7 @@ const DashboardLayout = () => {
   const handlePassOpen = () => setOpenChnpass(true);
   const handlePassClose = () => setOpenChnpass(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const validationSchema = Yup.object().shape({
     password: Yup.string()
       .required("Password is required")
@@ -127,27 +128,37 @@ const DashboardLayout = () => {
   };
   const handleSettings = (setting) => {
     console.log(setting);
+    if (setting === "Logout") {
+      console.log("in logout")
+     Logout();
+   }
     if (setting === "Account") {
-    } else if (setting === "Change password") {
+    } 
+     if (setting === "Change password") {
       handlePassOpen();
-    } else if (setting === "Logout") {
-      Logout();
-    }
+    } 
   };
   const handleClearPersistedData = () => {
     persistor.purge();
-    dispatch(superAdminLogout());
     sessionStorage.clear();
+    localStorage.removeItem('persist:root');
+    dispatch(superAdminLogout());
   };
   // api calls ----------------------------------------------------------------
-  const Logout = () => {
-    sessionStorage.clear();
+  const Logout = () => {  
     handleClearPersistedData();
-    LoginServices.superAdminLogout()
+    CommonServices.logout()
       .then((res) => {
         console.log(res);
-        if (res.success === 200) {
-          toast.success("logged out successfully");
+        if (res.status === 200 || res.status === 204) {
+            console.log("entered logout");
+            navigate('/')
+            toast.success("logged out successfully");
+        }
+        if (res.status === 401 ) {
+          console.log("entered 401")
+          // dispatch(superAdminLogout());
+          navigate('/')
         }
       })
       .catch((err) => {
