@@ -21,10 +21,7 @@ export const superAdminSlice = createSlice({
       state.status = action.payload.status;
       state.token = action.payload.token;
     },
-    superAdminLogout: (state) => {
-      console.log(" redux log out");
-      state= { };
-    },
+    superAdminLogout:() => initialState ,
     
   },
 });

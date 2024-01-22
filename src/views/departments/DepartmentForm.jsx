@@ -18,18 +18,17 @@ const DeartmentsForm = (props) => {
     
   const validationSchema = Yup.object().shape({
     department_name: Yup.string().required("Department name is required"),
-  });
+  })
   const {
     control,
     setError,
+    setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    defaultValues: { department_name: props?.dep_name ||" " },
-    resolver: yupResolver(validationSchema, {
-      stripUnknown: true,
-      abortEarly: false,
-    }),
+  } = useForm ({ defaultValues: {
+    department_name: props?.showDepartment,},
+    resolver: yupResolver(validationSchema),
+   
   });
   
 

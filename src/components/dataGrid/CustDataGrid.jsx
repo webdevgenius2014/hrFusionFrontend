@@ -27,13 +27,8 @@ export const CustDataGrid = (props) => {
         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
       }
       disableRowSelectionOnClick
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: 10 
-          },
-        },
-      }}
+      rowsPerPageOptions={[10]}   
+    
       
     />
   )

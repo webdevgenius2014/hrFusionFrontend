@@ -4,7 +4,17 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 
+function getModalStyle() {
+    const top = 50
+    const left = 50
 
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+        transform: `translate(-${top}%, -${left}%)`,
+        overflow: "scroll"
+    };
+}
 const CommonModal = ({ isOpen, children, isClose }) => {
     const style = {
         position: 'absolute',
@@ -14,7 +24,7 @@ const CommonModal = ({ isOpen, children, isClose }) => {
         bgcolor: 'background.paper',
         boxShadow: 24,
         borderRadius: '8px',
-        // overflowY: "scroll",
+        overflowY: "scroll",
         
         p: 4,
     };

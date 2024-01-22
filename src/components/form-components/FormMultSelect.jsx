@@ -70,7 +70,7 @@ export const FormMultiSelect = ({
   
 
       <FormHelperText style={{ color: error?.message ? "#f79277" : "" }}>
-        {error?.message}
+       <span> {error?.message}</span>
       </FormHelperText>
       </FormControl >
 

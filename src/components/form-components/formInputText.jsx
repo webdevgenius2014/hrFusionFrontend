@@ -6,7 +6,7 @@ export const FormInputText= ({name,f_type, control, label, required=false,focuse
         <Controller
             control={control}
             name={name}
-            rules={{required: required===true?label+' is required':required}}            
+            // rules={{required: required===true?label+' is required':required}}            
             render={({field:{onChange, value, ref}}) => (
                 <TextField 
                     ref={ref}              

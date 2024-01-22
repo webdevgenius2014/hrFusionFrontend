@@ -139,26 +139,30 @@ const DashboardLayout = () => {
     } 
   };
   const handleClearPersistedData = () => {
+    dispatch(superAdminLogout());
     persistor.purge();
     sessionStorage.clear();
-    localStorage.removeItem('persist:root');
-    dispatch(superAdminLogout());
+    localStorage.clear();
   };
   // api calls ----------------------------------------------------------------
   const Logout = () => {  
-    handleClearPersistedData();
+    handleClearPersistedData(); 
     CommonServices.logout()
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200 || res.status === 204) {
-            console.log("entered logout");
+    .then((res) => {
+      console.log(res);
+      if (res.status === 200 || res.status === 204) {
+        console.log("entered logout");
             navigate('/')
+            sessionStorage.clear();
+            localStorage.clear();
             toast.success("logged out successfully");
         }
         if (res.status === 401 ) {
           console.log("entered 401")
-          // dispatch(superAdminLogout());
+          localStorage.clear();
           navigate('/')
+
+          // dispatch(superAdminLogout());
         }
       })
       .catch((err) => {

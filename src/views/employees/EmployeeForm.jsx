@@ -217,12 +217,12 @@ const EmployeesForm = (props)=>{
               </Grid>
               {data && (<>
               <Grid item xs={12} sm={6}>
-              <div style={{marginTop:'8px'}}>
+              <div style={{marginTop:'18px'}}>
               <FormInputText    
                 fullWidth
                 id="Leaving Reason"
                 label="Leaving Reason"
-                name="Leaving_reason"
+                name="leaving_reason"
                 size="small"
                 // error={errors && errors.employee_id}
                 control={control}
@@ -240,7 +240,7 @@ const EmployeesForm = (props)=>{
                   id="dob"
                   format="yyyy-MM-dd" 
                   label="Date of Leaving"
-                  name="Leaving_date" 
+                  name="leaving_date" 
                   size="small"
                   setValue={setValue}
                   control={control}

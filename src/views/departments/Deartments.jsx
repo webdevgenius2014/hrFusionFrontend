@@ -36,11 +36,12 @@ const Deartments = () => {
         if (res.status === 200) {
           setLoading(false);
           handleClose();
-          toast.success(res.data.message);
+          toast.success(res?.data?.message);
           getDepartmentfn();
         }
         if (res.status === 403) {
-          setServerError(res.data);
+          console.log(res.data)
+          setServerError(res?.data);
           setLoading(false);
         }
       })
@@ -100,10 +101,10 @@ const Deartments = () => {
           setLoading(false);
           handleEditClose();
           getDepartmentfn();
-          toast.success(res.data.message);
+          toast.success(res?.data?.message);
         }
         if (res.status === 403) {
-          setServerError(res.data);
+          setServerError(res?.data?.errors);
           setLoading(false);
         }
       })

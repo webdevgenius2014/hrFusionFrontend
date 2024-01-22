@@ -1,51 +1,57 @@
-import React, { useState, useEffect,useMemo,useRef } from "react";
-import { styled } from "@mui/material/styles";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import copy from "clipboard-copy";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
-import { TextArea } from "../../components/form-components/TextArea";
-import MUIRichTextEditor from "mui-rte";
-import { stateToHTML } from "draft-js-export-html";
-import ReactHtmlParser from "react-html-parser";
-import { convertFromHTML, ContentState, convertToRaw } from 'draft-js'
-import parser from "react-html-parser";
-import JoditEditor from 'jodit-react';
+import JoditEditor from "jodit-react";
 import FormHelperText from "@mui/material/FormHelperText";
-
-
 
 const TemplateForm = (props) => {
   const data = props?.data || {};
   const editor = useRef(null);
 
-  const [html,setHtml]=useState( data?.message || '')
-  const onChange = (data) => {
-    setHtml(data)
+  const cName = useRef(null);
+  const cPhone = useRef(null);
+  const cEmail = useRef(null);
+
+  const [html, setHtml] = useState(data?.message || "");
+  const onChange = (html) => {
+    setHtml(html);
+    setValue("message", html);
   };
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    subject: Yup.string().required("subject is required"),
-    message: Yup.string().required("message is required"),
+    title: Yup.string().required("Tilte is required"),
+    subject: Yup.string().required("Subject is required"),
+    message: Yup.string().required("Subject is required"),
   });
   const {
     control,
     setError,
-    handleSubmit,
     setValue,
-    getValues,
+    handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { title: data?.title ||" " ,
-    subject: data?.subject || " ",
-    message: data?.message || " ",
-  },
-    
-  } );
+    defaultValues: {
+      title: data?.title,
+      message: data?.message,
+      subject: props?.subject,
+    },
+    resolver: yupResolver(validationSchema),
+  });
+  const newErrors = props?.error;
+  useEffect(() => {
+    if (newErrors)
+      setError("designation_name", {
+        type: "manual",
+        message: newErrors?.message,
+      });
+  }, [newErrors]);
+  const keyWords = ["%CLIENT_NAME%","%CLIENT_EMAIL%","%CLIENT_PHONE%"];
+ 
 
   return (
     <>
@@ -55,7 +61,7 @@ const TemplateForm = (props) => {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit((data) => props.apiFun(data,html))}
+              onSubmit={handleSubmit((values) => props.apiFun(values, html))}
               sx={{ mt: 1 }}
             >
               <Grid container justifyContent="space-between">
@@ -88,22 +94,40 @@ const TemplateForm = (props) => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                <JoditEditor
-                ref={editor}
-                value={props?.data?.message}
-                // config={config}
-                tabIndex={1} // tabIndex of textarea
-                // onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                onChange={newContent => { onChange(newContent)}}
-              />
-              <FormHelperText style={{ color: errors?.message ? "#f79277" : "" }}>
-                   {errors?.message}
-              </FormHelperText>
+                  <JoditEditor
+                    ref={editor}
+                    value={props?.data?.message}
+                    tabIndex={2} // tabIndex of textarea
+                    onChange={(newContent) => {
+                      onChange(newContent);
+                    }}
+
+                    // config={config}
+                    // onBlur={newContent => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                  />
+                  <FormHelperText
+                    style={{ color: errors?.message ? "#f79277" : "" }}
+                  >
+                    {errors?.message}
+                  </FormHelperText>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12}>
-                <span style={{ fontSize: "10px" }}> %CLIENT_NAME%  ,</span>
-                <span style={{ fontSize: "10px" }}> %CLIENT_EMAIL%  ,</span>
-                <span style={{ fontSize: "10px" }}> %CLIENT_PHONE%  ,</span>
+                  <div
+                    style={{
+                      fontSize: "10px",
+                      fontWeight: 600,
+                      color: "#808080",
+                      gap:'5px',
+                    }}
+                  >
+                    {keyWords?.map((text,index) => {
+                      return (<>
+                        <CopyToClipboardButton key={index} text={text} /> 
+                        <span> , </span>
+                        </>
+                      );
+                    })}
+                  </div>
                 </Grid>
               </Grid>
               <SubmitButton loading={props?.loading} btnName={props?.btnName} />
@@ -114,4 +138,22 @@ const TemplateForm = (props) => {
     </>
   );
 };
+
+
+function CopyToClipboardButton({ text }) {
+  const handleCopyClick = async () => {
+    try {
+      await copy(text); 
+      console.log('Text copied to clipboard:', text);
+    } catch (error) {
+      console.error('Unable to copy text to clipboard:', error);
+    }
+  };
+
+  return (
+    <span onClick={handleCopyClick} style={{ cursor: 'pointer' }}>
+      {text}
+    </span>
+  );
+}
 export default TemplateForm;

@@ -23,7 +23,7 @@ import { CustomPagination } from "../../components/CustomPagination";
   const  [noRecord,setNoRecord]=useState();
   const [page, setPage] = useState(1);
 
-
+  const [serverErr , setServerErr] = useState()
 
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState();
@@ -71,10 +71,10 @@ import { CustomPagination } from "../../components/CustomPagination";
 
 
 // add templates ----------------------------------------------------------------
-  const addTemplate = (data,message,contentState) => {
-    setLoading(true)
-    const payload = {...data, message: message ,raw_data: contentState}
-    TemplateServices.addTemplate( payload)
+  const addTemplate = (data , html) => {
+    setLoading(true)  
+    const payload = {...data, message: html}
+    TemplateServices.addTemplate( payload )
       .then((res) => {
         if (res.status === 200) {         
           // console.log(res.data.message);
@@ -85,8 +85,8 @@ import { CustomPagination } from "../../components/CustomPagination";
         }
         if(res.status===403){
           setLoading(false);
-          toast.error(...res?.data?.errors?.message);
-
+          // toast.error(...res?.data?.errors?.message);
+          setServerErr(res?.data?.errors)
         }
         
       })
@@ -206,7 +206,6 @@ useEffect(() => {
             key={i.id}
             handleDeleteClick={handleDeleteClick}
             handleEditClick={handleEditClick}
-
             />
           );
         })
@@ -253,6 +252,7 @@ useEffect(() => {
         apiFun={addTemplate}
         btnName={"Save "}
         loading={loading}
+        error={serverErr}
         />
         </Box>
       </CommonModal>
@@ -280,7 +280,7 @@ useEffect(() => {
     data={editTempData}
     btnName={"Save Changes "}
     loading={loading}
-
+    error={serverErr}
     />
     </Box>
   </CommonModal>

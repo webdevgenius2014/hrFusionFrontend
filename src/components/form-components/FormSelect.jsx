@@ -77,8 +77,8 @@ export const FormSelect = ({
                 </MenuItem>
               ))}
           </Select>
-          <FormHelperText style={{ color: error?.message ? ' #f79277' : '' }}>{error?.message}</FormHelperText>
-</FormControl>
+          <FormHelperText style={{ color: error?.message ? ' #f79277' : '' }}><span>{error?.message}</span></FormHelperText>
+          </FormControl>
           </>
       )}
     />

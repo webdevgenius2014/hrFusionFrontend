@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
+import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as Yup from "yup";
 import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
 import { FormSelect } from "../../components/form-components/FormSelect";
@@ -10,7 +10,7 @@ import { FormSelect } from "../../components/form-components/FormSelect";
 const DesignationForm = (props) => {
   const validationSchema = Yup.object().shape({
     designation_name: Yup.string().required("Designation name is required"),
-    department_name: Yup.string().required("Designation name is required"),
+    department_name: Yup.string().required("Department name is required"),
   })
   const {
     control,

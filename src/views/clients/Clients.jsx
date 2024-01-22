@@ -283,7 +283,7 @@ const  [record,setRecord]=useState();
               />
             </Box>
           </CommonModal>
-          <box
+          <Box
             maxWidth="sm"
             style={{
               display: "flex",
@@ -324,7 +324,7 @@ const  [record,setRecord]=useState();
             ) : (
               <p>{record}</p>
             )}
-          </box>
+          </Box>
           {getClients &&
           <div
             style={{ width: "100%", marginTop: "10px", background: "white" }}
