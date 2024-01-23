@@ -17,9 +17,13 @@ import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomPagination } from "../../components/CustomPagination";
 import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
 
 const Deartments = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState();
@@ -44,6 +48,12 @@ const Deartments = () => {
           setServerError(res?.data);
           setLoading(false);
         }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+        }
       })
       .catch((err) => {
         console.log("addDepartment error: " + err);
@@ -67,7 +77,9 @@ const Deartments = () => {
             setGetdep([]);
           }
           if(res.status === 401){
-            
+            dispatch(superAdminLogout());
+            setLoading(false);
+            navigate("/");
           }
         
       })
@@ -111,6 +123,11 @@ const Deartments = () => {
           setServerError(res?.data?.errors);
           setLoading(false);
         }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.log("editDepartment error: " + err);
@@ -136,8 +153,9 @@ const Deartments = () => {
           toast.success("Department deleted successfully");
           getDepartmentfn();
         } else if (res.status === 401) {
-          navigate("/");
+          dispatch(superAdminLogout());
           setLoading(false);
+          navigate("/");
 
           toast.error("please login again");
         }

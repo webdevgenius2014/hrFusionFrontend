@@ -25,7 +25,7 @@ import Brand from "../../components/Brand";
 import { defaultTheme } from "../../theme/theme";
 import CommonServices from "../../services/CommonServices";
 import { persistor } from "../../redux/Store";
-import {ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import "react-toastify/dist/ReactToastify.css";
@@ -129,14 +129,14 @@ const DashboardLayout = () => {
   const handleSettings = (setting) => {
     console.log(setting);
     if (setting === "Logout") {
-      console.log("in logout")
-     Logout();
-   }
+      console.log("in logout");
+      Logout();
+    }
     if (setting === "Account") {
-    } 
-     if (setting === "Change password") {
+    }
+    if (setting === "Change password") {
       handlePassOpen();
-    } 
+    }
   };
   const handleClearPersistedData = () => {
     dispatch(superAdminLogout());
@@ -145,22 +145,20 @@ const DashboardLayout = () => {
     localStorage.clear();
   };
   // api calls ----------------------------------------------------------------
-  const Logout = () => {  
-    handleClearPersistedData(); 
-    CommonServices.logout()
-    .then((res) => {
-      console.log(res);
-      if (res.status === 200 || res.status === 204) {
-        console.log("entered logout");
-            navigate('/')
-            sessionStorage.clear();
-            localStorage.clear();
-            toast.success("logged out successfully");
+  const Logout = async() => {
+   await CommonServices.logout()
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200 || res.status === 204) {
+          dispatch(superAdminLogout());
+          console.log("entered logout");
+          toast.success("logged out successfully");
+          navigate("/");
         }
-        if (res.status === 401 ) {
-          console.log("entered 401")
+        if (res.status === 401) {
+          console.log("entered 401");
           localStorage.clear();
-          navigate('/')
+          navigate("/");
 
           // dispatch(superAdminLogout());
         }
@@ -168,7 +166,7 @@ const DashboardLayout = () => {
       .catch((err) => {
         console.log("error in logout", err);
       });
-  }
+  };
   // Change Password ----------------------------------------------------------------
   const changePassword = (payload) => {
     setLoading(true);
@@ -196,7 +194,7 @@ const DashboardLayout = () => {
   const theme = defaultTheme;
   return (
     <>
-    <ToastContainer style={{ fontSize: "14px", zIndex: 1204 }}/>
+      <ToastContainer style={{ fontSize: "14px", zIndex: 1204 }} />
 
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
@@ -205,7 +203,7 @@ const DashboardLayout = () => {
             sx={{
               pr: "24px", // keep right padding when drawer closed
               bgcolor: theme.palette.grey[400],
-              zIndex:'999'
+              zIndex: "999",
             }}
           >
             <IconButton

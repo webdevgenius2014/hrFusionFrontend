@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {persistor} from './Store'
+
 const initialState = {
   id: "",
   name: "",
@@ -21,7 +23,18 @@ export const superAdminSlice = createSlice({
       state.status = action.payload.status;
       state.token = action.payload.token;
     },
-    superAdminLogout:() => initialState ,
+    superAdminLogout:(state,action) => {
+      state.id = undefined;
+      state.name = undefined;
+      state.email = undefined;
+      state.role = undefined;
+      state.status = undefined;
+      state.token = undefined;
+      sessionStorage.clear();
+      localStorage.clear();
+      // persistor.purge();
+    } ,
+
     
   },
 });

@@ -1,18 +1,22 @@
 import React, {useState, useEffect } from 'react'
 import Container from "@mui/material/Container";
 import BeatLoader from "react-spinners/ClipLoader";
-import { useDispatch } from "react-redux";
 import { DepData,RoleData } from '../../redux/DepRoleSlice';
 import DepartmentServices from "../../services/DepartmentServices";
 import commonServices  from '../../services/CommonServices'
 import DashboardCard from './DashboardCard';
 import Box from "@mui/material/Box";
-import Logout from '../../helperFunctions/LogoutFun';
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
+
 
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [noRecord, setNoRecord] = useState();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   // get Dashboard ------------------------------------------------
   const [dashboardData ,setDashboardData] =useState()
   const dashboarData = () => {
@@ -31,7 +35,9 @@ const Dashboard = () => {
       } 
       if ( res.status === 401){
         console.log("entred 401")
-        Logout();
+        setLoading(false); 
+        dispatch(superAdminLogout());
+        navigate("/");
       }
     })
     .catch((err) => {
