@@ -33,7 +33,8 @@ export const FormSelect = ({
   ...rest
 }) => {
   const handleChange = (event) => {
-    if(leadValFn!==undefined){
+    if(leadValFn !== undefined){
+      console.log(event.target.value)
      leadValFn(event.target.value)
     }
     // setValue(name,   event.target.value);

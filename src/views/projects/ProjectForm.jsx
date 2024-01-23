@@ -11,9 +11,10 @@ import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
 
 const ProjectForm = (props) => {
-
   const [data, setData] = useState(props?.projectData);
+  const statusData=[{id:1,value:'completed'},{id:0,value:'inProgress'},{id:2,value:`pending`}]
   const serverErrors = props?.serverError;
+  // console.log(data)
   const validationSchema = Yup.object().shape({
     client_id: Yup.string().required("Client name is required"),
     cost: Yup.string().required("Lead From Platform is required"),
@@ -52,9 +53,37 @@ const ProjectForm = (props) => {
     resolver: yupResolver(validationSchema),
   });
    const handleClintId =(id) => {
-    console.log(id)
+    // console.log(id)
       setValue('client_id',id)
    }
+   const handleStatusId =(id) => {
+  //  console.log(id)
+   setValue('status',id)
+   }
+   const handlePaymentStatus =(name) => {
+   console.log(name)
+   setValue('payment_status',name)
+   }
+   const [empID,setEmpId]= useState([])
+   const handleEmployeesId =(id) => {
+    let selectedData = empID;
+    // console.log(empID)
+    if (empID.includes(id)) {
+      selectedData = selectedData.filter((selected) => selected !== id)
+      setValue('team_members', selectedData)
+
+      // setEmpId(()=>empID.filter((selected) => selected !== id));
+    } else {
+      selectedData = [...selectedData, id]
+      // setEmpId([...empID, id]);
+      setValue('team_members', selectedData)
+    }
+    setEmpId(selectedData)
+  }
+    
+
+
+   
   useEffect(() => {
     if (serverErrors) {
       Object.keys(serverErrors).forEach((field) => {
@@ -80,7 +109,7 @@ const ProjectForm = (props) => {
         <Box
           component="form"
           noValidate
-          onSubmit={handleSubmit(props.apiFunc)}
+          onSubmit={handleSubmit((data)=>{console.log(data)})}
           sx={{ mt: 1 }}
         >
           <Grid container spacing={1}>
@@ -148,7 +177,6 @@ const ProjectForm = (props) => {
                 data={props?.clientsData}
                 control={control}
                 onchange={onchange}
-                // leadValFn={leadValFn}
                 pass_fun={handleClintId}
                 // getValue={getValues}
                 def={data?.client?.name}
@@ -158,11 +186,12 @@ const ProjectForm = (props) => {
             </Grid>
             <Grid item xs={12} sm={6}>
             <FormMultiSelect
-              name="team_members"
+              name="team_members_names"
               data={data?.team_members}
               label="Team Members"
               options={props?.employeesData}
               fieldaname="name"
+              pass_fun={handleEmployeesId}
               def={data?.team_members}
               setValue={setValue}
               error={errors && errors?.team_members}
@@ -183,31 +212,35 @@ const ProjectForm = (props) => {
                         />
                       </Grid>
             <Grid item xs={12} sm={6}>
-              <FormInputText
-                required
-                fullWidth
-                id="payment_status"
-                label="Payment Status "
-                name="payment_status"
-                size="small"
-                error={errors && errors?.payment_status}
-                control={control}
-                defaultValue={data?.payment_status || ""}
-              />
+            <FormSelect
+            label="Payment Status"
+            name={"payment_status_name"}
+            fieldaname="name"
+            data={[{id:'pending',name:'Pending'},{name:'Completed',name:'completed'}]}
+            control={control}
+            onchange={onchange}
+            pass_fun={handlePaymentStatus}
+            // getValue={getValues}
+            def={data?.payment_status}
+            error={errors && errors?.payment_status}
+            required
+          />          
             </Grid>
           
             <Grid item xs={12} sm={6} sx={{marginTop:'18px'}}>
-              <FormInputText
-                required
-                fullWidth
-                id="status"
-                label="Status "
-                name="status"
-                size="small"
-                error={errors && errors?.status}
-                control={control}
-                defaultValue={data?.status}
-              />              
+            <FormSelect
+            label="Status"
+            name={"statusValue"}
+            fieldaname="value"
+            data={statusData}
+            control={control}
+            onchange={onchange}
+            pass_fun={handleStatusId}
+            // getValue={getValues}
+            def={data?.status}
+            error={errors && errors?.status}
+            required
+          />          
             </Grid>
          
             

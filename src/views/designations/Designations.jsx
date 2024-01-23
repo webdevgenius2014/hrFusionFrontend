@@ -34,9 +34,10 @@ const Designations = () => {
   const getDepartmentfn = async () => {
     await DepartmentServices.getAllDepartments()
       .then((res) => {
-        if (res) {
+        if (res.status === 200 && res?.data?.success=== true) {
           setGetdep(res?.data?.data);
-        } else {
+        } if(res.status=== 200 && res?.data?.success === false) {
+          setFormLoader(false);
           setGetdep([]);
         }
       })
@@ -47,21 +48,25 @@ const Designations = () => {
   //-------------------------
   // get designations --------------------------------
   const [getDesig, setGetDesig] = useState([]);
-  const getDesignationsfn = async () => {
+  const getDesignationsfn =  () => {
     setFormLoader(true);
-    await DesignationServices.getDesignations(page)
+     DesignationServices.getDesignations(page)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 && res?.data?.success === true ) {
           setTotalPages(res?.data?.data?.last_page);
           setGetDesig(res?.data?.data.data);
           setFormLoader(false);
           // EmployeServices.getEmployee();
         }
+        if(res.status=== 200 && res?.data?.success === false) {
+          setFormLoader(false);
+         
+          setGetDesig([]);
+        }
         if (res.status === 401) {
           navigate("/");
           setGetDesig([]);
         }
-        setFormLoader(false);
       })
       .catch((err) => {
         console.log("getDesignations", err);

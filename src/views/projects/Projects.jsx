@@ -25,16 +25,16 @@ const Projects = () => {
   const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState('1');
   const [searchFlag, setSearchFlag] = useState(false);
-  const [record, setRecord] = useState();
+  const [noRecord, setNoRecord] = useState();
 
   // api integration -----------------------------------
   // all clients =------------------------------------------
   const [getClients, setgetClients] = useState([]);
   const getClientsfn = () => {
     setLoading(true);
-    ClientsServices.getClients()
+    ClientsServices.getClients(page)
       .then((res) => {
         // console.log(res.data.data.data)
         if (res) {
@@ -62,7 +62,7 @@ const Projects = () => {
     EmployeServices.getEmployee()
       .then((res) => {
         if (res.status === 200) {
-          setGetEmployees(() => res.data.data.data);
+          setGetEmployees(() => res?.data?.data?.data);
           setLoading(false);
         } else {
           setLoading(false);
@@ -83,11 +83,11 @@ const Projects = () => {
         if (res.status === 200) {
           setLoading(false);
           getProjectsFn();
-          toast.success(res.data.message);
+          toast.success(res?.data?.message);
           handleClose();
         }
         if (res.status === 403) {
-          setServerError(res.data);
+          setServerError(res?.data);
           setLoading(false);
         }
       })
@@ -103,17 +103,19 @@ const Projects = () => {
     setLoading(true);
     ProjectServices.getProjects(page)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200  && res?.data?.success=== true) {
           setTotalPages(() => res?.data?.data?.last_page);
           setGetProj(res?.data?.data?.data);
           setLoading(false);
-        } else {
-          loading(false);
+           
+        } 
+        if (res?.status=== 200 && res?.data?.success=== false) {
+          setLoading(false);
           setGetProj([]);
-          setRecord(res?.data?.message);
+          setNoRecord(res?.data?.message);
         }
         if (res.status === 404) {
-          setRecord(res.data.message);
+          setNoRecord(res.data.message);
           setLoading(false);
         }
       })
@@ -208,18 +210,20 @@ const Projects = () => {
     setLoading(true);
     ProjectServices.searchProjects(payload)
       .then((res) => {
-        if (res) {
+        console.log(res)
+        if (res.status === 200 && res?.data?.success=== true)  {
           setGetProj(res?.data?.data);
           setSearchPage(() => res?.data?.data?.last_page);
           console.log(res?.data)
           setLoading(false);
-        } else {
+        } 
+        if (res?.status=== 200 && res?.data?.success=== false) {
           loading(false);
           // setGetProj([]);
-          setRecord(res?.data?.message);
+          setNoRecord(res?.data?.message);
         }
         if (res.status === 404) {
-          setRecord(res.data.message);
+          setNoRecord(res.data.message);
           setLoading(false);
         }
       })
@@ -338,7 +342,7 @@ const Projects = () => {
             size={90}
           />
         ) : (
-          <p>{record}</p>
+          <p>{noRecord}</p>
         )}
       </Box>
       {/*  add modal */}

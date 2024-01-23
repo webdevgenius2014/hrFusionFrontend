@@ -62,12 +62,14 @@ const Clients = () => {
     ClientsServices.getClients(page)
       .then((res) => {
         // console.log("get client",res?.data?.data?.data)
-        if (res) {
+        if (res.status=== 200 && res?.data?.success=== true) {
           setgetClients(res?.data?.data?.data);
           setTotalPages(res?.data?.data?.last_page);
           setLoading(false);
-        } else {
+        }
+         if (res.status=== 200 && res?.data?.success=== false) {
           setLoading(false);
+          setRecord(res?.data?.message);
           setgetClients([]);
         }
         if (res.status === 403) {
@@ -269,9 +271,10 @@ const  [record,setRecord]=useState();
             <Box
               sx={{
                 mb: 2,
-                width: 650,
+                width: 850,
                 display: "flex",
                 height: 440,
+               
                 overflow: "hidden",
                 overflowY: "scroll",
               }}
@@ -325,7 +328,7 @@ const  [record,setRecord]=useState();
               <p>{record}</p>
             )}
           </Box>
-          {getClients &&
+          {getClients && getClients?.length > 0 &&
           <div
             style={{ width: "100%", marginTop: "10px", background: "white" }}
           >

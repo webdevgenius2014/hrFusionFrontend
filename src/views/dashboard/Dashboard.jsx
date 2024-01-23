@@ -7,73 +7,44 @@ import DepartmentServices from "../../services/DepartmentServices";
 import commonServices  from '../../services/CommonServices'
 import DashboardCard from './DashboardCard';
 import Box from "@mui/material/Box";
-
+import Logout from '../../helperFunctions/LogoutFun';
 
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
-
-  // department to  redux
-  const getDepartmentfn = () => {
-    DepartmentServices.getAllDepartments()
-      .then((res) => {
-        if (res) {
-          // console.log(res.data.data)
-          dispatch(DepData(res?.data?.data));
-        } 
-      })
-      .catch((err) => {
-        console.log("getdep error", err);
-      });
-  };
-  // get roles ---------------------------------------------------
-  const getRoles = () => {
-    setLoading(true);
-    commonServices.getRole()
-    .then((res) => {
-      if (res.status === 200) {
-        // console.log(res.data.data)
-        dispatch(RoleData(res?.data?.data));
-
-        // EmployeServices.getEmployee();
-      } else {
-      }
-    })
-    .catch((err) => {
-      console.log("get roles", err);
-    });
-
-};
-
+  const [noRecord, setNoRecord] = useState();
   // get Dashboard ------------------------------------------------
   const [dashboardData ,setDashboardData] =useState()
-  const Dashboardata = () => {
+  const dashboarData = () => {
     setLoading(true);
     commonServices.dashboard()
     .then((res) => {
+      
       if (res.status === 200) {
         setDashboardData(res?.data?.data)
         // console.log(res?.data?.data)
-        setLoading(false);
-      } else {
-        setLoading(false);
-
-        console.log('dashboard data error')
+        setLoading(false); 
+        if (res.status === 200 && res?.success=== false) {
+          setLoading(false); 
+         setNoRecord(res.data?.message)
+        }
+      } 
+      if ( res.status === 401){
+        console.log("entred 401")
+        Logout();
       }
     })
     .catch((err) => {
-      console.log("get roles", err);
+      console.log("dashboard", err);
     });
 
-};
+  };
 
 
 
   // end Dashboard --------------------------------
-  useEffect(() => {
-    getDepartmentfn();
-    getRoles();
-    Dashboardata();
+  useEffect(() => {    
+    dashboarData();
   }, []);
 
 
@@ -81,7 +52,7 @@ const Dashboard = () => {
   // redux
   // const dep = useSelector((state) => state.DepRole);
   // console.log("sAdminData",dep)
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   //----------------------------------------------------------------
   return (
     <Container style={{ padding: 0 }}>
@@ -129,7 +100,7 @@ const Dashboard = () => {
           size={90}
         />
       ) : (
-        <p>temp</p>
+        <p>{noRecord}</p>
       )}
     </Box>
      {/* {getClients &&

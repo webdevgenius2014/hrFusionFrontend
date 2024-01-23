@@ -24,7 +24,7 @@ const CommonModal = ({ isOpen, children, isClose }) => {
         bgcolor: 'background.paper',
         boxShadow: 24,
         borderRadius: '8px',
-        overflowY: "scroll",
+        // overflowY: "scroll",
         
         p: 4,
     };

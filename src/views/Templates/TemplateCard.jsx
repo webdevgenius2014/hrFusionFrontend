@@ -10,7 +10,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import parser from "react-html-parser";
-import { stateToHTML } from "draft-js-export-html";
 
 const TemplateCard = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,7 +35,7 @@ const TemplateCard = (props) => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "spaceAround",
+            justifyContent: "space-between",
             alignItems: "center",
             margin: "auto",
           }}

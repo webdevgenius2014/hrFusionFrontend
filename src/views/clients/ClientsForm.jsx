@@ -14,6 +14,8 @@ import { FormImage } from "../../components/form-components/FormImage";
 import FormHelperText from "@mui/material/FormHelperText";
 // import { validImageType,maxImageSize } from "../../helperFunctions/imageValidation";
 import SubmitButton from "../../components/form-components/submitButton";
+
+
 const ClientForm = (props) => {
     
 
@@ -106,12 +108,11 @@ useEffect(()=>{
     { value: "Email" },
     { value: "Whatsapp" },
     { value: "SMS" },
-    { value: "slack" },
+    { value: "Slack" },
   ];
 
   const addInputField = () => {
-    setInputFields([...inputFields, '']);
-    
+    setInputFields([...inputFields, '']);  
   };
   const handleInputChange = (index, value) => {
     const updatedInputFields = [...inputFields];
@@ -173,13 +174,14 @@ const combine =(data) => {
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Box
+        
           component="form"
           noValidate
           onSubmit={handleSubmit((data)=>{combine(data); })}
-          sx={{ mt: 1 }}
+          sx={{ mt: 1 ,mr:2}}
         >
-          <Grid container justifyContent="space-between">
-            <Grid item xs={12} sm={6}>
+          <Grid container justifyContent="space-between"  >
+            <Grid  xs={12} sm={6} >
               <FormInputText
                 autoComplete="given-name"
                 name="name"

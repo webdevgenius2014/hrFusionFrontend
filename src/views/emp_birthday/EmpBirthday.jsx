@@ -22,15 +22,18 @@ import Box from "@mui/material/Box";
       setFormLoader(true);
       CommonServices.empBirthday()
         .then((res) => {
-          if (res.status === 200) {
+          console.log(res.status === 200 && res.data.success=== true)
+          if (res.status === 200 ) {
             console.log(res?.data?.data);
             // setTotalPages(res.data.data.last_page);
             setGetEmpData(res?.data?.data);
             setFormLoader(false);
-          } else {
+          } 
+          if (res.status === 200 && res?.data?.success === false) {
             setFormLoader(false);
+            
             // setFormLoader(false);
-            // setGetEmpData([]);
+            setGetEmpData([]);
           }
         })
         .catch((err) => {
@@ -123,23 +126,16 @@ import Box from "@mui/material/Box";
     <div>
     <Box
     style={{
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "10px",
-      justifyContent: "flex-start",
-      alignItems: "center",
     }}
   >
-    {getEmpData && getEmpData?.length > 0 ? (
+    
       <CustDataGrid
       data={getEmpData}
       columns={columns}
-      // loading={formLoader}
+      loading={formLoader}
       // totalPages={totalPages}
       //  setPage={setPage}
-    />) : formLoader === 'false' && (
-      <p>temp</p>
-    )}
+    />
   </Box>
    
     </div>

@@ -57,15 +57,19 @@ const Deartments = () => {
     setFormLoader(true);
     DepartmentServices.getDepartments(page)
       .then((res) => {
-        if (res) {
-          // console.log(res.data);
-          setTotalPages(res.data.data.last_page);
-          setGetdep(res.data.data.data);
+        if (res.status=== 200 && res?.data?.success === true) {
+          setTotalPages(res?.data?.data?.last_page);
+          setGetdep(res?.data?.data?.data);
           setFormLoader(false);
-        } else {
-          setFormLoader(false);
-          setGetdep([]);
-        }
+        } 
+          if(res.status=== 200 && res?.data?.success === false) {
+            setFormLoader(false);
+            setGetdep([]);
+          }
+          if(res.status === 401){
+            
+          }
+        
       })
       .catch((err) => {
         setFormLoader(false);
@@ -191,6 +195,7 @@ const Deartments = () => {
         // let id=params?.id
         // console.log("prams",params)
         return [
+          
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"

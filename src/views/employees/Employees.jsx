@@ -40,13 +40,13 @@ const Employees = () => {
     setFormLoader(true);
     EmployeServices.getEmployee(page)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 200 && res?.data?.success===true) {
           setGetEmployees(() => res?.data?.data?.data);
           setTotalPages(res?.data?.data?.last_page);
           setFormLoader(false);
-        } else {
+        } 
+        if (res.status === 200 && res?.data?.success===false) {
           setFormLoader(false);
-          console.log("getemployee if", res);
           setGetEmployees([]);
         }
       })
@@ -352,7 +352,7 @@ const Employees = () => {
       handleDelete={handleDelete}
       loading={loading}
       deleteopen={deleteopen} />
-      {  getEmployees &&  getEmployees.length>0 && <div
+      {  getEmployees &&  getEmployees?.length>0 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >
         <CustomPagination totalPages={totalPages} setPage={setPage} />

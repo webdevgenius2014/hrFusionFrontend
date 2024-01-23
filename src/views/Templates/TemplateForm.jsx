@@ -11,12 +11,11 @@ import JoditEditor from "jodit-react";
 import FormHelperText from "@mui/material/FormHelperText";
 
 const TemplateForm = (props) => {
+  const keyWords = ["%CLIENT_NAME%","%CLIENT_EMAIL%","%CLIENT_PHONE%"];
   const data = props?.data || {};
   const editor = useRef(null);
 
-  const cName = useRef(null);
-  const cPhone = useRef(null);
-  const cEmail = useRef(null);
+  
 
   const [html, setHtml] = useState(data?.message || "");
   const onChange = (html) => {
@@ -38,7 +37,7 @@ const TemplateForm = (props) => {
     defaultValues: {
       title: data?.title,
       message: data?.message,
-      subject: props?.subject,
+      subject: data?.subject,
     },
     resolver: yupResolver(validationSchema),
   });
@@ -50,7 +49,6 @@ const TemplateForm = (props) => {
         message: newErrors?.message,
       });
   }, [newErrors]);
-  const keyWords = ["%CLIENT_NAME%","%CLIENT_EMAIL%","%CLIENT_PHONE%"];
  
 
   return (
@@ -96,7 +94,7 @@ const TemplateForm = (props) => {
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                   <JoditEditor
                     ref={editor}
-                    value={props?.data?.message}
+                    value={props?.data?.message || []}
                     tabIndex={2} // tabIndex of textarea
                     onChange={(newContent) => {
                       onChange(newContent);
