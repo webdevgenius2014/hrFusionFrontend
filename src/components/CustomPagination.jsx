@@ -11,7 +11,8 @@ export const CustomPagination = ({ totalPages, setPage, }) => {
   }, [totalPages]);
 
   return (
-    <Box py={1} display="flex" color='white' justifyContent="center">
+    <Box py={1} display="flex" color='white' justifyContent="center" 
+      >
       <Pagination
         count={localTotalPages}
         color="secondary"

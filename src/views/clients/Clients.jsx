@@ -10,7 +10,6 @@ import Button from "@mui/material/Button";
 import SearchIcon from "@mui/icons-material/Search";
 import ClientsServices from "../../services/ClientsServices";
 import ClientsForm from "./ClientsForm";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ClientsCard } from "./ClientsCard";
 import { CustomPagination } from "../../components/CustomPagination";
@@ -18,19 +17,26 @@ import { Searching } from "../../components/Searching";
 import "react-toastify/dist/ReactToastify.css";
 import  ClientProfile  from "./ClientProfile";
 import { DeleteDilagBox } from "../../components/modal/DeleteModal";
-
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import GeneralServices from "../../services/GeneralServices";
 
 const Clients = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [serverError, setServerError] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchFlag, setSearchFlag] = useState(false);
-  const navigate = useNavigate();
-  // api integration -----------------------------------
+  const [formLoader, setFormLoader] = useState(false);
 
+  // api integration -----------------------------------
   // add Clients-------------------------------------
   const handleAddClients = (data) => {
+    
     let payload = { ...data, email: data?.useremail };
     setLoading(true);
 
@@ -49,6 +55,12 @@ const Clients = () => {
           setServerError(res.data.errors);
           setLoading(false);
         }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+        }
       })
       .catch((err) => {
         setLoading(false);
@@ -58,22 +70,28 @@ const Clients = () => {
   // get  Clients --------------------------------
   const [getClients, setgetClients] = useState();
   const getClientsfn = () => {
-    setLoading(true);
+    setFormLoader(true);
     ClientsServices.getClients(page)
       .then((res) => {
         // console.log("get client",res?.data?.data?.data)
         if (res.status=== 200 && res?.data?.success=== true) {
           setgetClients(res?.data?.data?.data);
           setTotalPages(res?.data?.data?.last_page);
-          setLoading(false);
+          setFormLoader(false);
         }
          if (res.status=== 200 && res?.data?.success=== false) {
-          setLoading(false);
+          setFormLoader(false);
           setRecord(res?.data?.message);
           setgetClients([]);
         }
         if (res.status === 403) {
-          setLoading(false);
+          setFormLoader(false);
+        }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setFormLoader(false);
+        navigate("/");
         }
         if (res.status === 404) {
             console.log(res.data.message);
@@ -86,8 +104,66 @@ const Clients = () => {
         console.log("getClients error", err);
       });
   };
+  // get api channel
+  const [getAddChannel,setGetAddChannel]=useState([])
+  const getAllChannel = () => {
+    // setFormLoader(true);
+    GeneralServices.getAllChannels()
+      .then((res) => {
+        // console.log(res?.data?.data)
+        if (res.status === 200 && res?.data?.success === true) {
+          // setFormLoader(false);
+          setGetAddChannel(res?.data?.data);
+          // console.log(res?.data?.data)
+        }
+        if (res.status === 200 && res?.data?.success === false) {
+          // setFormLoader(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        // setFormLoader(false);
+        console.log("getdep error", err);
+      });
+  };
+  // get api leadplatform -----------------------
+  const [getAllLeads,setGetAllLeads] = useState([]);
+  const getAllLeadsFun = () => {
+    setFormLoader(true);
+    GeneralServices.getAllPlatforms()
+      .then((res) => {
+        console.log(res?.data?.data)
+        if (res.status=== 200 && res?.data?.success === true) {
+          setFormLoader(false);
+          setGetAllLeads(res?.data?.data)
+        } 
+          if(res.status=== 200 && res?.data?.success === false) {
+            setFormLoader(false);
+          }
+          if(res.status === 401){
+            dispatch(superAdminLogout());
+            navigate("/");
+          }
+          if(res.status === 404){
+            setFormLoader(false);
+            setLoading(false);
+
+          }
+        
+      })
+      .catch((err) => {
+        setFormLoader(false);
+        console.log("getdep error", err);
+      });
+  };
+
   useEffect(() => {
     getClientsfn();
+    getAllChannel();
+    getAllLeadsFun();
   }, [page]);
 
   // edit Clients -------------------------------
@@ -114,7 +190,12 @@ const Clients = () => {
           getClientsfn();
           toast.success(res?.data?.message);
         }
-
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+        }
         if (res.status === 403) {
           setServerError(() => res.data.errors);
           setLoading(false);
@@ -142,11 +223,11 @@ const Clients = () => {
           handleDeleteClose();
           toast.success("Client deleted successfully");
           getClientsfn();
-        } else if (res.status === 401) {
-          navigate("/");
+        } if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
           setLoading(false);
-
-          toast.error("please login again");
+        navigate("/");
         }
         if (res.status === 403) {
           setLoading(false);
@@ -167,8 +248,8 @@ const  [record,setRecord]=useState();
     ClientsServices.searchClient(payload,page)
       .then((res) => {
         if (res.status === 200 ) {
-          totalPages(res?.data.data.last_page);
-          setgetClients(() => res?.data?.data?.data);
+          console.log(res?.data?.data)
+          setgetClients(() => res?.data?.data);
           handleSearchClose();
         } else {
           setLoading(false);
@@ -178,8 +259,18 @@ const  [record,setRecord]=useState();
         if (res.status === 403) {
           setLoading(false);
         }
+        if(res.status === 404) {
+          setLoading(false);
+
+        }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+        }
         if (res.status === 404) {
-          setRecord(res.data.message)
+          setRecord(res?.data?.message)
         setLoading(false);
       }
       })
@@ -281,6 +372,8 @@ const  [record,setRecord]=useState();
             >
               <ClientsForm
                 apiFunc={handleAddClients}
+                getAddChannel={getAddChannel}
+                getAllLeads={getAllLeads}
                 serverError={serverError}
                 btnName={"Save "}
               />
@@ -328,7 +421,7 @@ const  [record,setRecord]=useState();
               <p>{record}</p>
             )}
           </Box>
-          {getClients && getClients?.length > 0 &&
+          {totalPages && totalPages>= 2  &&
           <div
             style={{ width: "100%", marginTop: "10px", background: "white" }}
           >
@@ -359,7 +452,9 @@ const  [record,setRecord]=useState();
         >
           <ClientsForm
             apiFunc={handleClientEdit}
+            getAddChannel={getAddChannel}
             clientData={clientData}
+            getAllLeads={getAllLeads}
             serverError={serverError}
             btnName={"Save Changes"}
           />

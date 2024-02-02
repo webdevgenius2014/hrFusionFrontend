@@ -33,17 +33,15 @@ const handleChangeDesig= (id)=>{
 }
 const debouncedApiCall = debounce(props.apiFun, 1000);
 const handleChange = (event) => {
-  const value = {[event.target.name]: event.target.value};
+  const value = {[event?.target?.name]: event?.target?.value};
   debouncedApiCall(value);
 };
       const Item = styled(Paper)(({ theme }) => ({
         backgroundColor: "transparent",
         boxShadow: "none",
-       
-      }));      
-      
-  return (
+      }));     
 
+  return (
     <div>
     <Box sx={{background:'white',margin:'0px',marginY:1 ,}} >
       <Grid  container spacing={{ xs: 1, md: 1 }} columns={{ xs: 4, sm: 8, md: 12 }}
@@ -67,7 +65,6 @@ const handleChange = (event) => {
 
         {props?.getDesig && props?.getDesig?.length>0 &&(<>
           <Grid item xs={12} sm={2} md={3} lg={4} xl={2} style={{margin: 'auto 0px'}}  >
-          
           <Item  >
           <FormSelect 
             name="designation"
@@ -78,7 +75,6 @@ const handleChange = (event) => {
             fieldaname='designation_name'
             def={props?.showDesig }
             // error={errors && errors?.designation}   
-            
           />
           </Item>
           </Grid>

@@ -9,14 +9,19 @@ import Box from "@mui/material/Box";
 import { FormDate } from "../../components/form-components/FormDate";
 import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
+import { DataGrid } from "@mui/x-data-grid";
 
 const ProjectForm = (props) => {
   const [data, setData] = useState(props?.projectData);
-  const statusData=[{id:1,value:'completed'},{id:0,value:'inProgress'},{id:2,value:`pending`}]
+  const statusData=[{id:1,value:'completed'},{id:0,value:'In progress'},{id:2,value:'On hold'}]
   const serverErrors = props?.serverError;
-  // console.log(data)
+  // console.log(data?.team_members?.map((i)=>{return i?.name}))
+  const [team_membersView ]=useState(data?.team_members?.map((i)=>{return  i?.name}))
+  const [empID,setEmpId]= useState(data?.team_members?.map((i)=>{return  i?.id}) ||[])
+
+  // console.log(data.status)
   const validationSchema = Yup.object().shape({
-    client_id: Yup.string().required("Client name is required"),
+    client_name: Yup.string().required("Client name is required"),
     cost: Yup.string().required("Lead From Platform is required"),
     deadline: Yup.string().required("Phone number  is required"),
     language: Yup.string().required("Language is required"),
@@ -40,13 +45,14 @@ const ProjectForm = (props) => {
   } = useForm({
     defaultValues: {
         client_name: data?.client?.name,
+        client_id: data?.client?.id,
         cost: data?.cost,
         deadline: data?.deadline,
         language: data?.language,
         payment_status: data?.payment_status,
-        team_members: data?.team_members,
+        team_members: empID,
         description: data?.description,
-        team_lead: data?.team_lead,
+        team_lead: data?.team_lead?.id,
         project_name: data?.project_name,
         status:data?.status,
     },
@@ -54,29 +60,33 @@ const ProjectForm = (props) => {
   });
    const handleClintId =(id) => {
     // console.log(id)
-      setValue('client_id',id)
+      setValue('client_id',id || data?.client?.id)
    }
-   const handleStatusId =(id) => {
+   const handleStatusId =(status) => {
   //  console.log(id)
-   setValue('status',id)
+   setValue('status',status || data?.status)
+   }
+
+   const handleTeamleadId =(id) => {
+   console.log(id)
+   setValue('team_lead',id || data?.team_lead?.id)
    }
    const handlePaymentStatus =(name) => {
    console.log(name)
-   setValue('payment_status',name)
+   setValue('payment_status',name ||data?.payment_status)
    }
-   const [empID,setEmpId]= useState([])
    const handleEmployeesId =(id) => {
     let selectedData = empID;
     // console.log(empID)
     if (empID.includes(id)) {
       selectedData = selectedData.filter((selected) => selected !== id)
-      setValue('team_members', selectedData)
+      setValue('team_members', selectedData ||team_membersView)
 
       // setEmpId(()=>empID.filter((selected) => selected !== id));
     } else {
       selectedData = [...selectedData, id]
       // setEmpId([...empID, id]);
-      setValue('team_members', selectedData)
+      setValue('team_members', selectedData ||team_membersView)
     }
     setEmpId(selectedData)
   }
@@ -109,7 +119,7 @@ const ProjectForm = (props) => {
         <Box
           component="form"
           noValidate
-          onSubmit={handleSubmit((data)=>{console.log(data)})}
+          onSubmit={handleSubmit(props.apiFun)}
           sx={{ mt: 1 }}
         >
           <Grid container spacing={1}>
@@ -138,22 +148,22 @@ const ProjectForm = (props) => {
                 control={control}
                 defaultValue={data?.description || ""}
               />
-            </Grid>
-          
+            </  Grid>
           
             <Grid item xs={12} sm={6}>
-              <FormInputText
-                required
-                fullWidth
-                id="team_lead"
-                label="Team Lead "
-                name="team_lead"
-                size="small"
-                error={errors && errors?.team_lead}
-                control={control}
-                defaultValue={data?.team_lead || ""}
-              />
-            </Grid>
+            <FormInputText
+              required
+              fullWidth
+              id="cost"
+              label="Cost "
+              name="cost"
+              size="small"
+              error={errors && errors?.cost}
+              control={control}
+              defaultValue={data?.cost || ""}
+            />
+          </Grid>
+          
             <Grid item xs={12} sm={6}>
               <FormInputText
                 required
@@ -180,7 +190,7 @@ const ProjectForm = (props) => {
                 pass_fun={handleClintId}
                 // getValue={getValues}
                 def={data?.client?.name}
-                error={errors && errors?.client_id}
+                error={errors && errors?.client_name}
                 required
               />
             </Grid>
@@ -192,31 +202,36 @@ const ProjectForm = (props) => {
               options={props?.employeesData}
               fieldaname="name"
               pass_fun={handleEmployeesId}
-              def={data?.team_members}
+              def={team_membersView}
               setValue={setValue}
               error={errors && errors?.team_members}
               required
             />
+            
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                        <FormInputText
-                          required
-                          fullWidth
-                          id="cost"
-                          label="Cost "
-                          name="cost"
-                          size="small"
-                          error={errors && errors?.cost}
-                          control={control}
-                          defaultValue={data?.cost || ""}
-                        />
-                      </Grid>
+                        <FormSelect
+                        label="Team Lead"
+                        name={"team_lead_name"}
+                        fieldaname="name"
+                        data={props?.getTeamlead}
+                        control={control}
+                        onchange={onchange}
+                        pass_fun={handleTeamleadId}
+                        // getValue={getValues}
+                        def={data?.team_lead?.name}
+                        error={errors && errors?.team_lead}
+                        required
+                      />
+                         
+                        </Grid>
+                       
             <Grid item xs={12} sm={6}>
             <FormSelect
             label="Payment Status"
             name={"payment_status_name"}
             fieldaname="name"
-            data={[{id:'pending',name:'Pending'},{name:'Completed',name:'completed'}]}
+            data={[{id:'pending',name:'Pending'},{id:'completed',name:'Completed'}]}
             control={control}
             onchange={onchange}
             pass_fun={handlePaymentStatus}
@@ -230,20 +245,18 @@ const ProjectForm = (props) => {
             <Grid item xs={12} sm={6} sx={{marginTop:'18px'}}>
             <FormSelect
             label="Status"
-            name={"statusValue"}
+            name={"status"}
             fieldaname="value"
             data={statusData}
             control={control}
             onchange={onchange}
             pass_fun={handleStatusId}
             // getValue={getValues}
-            def={data?.status}
+            def={data?.status} 
             error={errors && errors?.status}
             required
           />          
-            </Grid>
-         
-            
+            </Grid>            
             <Grid item xs={12} sm={6}>
               <FormDate
                 required

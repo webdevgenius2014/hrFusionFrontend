@@ -17,5 +17,11 @@ class CommonServices {
   logout() {
     return instance.post(ApiConfig.logout);
   }
+  getAllTeamLeads() {
+    return instance.get(ApiConfig.getAllTeamLeads);
+  }
+  sendMessageToClient(payload) {
+    return instance.post(ApiConfig.sendMessageToClient , payload);
+  }
 }
 export default new CommonServices();

@@ -54,13 +54,12 @@ export const FormMultiSelect = ({
         }}
         inputProps={{ 'aria-label': 'Without label' }}
       >
-        
+      
         {options.map((i) => (
           <MenuItem
             key={i[fieldaname]}
             value={i[fieldaname]}
             onClick={() =>{if(pass_fun){ pass_fun(i?.id)}}}
-
             // style={getStyles(name, apiData, theme)}
           >
             {i[fieldaname]}

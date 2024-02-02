@@ -1,11 +1,22 @@
-import * as React from "react";
 import { Controller } from "react-hook-form";
-import DatePicker from "react-datepicker";
+// import DatePicker from "react-datepicker";
 import dateFormat from "dateformat";
-import Grid from '@mui/material/Grid';
-import FormHelperText from "@mui/material/FormHelperText";
+import Grid from "@mui/material/Grid";
+import Helpertext from "@mui/material/FormHelperText";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Date.css";
+import TextField from '@mui/material/TextField';
+
+
+import * as React from "react";
+import dayjs from "dayjs";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 export const FormDate = ({
   name,
   f_type,
@@ -23,42 +34,54 @@ export const FormDate = ({
     setValue(name, dateFormat(date, "yyyy-mm-dd"), {
       shouldDirty: true,
     });
+
     setSelectedDate(date);
-    // console.log("date",date)
+    // console.log(dateFormat(date, "yyyy-mm-dd"));
   };
+  let defaultDate='';
+  if(d_value !== undefined){
+    defaultDate =dayjs(d_value)
+  }else
+  {
+    defaultDate = undefined
+  }
 
   return (
     <>
-    <Controller
-    name={name}
-    control={control}
-    defaultValue={d_value}
-    render={() => (<>
-      <Grid container xs={12} sm={12} md={12} lg={12} style={{marginLeft:'5px'}}>
-      <Grid item xs={12}  sm={12} md={12} lg={12}>
-      <label>{label}</label>
-     </Grid>
-     <Grid  xs={12}  sm={12} md={12} lg={12}>
-      <DatePicker
-            className={error?.message ? "error-message " : "wid"}
-            error={!!error}
-            fullWidth={true}
-            helperText={error && `${error.message}`}
-            dateFormat="MM/dd/yyyy"
-            showTimeSelect={false}
-            selected={selectedDate}
-            placeholderText={d_value}
-            onChange={handleDateChange}
-          />
-          </Grid>
-          </Grid>
-        </>)}
+      <Controller
+        name={name}
+        control={control}
+        render={() => (
+          <>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer
+                components={[
+                  "DatePicker",
+                  "MobileDatePicker",
+                  "DesktopDatePicker",
+                  "StaticDatePicker",
+                ]}
+              >
+                <DatePicker
+                  label={label}
+                  onChange={(date) => handleDateChange(date)}
+                  size="small"
+                  defaultValue={defaultDate ||undefined}
+                  renderInput={(params) => <TextField size="small" {...params} />}
+                  slotProps={{
+                    textField: {
+                      size: 'small',
+                      error: !!error,
+                      helperText: error && `${ error?.message}`
+                    },
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </>
+        )}
       />
-      <FormHelperText
-        style={{ color: error?.message ? " #f79277" : "inherit" }}
-      >
-        {error?.message}
-      </FormHelperText>
+     
     </>
   );
 };

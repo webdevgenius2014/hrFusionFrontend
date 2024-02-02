@@ -7,3 +7,9 @@
 .css-1274r9c {
     max-width: 100% !important;
 }
+.MuiAccordionDetails-root {
+    padding: 1px 28px 16px !important;
+}
+.MuiAccordion-root:hover{
+    background-color: #f3f8f9;
+    }

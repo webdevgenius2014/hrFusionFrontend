@@ -8,14 +8,16 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { ImagePath } from '../../helperFunctions/ImagePath';
 import Box from "@mui/material/Box";
-
-
-
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 
 
  const EmpBirthday = () => {
   const [formLoader,setFormLoader]=useState(false)
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
     // empBirthday =======================  
         const [getEmpData, setGetEmpData] = useState([]);
     const EmplpyeeBday = () => {
@@ -34,6 +36,12 @@ import Box from "@mui/material/Box";
             
             // setFormLoader(false);
             setGetEmpData([]);
+          }
+          if (res.status === 401) {
+            // con9sole.log()
+            dispatch(superAdminLogout());
+            setFormLoader(false);
+          navigate("/");
           }
         })
         .catch((err) => {
@@ -124,6 +132,14 @@ import Box from "@mui/material/Box";
     ];
   return (
     <div>
+    <Box>
+    <DatagridHeader name={"Upcoming 6 Months Birthdays"} >
+    
+    </DatagridHeader>
+
+   
+    {/* checkboxSelection  upline */}
+  </Box>
     <Box
     style={{
     }}

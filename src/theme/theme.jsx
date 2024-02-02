@@ -2,16 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme({
   overrides: {
-    MUIRichTextEditor: {
-      editor: {
-        height: "35vh",
-        maxHeight: "35vh",
-        overflow: "auto",
-        borderRadius: "5px",
-        border: "1px solid lightgrey",
-        padding: "15px",
-      },
-    },
+   
     MuiCssBaseline: {
       '@global': {
         '*::-webkit-scrollbar': {
@@ -27,6 +18,31 @@ const defaultTheme = createTheme({
     },
   },
   components: {
+    MuiPickersToolbar: {
+      styleOverrides: {
+        root: {
+          color: '#1565c0',
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: '#2196f3',
+        }
+      }
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        "root": {
+          "background": "transparent",
+          "boxShadow": "none",
+          "margin": "0px",
+          "&.Mui-expanded": {
+            "margin": "0px",
+            "padding": "0px",
+            "boxShadow": "1px 1px 1px rgba(0.2, 0.2, 0.2, 0.3)"
+          }
+        },       
+      },
+    },
+    
     MuiCssBaseline: {
       styleOverrides: {
         // Add more style overrides as needed

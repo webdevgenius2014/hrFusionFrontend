@@ -14,6 +14,9 @@ class TemplateServices {
   getTemplate(page) {
     return instance.get(`${ApiConfig.getTemplate}?page=${page}`);
   }
+  getAllTemplates(page) {
+    return instance.get(ApiConfig.getAllTemplates);
+  }
   viewTemplate(payload) {
     return instance.get(ApiConfig.viewTemplate, payload);
   }

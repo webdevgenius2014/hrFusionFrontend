@@ -38,6 +38,8 @@ import { FormInputText } from "../../components/form-components/formInputText";
 import Button from "@mui/material/Button";
 YupPassword(Yup);
 
+
+
 // import Chart from './Chart';
 // import Deposits from './Deposits';
 // import Orders from './Orders';
@@ -195,7 +197,6 @@ const DashboardLayout = () => {
   return (
     <>
       <ToastContainer style={{ fontSize: "14px", zIndex: 1204 }} />
-
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar open={open}>
@@ -294,13 +295,17 @@ const DashboardLayout = () => {
         <Box
           component="main"
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+            // backgroundColor: (theme) =>
+            //   theme.palette.mode === "light"
+            //     ? theme.palette.grey[100]
+            //     : theme.palette.grey[900],
             flexGrow: 1,
+            background:"url('dashboard/leptop_desktop.png')",
+            backgroundPosition: 'center',
             height: "100vh",
+            backgroundSize: '100% 100%',
             overflow: "auto",
+
           }}
         >
           <Toolbar />
@@ -308,9 +313,20 @@ const DashboardLayout = () => {
             <Box maxWidth="xl" as="div" sx={{ minHeight: "75vh" }}>
               <Outlet />
             </Box>
-            <Footer />
+            
           </Container>
+          <Footer
+            sx={{
+              // position: "absolute",
+              // paddingY:'20px',
+              background:'transparent',
+              left: "50%",
+              bottom: "20px",
+              transform: "translate(-50% 50%)",
+            }}
+          />
         </Box>
+        
       </Box>
       <CommonModal isOpen={openChnPass} isClose={handlePassClose}>
         <Typography
@@ -383,6 +399,7 @@ const DashboardLayout = () => {
           </form>
         </Box>
       </CommonModal>
+      
     </>
   );
 };

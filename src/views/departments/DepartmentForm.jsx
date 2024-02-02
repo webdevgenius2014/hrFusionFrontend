@@ -8,7 +8,6 @@ import SubmitButton from "../../components/form-components/submitButton";
 const DeartmentsForm = (props) => {
   const newErrors= props?.error;
   useEffect(()=>{
-   
     setError ("department_name", {
       type: "manual",
       message:newErrors?.message

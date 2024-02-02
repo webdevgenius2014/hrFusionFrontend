@@ -230,8 +230,8 @@ const combine =(data) => {
                 label="Communication Channel"
                 control={control}
                 onchange={onchange}
-                options={commChnlOpt}
-                fieldaname="value"
+                options={props?.getAddChannel}
+                fieldaname="channel_name"
                 def={data?.communication_channel}
                 getValues={getValues}
                 setValue={setValue}
@@ -242,13 +242,13 @@ const combine =(data) => {
             <Grid item xs={12} sm={6}>
               <FormSelect
                 name="lead_from_platform"
-                data={leadPlatOption}
+                data={props.getAllLeads}
                 label="Lead From Platform"
                 control={control}
                 onchange={onchange}
                 leadValFn={leadValFn}
                 pass_fun={props?.handleLeadPlat}
-                fieldaname="value"
+                fieldaname="platform_name"
                 getValue={getValues}
                 def={data?.lead_from_platform}
                 error={errors && errors?.lead_from_platform}

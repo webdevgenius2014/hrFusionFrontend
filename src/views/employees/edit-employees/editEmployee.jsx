@@ -9,10 +9,15 @@ import {toast } from "react-toastify";
 import DesignationServices from "../../../services/DesignationServices";
 import DepartmentServices from "../../../services/DepartmentServices";
 import commonServices  from '../../../services/CommonServices'
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../../redux/SuperAdminSlice";
+import {getAllDepartmentfn , allRoles} from '../../../helperApis/HelperApis'
 
 
 const EditEmployee = (props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false)
   const [serverError , setServerError] = useState('')
   const [id] = useState(() => props?.data?.id);
@@ -43,56 +48,44 @@ const EditEmployee = (props) => {
           setLoading(false);
         }
         if (res.status === 403) {
+          setLoading(false);
           setServerError(res.data.errors)
          
         }
-        setLoading(false);
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+      }
       })
       .catch((err) => {
-        if (err.response.status === 401) {
-          toast.error("please login again");
-          navigate("/");
-        }
-        if(err.response.status ===500){
-          toast.error("Please try again");
-        }
+        console.log('edit employee error',err)
       });
   };
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = async () => {
-    DepartmentServices.getAllDepartments()
-      .then((res) => {
-        if (res) {
-          // console.log(res.data.data)
-          setGetdep(res.data.data);
-        } else {
-          setGetdep([]);
-        }
-      })
-      .catch((err) => {
-        console.log("getDepartment", err);
-      });
+  const getAllDepartmentsFn = async () => {
+    try {
+      const result = await getAllDepartmentfn();
+      console.log(result);
+      setGetdep(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
   };
   // end all department --------------------
   // get roles --------------------
   const [getRole,setRole]=useState([]);
-  const getRoles = () => {
-    setRole(()=>[])
-    commonServices.getRole()
-    .then((res) => {
-      if (res.status===200) {
-        setRole(()=>res?.data?.data);
-        // EmployeServices.getEmployee();
-      } else {
-        setRole([]);
-      }
-    })
-    .catch((err) => {
-      console.log("get roles", err);
-    });
-
-};
+  const getAllRole = async () => {
+    try {
+      const result = await allRoles();
+      console.log(result);
+      setRole(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
+  };
 // console.log(data)
   // end  get roles -------------------
   // get all designations --------------------
@@ -106,6 +99,12 @@ const EditEmployee = (props) => {
         } else {
           setGetDesig([]);
         }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+      }
       })
       .catch((err) => {
         console.log("getDesignations", err);
@@ -138,8 +137,8 @@ const EditEmployee = (props) => {
   // console.log("desig", addDesignation_id);
   // form validation
   useEffect(() => {
-    getDepartmentfn();
-    getRoles();
+    getAllDepartmentsFn();
+    getAllRole();
    desigByDep({id:addDepartment_id});
 
   }, []);
@@ -182,6 +181,7 @@ const EditEmployee = (props) => {
        serverError={serverError}
        btnName={"Save Changes"}
        loading={loading}
+       editForm={true}
        />
       </Box>
     </>

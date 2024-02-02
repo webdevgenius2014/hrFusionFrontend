@@ -23,6 +23,9 @@ class ClientService {
     // console.log(`${ApiConfig.getClients}?page=${page}`)
     return instance.post(ApiConfig.viewClient,payload);
   }
+  getAllClients() {
+    return instance.get(ApiConfig.getAllClients);
+  }
 }
 
 export default new ClientService();

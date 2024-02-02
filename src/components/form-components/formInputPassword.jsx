@@ -6,21 +6,20 @@ export const FormInputPassword= ({name, control, label, required=false,focused=f
         <Controller
             control={control}
             name={name}
-            rules={{required: required===true?label+' is required':required}}            
+            // rules={{required: required===true?label+' is required':required}}            
             render={({field:{onChange, value, ref}}) => (
                 <TextField                                                                          
                     ref={ref}      
                     focused={focused}     
                     label={label}
                     varient="filled"                                                        
-                    // value={value?value:''}
                     onChange={onChange} 
                     fullWidth={true}  
                     sx={{margin:'5px'}}                  
                     type="password" 
                     autoComplete="current-password"                                                
                     error={!!error}                    
-                    helperText={error && `${error.message}`}
+                    helperText={error && `${error?.message}`}
                     margin='normal'
                     {...rest}                     
                 />

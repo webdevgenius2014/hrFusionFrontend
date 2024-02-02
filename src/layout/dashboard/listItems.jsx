@@ -4,102 +4,62 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import {useNavigate } from "react-router-dom";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import GroupsIcon from "@mui/icons-material/Groups";
+import CakeIcon from "@mui/icons-material/Cake";
 import { NavLink } from "react-router-dom";
-import Person3Icon from '@mui/icons-material/Person3';
-import { useDispatch } from "react-redux";
-import WorkIcon from '@mui/icons-material/Work';
-import {superAdminLogout } from "../../redux/SuperAdminSlice";
-import LoginServices from "../../services/loginServices/LoginServices";
-import { persistor } from '../../redux/Store';
-import { toast } from "react-toastify";
-import CakeIcon from '@mui/icons-material/Cake';
-import AddCommentIcon from '@mui/icons-material/AddComment';
 import "react-toastify/dist/ReactToastify.css";
-
-
-
+import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import { ClientAccordion } from "./ClientAccordion";
 
 export const MainListItems = () => {
-  const dispatch = useDispatch();
-  const handleClearPersistedData = () => {
-    persistor.purge(); 
-    dispatch(superAdminLogout());
-    sessionStorage.clear();
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
   };
-  // lougout ----------------------------
-  // const onSubmit =  () => {
-  //   sessionStorage.clear();
-  //   handleClearPersistedData();
-  //    LoginServices.superAdminLogout()
-  //   .then((res) => {
-  //     console.log(res)
-  //     if(res.success===200) {
-  //       toast.success('logged out successfully')
-  //     }
-  //   })
-  //   .catch((err) =>{
-  //         console.log('error in logout', err)
-  //   })
-  //   // end api --------------------------------
-  // };
-
-
-
   return (
     <>
-      <ListItemButton component={NavLink} to="/dashboard">
+      <ListItemButton component={NavLink} onClick={handleChange('false')} to="/dashboard">
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItemButton>
-      <ListItemButton component={NavLink} to="/departments">
+      <ListItemButton component={NavLink} onClick={handleChange('false')} to="/departments">
         <ListItemIcon>
           <AccountTreeIcon />
         </ListItemIcon>
         <ListItemText primary="Departments" />
       </ListItemButton>
-      <ListItemButton component={NavLink} to="/designations">
+      <ListItemButton component={NavLink} onClick={handleChange('false')} to="/designations">
         <ListItemIcon>
           <BusinessCenterIcon />
         </ListItemIcon>
         <ListItemText primary="Designations" />
       </ListItemButton>
-      <ListItemButton component={NavLink} to="/employees">
+      <ListItemButton component={NavLink} onClick={handleChange('false')} to="/employees">
         <ListItemIcon>
           <GroupsIcon />
         </ListItemIcon>
         <ListItemText primary="Employees" />
       </ListItemButton>
-      <ListItemButton component={NavLink} to="/clients">
-        <ListItemIcon>
-          <Person3Icon />
-        </ListItemIcon>
-        <ListItemText primary="Clients" />
-      </ListItemButton>
-      <ListItemButton component={NavLink} to="/Projects">
-        <ListItemIcon>
-          <WorkIcon />
-        </ListItemIcon>
-        <ListItemText primary="Projects" />
-      </ListItemButton>
-      <ListItemButton component={NavLink} to="/template">
-        <ListItemIcon>
-          <AddCommentIcon />
-        </ListItemIcon>
-        <ListItemText primary="Template" />
-      </ListItemButton>
-      <ListItemButton component={NavLink} to="/Employees-Birthday">
+      <ClientAccordion handleChange={handleChange} expanded={expanded} />
+      <ListItemButton component={NavLink} onClick={handleChange('false')} to="/Employees-Birthday">
         <ListItemIcon>
           <CakeIcon />
         </ListItemIcon>
         <ListItemText primary="Employee Birthday" />
       </ListItemButton>
-     { /* <ListItemButton component={NavLink} to="/">
+      <ListItemButton component={NavLink} onClick={handleChange('false')} to="/generalSettings">
+        <ListItemIcon>
+          <SettingsSuggestIcon />
+        </ListItemIcon>
+        <ListItemText primary="General Settings" />
+      </ListItemButton>
+
+      {/* <ListItemButton component={NavLink} to="/">
         <ListItemIcon>
           <LoginIcon />
         </ListItemIcon>

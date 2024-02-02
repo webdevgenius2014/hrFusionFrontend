@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
-import {TextField } from "@mui/material";
+import {TextField ,InputLabel } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -28,9 +28,11 @@ export const FormImage = ({
 
   const onDrop = (e) => {
     const fileInput = e.target;        
-    const file = fileInput.files[0];   
+    const file = fileInput.files[0];  
+    if(file ){ 
       setSelectedFile(URL.createObjectURL(file));
-      setValue( name,file );
+      setValue( name,file );}
+      
       // console.log("image file",e.target.files[0])
 
     };
@@ -44,15 +46,14 @@ export const FormImage = ({
         defaultValue={d_value}
         render={({ field }) => (
           <div>
+          <InputLabel >{label}</InputLabel>          
+
           <FormControl size="small" fullWidth  >
-            <input {...field.input} type="hidden" />
-            <label htmlFor="image">
-              <TextField
+              <input
               labelId="demo-simple-select-label"
               id="demo-simple-select"
                 type="file"
                 size="small"
-                label={label}
                 focused
                 placeholder={d_value}
                 fullWidth="true"
@@ -62,17 +63,17 @@ export const FormImage = ({
                 onChange={(e) => onDrop(e)}
               />
              
-            </label>
+            
             {error && <FormHelperText style={{ color: error?.message ? "#f79277" : "" }}>
             {error?.message}
           </FormHelperText>}
 
             { selectedFile && selectedFile?.length>0 &&            
-              <img
+              <img 
                 src={selectedFile || URL.createObjectURL(selectedFile)}
                 alt="Preview"
 
-                style={{ maxWidth: "150px", marginTop: "10px" }}
+                style={{ maxWidth: "250px",maxHeight:'100px', marginTop: "10px" }}
               />
             }
             </FormControl >

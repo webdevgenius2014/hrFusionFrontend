@@ -67,16 +67,17 @@ export const FormSelect = ({
             renderValue={(value) => value}
             MenuProps={MenuProps}
           >
-            {data &&
+            {data && data.length > 0 ?(
               data.map((item, index) => (
                 <MenuItem
-                  key={index}
+                  key={item[index]}
                   onClick={() =>{if(pass_fun){ pass_fun(item?.id)}}}
                   value={item[fieldaname]}
                 >
                   {item[fieldaname]}
                 </MenuItem>
-              ))}
+              ))): (<MenuItem disabled={true} value={' '} >{label}</MenuItem>)
+            }
           </Select>
           <FormHelperText style={{ color: error?.message ? ' #f79277' : '' }}><span>{error?.message}</span></FormHelperText>
           </FormControl>

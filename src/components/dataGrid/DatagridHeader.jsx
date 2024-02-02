@@ -15,12 +15,12 @@ export const DatagridHeader = ({name,children}) => {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <Item>
             <h2 style={{ margin: "auto", height: "50px" }}>{name}</h2>
           </Item>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
           <Item
             align="right"
             style={{ display: "flex", gap: "6px", justifyContent: "right" }}

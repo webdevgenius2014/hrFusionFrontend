@@ -31,6 +31,9 @@ export const ClientsCard = (props) => {
   const handleNavigate = (id) => {
     navigate(`/clients/${id}`);
   };
+  const handleMessageNavigate = (id) => {
+    navigate(`/Client-Message/${id}`);
+  };
   return (
     <Card sx={{ minWidth: '230px',maxWidth:'330px', borderRadius:3}} >
     <div style={{position:'relative',textAlign:'right' ,top:'5px'}}>
@@ -72,8 +75,8 @@ export const ClientsCard = (props) => {
         {data.email}
         </Typography>
         <Typography gutterBottom variant="h5" component="div" style={{textAlign:'center',gap:'5px',}}>
-        <Button  style={{margin: '5px 0px',fontSize:'12px' }} onClick={()=>{handleNavigate(data.id)}} variant="contained">Profile</Button><br/>
-        <Button  style={{fontSize:'12px'}} variant="contained">Message</Button>
+        <Button  style={{margin: '5px 0px',fontSize:'12px' }} onClick={()=>{handleNavigate(data?.id)}} variant="contained">Profile</Button><br/>
+        <Button  style={{fontSize:'12px'}} onClick={()=>{handleMessageNavigate(data?.id)}} variant="contained">Message</Button>
 
         </Typography>
       </CardContent>

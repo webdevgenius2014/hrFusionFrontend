@@ -21,15 +21,21 @@ import {Searching} from "../../components/Searching";
 import DesignationServices from "../../services/DesignationServices";
 import { CustomPagination } from "../../components/CustomPagination";
 import { DeleteDilagBox } from "../../components/modal/DeleteModal";
-
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import {allDesignations,getAllDepartmentfn} from '../../helperApis/HelperApis'
 
 const Employees = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [searchFlag,setSearchFlag]=useState(false);
   const [addDesignation_id, setAddDesignation_id] = useState("");
+  const [getDesig, setGetDesig] = useState([]);
 
   const apiURL = `${process.env.REACT_APP_API_BASE_URL}/`; 
 
@@ -49,6 +55,12 @@ const Employees = () => {
           setFormLoader(false);
           setGetEmployees([]);
         }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+        }
       })
       .catch((err) => {
         setFormLoader(false);
@@ -56,15 +68,30 @@ const Employees = () => {
         console.log("getAllEmployees", err);
       });
   };
+  const getAllDesignationFn = async()=>{ 
+    try {
+      const result = await allDesignations();
+      // console.log(result)
+      setGetDesig(result);
+    } catch (error) {
+      console.log('getAllDepartmentsFn', error)
+    }
+  }
   useEffect(() => {
     getAllEmployees();
-    allDesig();
+    getAllDesignationFn();
   }, []);
   useEffect(() => {
     getAllEmployees();
   }, [page]);
   //  end get all employees---------------------------------------
   // delete emolpyees--------------------------------
+  const [delete_id, setDelete_id] = useState({});
+  const handleDeleteClick = (id) => () => {
+    handleDeleteOpen();
+    setDelete_id(() => id);
+    console.log("delete", delete_id);
+  };
   const handleDelete = () => {
     setLoading(true);
     EmployeServices.deleteEmployee({ id: delete_id })
@@ -77,6 +104,7 @@ const Employees = () => {
           handleDeleteClose();
         }
         if (res.status === 403) {
+        
           toast.error(res?.data?.error);
           setLoading(false);
         }
@@ -91,26 +119,6 @@ const Employees = () => {
       });
   };
   // end delete emolpyees --------------------------------
-  // end api integration ------------------------------------------------
-
-  const navigate = useNavigate();
-
-  
-
-  const [employeeData, SetEmployeeData] = useState({});
-  const handleEditClick = (data) => () => {
-    //ID - current Row ID
-    SetEmployeeData(data);
-    handleEditOpen();
-  };
-
-  // console.log("name:"+ des)
-  const [delete_id, setDelete_id] = useState({});
-  const handleDeleteClick = (id) => () => {
-    handleDeleteOpen();
-    setDelete_id(() => id);
-    console.log("delete", delete_id);
-  };
   // search employees -----------------------------
   const searchEmployee = (data) => {
     setFormLoader(true);
@@ -119,9 +127,10 @@ const Employees = () => {
     EmployeServices.searchEmployee(payload)
       .then((res) => {
         if (res.status === 200) {
-          console.log(res)
+          console.log(res.data.data)
+          
           setTotalPages(res?.data?.data?.last_page);
-          setGetEmployees(() => res?.data?.data?.data);
+          setGetEmployees(() => res?.data?.data);
           setFormLoader(false);
         } else {
           setFormLoader(false);
@@ -135,31 +144,13 @@ const Employees = () => {
         console.log("getAllEmployees", err);
       });
   };
-  // get all designations --------------------
-  const [getDesig, setGetDesig] = useState([]);
-  const allDesig = (id) => {
-      setGetDesig(()=>[])
-    DesignationServices.getAllDesignations()
-      .then((res) => {
-        if (res.status===200) {
-          // console.log(res)
-          setGetDesig(()=>res?.data?.data);
-          // EmployeServices.getEmployee();
-        } else {
-          setGetDesig([]);
-        }
-      })
-      .catch((err) => {
-        console.log("getDesignations", err);
-      });
 
+  const [employeeData, SetEmployeeData] = useState({});
+  const handleEditClick = (data) => () => {
+    //ID - current Row ID
+    SetEmployeeData(data);
+    handleEditOpen();
   };
-
-
-
-
-
-
   // end api intefration ---------------------------
   const handleChangeDesig = (id) => {
     setAddDesignation_id(() => id);
@@ -331,6 +322,7 @@ const Employees = () => {
               getAllEmployees={getAllEmployees}
             />
           </CommonModal>
+          
           <CustDataGrid
             data={getEmployees}
             loading={formLoader}
@@ -352,7 +344,7 @@ const Employees = () => {
       handleDelete={handleDelete}
       loading={loading}
       deleteopen={deleteopen} />
-      {  getEmployees &&  getEmployees?.length>0 && <div
+      {  totalPages &&  totalPages>=2 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >
         <CustomPagination totalPages={totalPages} setPage={setPage} />

@@ -10,13 +10,16 @@ import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import {toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DesignationServices from "../../services/DesignationServices";
 import DepartmentServices from "../../services/DepartmentServices";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { CustomPagination } from "../../components/CustomPagination";
 import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { getAllDepartmentfn } from "../../helperApis/HelperApis";
 
 import "react-toastify/dist/ReactToastify.css";
 const Designations = () => {
@@ -25,47 +28,34 @@ const Designations = () => {
   const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
+  const [getdep, setGetdep] = useState([]);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // api integration ----------------------------------------------------
-  // Getdepartments --------------------
-  const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = async () => {
-    await DepartmentServices.getAllDepartments()
-      .then((res) => {
-        if (res.status === 200 && res?.data?.success=== true) {
-          setGetdep(res?.data?.data);
-        } if(res.status=== 200 && res?.data?.success === false) {
-          setFormLoader(false);
-          setGetdep([]);
-        }
-      })
-      .catch((err) => {
-        console.log("getDepartment", err);
-      });
-  };
-  //-------------------------
   // get designations --------------------------------
   const [getDesig, setGetDesig] = useState([]);
-  const getDesignationsfn =  () => {
+  const getDesignationsfn = () => {
     setFormLoader(true);
-     DesignationServices.getDesignations(page)
+    DesignationServices.getDesignations(page)
       .then((res) => {
-        if (res.status === 200 && res?.data?.success === true ) {
+        if (res.status === 200 && res?.data?.success === true) {
           setTotalPages(res?.data?.data?.last_page);
           setGetDesig(res?.data?.data.data);
           setFormLoader(false);
           // EmployeServices.getEmployee();
         }
-        if(res.status=== 200 && res?.data?.success === false) {
+        if (res.status === 200 && res?.data?.success === false) {
           setFormLoader(false);
-         
+
           setGetDesig([]);
         }
         if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
           navigate("/");
-          setGetDesig([]);
         }
       })
       .catch((err) => {
@@ -73,10 +63,20 @@ const Designations = () => {
         setFormLoader(false);
       });
   };
+  const getAllDepartmentsFn = async () => {
+    try {
+      const result = await getAllDepartmentfn();
+      // console.log(result);
+      setGetdep(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
+  };
   useEffect(() => {
     getDesignationsfn();
-    getDepartmentfn();
+    getAllDepartmentsFn();
   }, []);
+
   useEffect(() => {
     getDesignationsfn();
   }, [page]);
@@ -113,6 +113,12 @@ const Designations = () => {
         }
         if (res.status === 403) {
           setLoading(false);
+        }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
         }
       })
       .catch((error) => {
@@ -157,6 +163,12 @@ const Designations = () => {
           setServerError(() => res.data);
           setLoading(false);
         }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
       })
       .catch((error) => {
         console.log("edit designation err", error);
@@ -188,6 +200,12 @@ const Designations = () => {
         if (res.status === 403) {
           toast.error(res?.data?.message);
         }
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
       })
       .catch((err) => {
         console.log("delete  designation error: ", err);
@@ -214,7 +232,7 @@ const Designations = () => {
       field: "id",
       headerName: "No. ",
       filterable: false,
-      width: 100 ,
+      width: 100,
       headerClassName: "super-app-theme--header",
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
@@ -222,21 +240,21 @@ const Designations = () => {
     {
       field: "designation_name",
       headerName: "Designation",
-      flex: 1 ,
+      flex: 1,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "department_name",
       headerName: "Department",
-      flex: 1 ,
+      flex: 1,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
       field: "emmployees_count",
       headerName: "Employess",
-      flex: 1 ,
+      flex: 1,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
@@ -271,33 +289,32 @@ const Designations = () => {
           />,
         ];
       },
-      flex: 1 ,
+      flex: 1,
     },
   ];
 
- 
   return (
     <>
       <Container style={{ padding: 0 }}>
         <Box>
-          <DatagridHeader name={"Designation"} >
-          <Button
-          startIcon={<AddIcon />}
-          variant="contained"
-          onClick={handleOpen}
-        >
-          Add
-        </Button>
+          <DatagridHeader name={"Designation"}>
+            <Button
+              startIcon={<AddIcon />}
+              variant="contained"
+              onClick={handleOpen}
+            >
+              Add
+            </Button>
           </DatagridHeader>
           <CommonModal isOpen={open} isClose={handleClose}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Add Designation
             </Typography>
             <Box
-            sx={{
-              minWidth: {lg:450,md:350,sm:150,xs:70,xl:600},
-              maxWidth: {lg:600,md:500,sm:400,xs:200,xl:800},
-            }}
+              sx={{
+                minWidth: { lg: 450, md: 350, sm: 150, xs: 70, xl: 600 },
+                maxWidth: { lg: 600, md: 500, sm: 400, xs: 200, xl: 800 },
+              }}
             >
               <DesignationForm
                 getdep={getdep}
@@ -309,7 +326,13 @@ const Designations = () => {
               />
             </Box>
           </CommonModal>
-          <CustDataGrid data={getDesig} loading={formLoader}  columns={columns} setPage={setPage} totalPages={totalPages}/>
+          <CustDataGrid
+            data={getDesig}
+            loading={formLoader}
+            columns={columns}
+            setPage={setPage}
+            totalPages={totalPages}
+          />
         </Box>
       </Container>
       <CommonModal isOpen={editopen} isClose={handleEditClose}>
@@ -322,10 +345,10 @@ const Designations = () => {
           Edit Designation
         </Typography>
         <Box
-        sx={{
-          minWidth: {lg:450,md:350,sm:150,xs:70,xl:600},
-          maxWidth: {lg:600,md:500,sm:400,xs:200,xl:800},
-        }}
+          sx={{
+            minWidth: { lg: 450, md: 350, sm: 150, xs: 70, xl: 600 },
+            maxWidth: { lg: 600, md: 500, sm: 400, xs: 200, xl: 800 },
+          }}
         >
           <DesignationForm
             showDesignation={showDesignation}
@@ -339,16 +362,18 @@ const Designations = () => {
           />
         </Box>
       </CommonModal>
-      <DeleteDilagBox title='Delete Designation' 
-      handleDeleteClose={handleDeleteClose}
-      handleDelete={handleDelete}
-      loading={loading}
-      deleteopen={deleteopen} />
-      {  getDesig &&  getDesig.length>0 && <div
-        style={{ width: "100%", marginTop: "10px", background: "white" }}
-      >
-        <CustomPagination totalPages={totalPages} setPage={setPage} />
-      </div>}
+      <DeleteDilagBox
+        title="Delete Designation"
+        handleDeleteClose={handleDeleteClose}
+        handleDelete={handleDelete}
+        loading={loading}
+        deleteopen={deleteopen}
+      />
+      {totalPages && totalPages >= 2 && (
+        <div style={{ width: "100%", marginTop: "10px", background: "white" }}>
+          <CustomPagination totalPages={totalPages} setPage={setPage} />
+        </div>
+      )}
     </>
   );
 };

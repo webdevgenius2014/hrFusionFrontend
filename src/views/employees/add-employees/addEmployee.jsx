@@ -5,14 +5,17 @@ import {toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import EmployeServices from "../../../services/EmployeServices";
-import DesignationServices from "../../../services/DesignationServices";
-import DepartmentServices from '../../../services/DepartmentServices'
-import commonServices  from '../../../services/CommonServices'
 import EmployeesForm from '../EmployeeForm'
+import { useDispatch } from "react-redux";
+import { superAdminLogout } from "../../../redux/SuperAdminSlice";
+import {getAllDepartmentfn , allRoles,desByDep} from '../../../helperApis/HelperApis'
+
 const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const [serverError,setServerError]=useState();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   // api integration --------------------------------
 
@@ -27,91 +30,67 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       role: addRole,
         };
     EmployeServices.addEmployee(payload)
-      .then((data) => {
-        if (data?.status === 200) {
-          toast.success(data.data?.message);
+      .then((res) => {
+        if (res?.status === 200) {
+          toast.success(res.data?.message);
           getAllEmployees();
           setLoading(false);
           handleClose();
         }
-        if (data.status === 403) {
-          setServerError(()=>data.data.errors)
+        if (res.status === 403) {
+          // console.log(res.data.errors)
+          setServerError(()=>res?.data?.errors)
+          setLoading(false);
         }
-        setLoading(false);
+        if (res.status === 401) {
+          // con9sole.log()
+          dispatch(superAdminLogout());
+          setLoading(false);
+        navigate("/");
+        }
       })
       .catch((err) => {
-        // console.log(err;
-        if (err.response.status === 401) {
-          toast.error("please login again");
-          navigate("/");
-        }
-
-        setLoading(false);
+        console.log("add employee",err);
+      
       });
   };
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
-  const getDepartmentfn = () => {
-    DepartmentServices.getAllDepartments()
-      .then((res) => {
-        if (res) {
-          setGetdep(()=>res.data.data);
-          console.log(res.data.data)
-        } else {
-          setGetdep([]);
-        }
-      })
-      .catch((err) => {
-        console.log("getdep error", err);
-      });
+  const getAllDepartmentsFn = async () => {
+    try {
+      const result = await getAllDepartmentfn();
+      setGetdep(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
   };
   // end all department --------------------
   // get all designations --------------------
   const [getDesig, setGetDesig] = useState([]);
-  const desigByDep = (id) => {
-      setGetDesig(()=>[])
-    DesignationServices.designationsByDep(id)
-      .then((res) => {
-        if (res.status===200) {
-          setGetDesig(()=>res?.data?.data);
-          // EmployeServices.getEmployee();
-        } else {
-          setGetDesig([]);
-        }
-      })
-      .catch((err) => {
-        console.log("getDesignations", err);
-      });
 
+  const desByDepFn = async (payload) => {
+    try {
+      const result = await desByDep(payload);
+      setGetDesig(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
   };
-
+ 
   // get roles ---------------------------------------------------
   const [getRole,setRole]=useState([]);
-  const getRoles = () => {
-    setRole(()=>[])
-    commonServices.getRole()
-    .then((res) => {
-      if (res.status===200) {
-        setRole(()=>res?.data?.data);
-        console.log(res.data.data)
-        // EmployeServices.getEmployee();
-      } else {
-        setRole([]);
-      }
-    })
-    .catch((err) => {
-      console.log("get roles", err);
-    });
-
-};
-
-  // end all designations --------------------
-  // end get  all department -------------------------------
-
-  // end add employee --------------------------------
+  const getAllRole = async () => {
+    try {
+      const result = await allRoles();
+      setRole(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
+  };
+  
   useEffect(() => {
-    getDepartmentfn();
-    getRoles();
+    getAllDepartmentsFn();
+    getAllRole();
 
   }, []);
 
@@ -122,10 +101,8 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const [addRole, setAddRole] = useState("");
   const handleChangeDep = (id) => {
     setAddDepartment_id(() => id);
-    console.log(id)
-    desigByDep({department_id:id});
-
-    
+    desByDepFn({department_id:id});
+        
   };
   // console.log("dep", addDepartment_id);
   const handleChangeDesig = (id) => {

@@ -1,7 +1,18 @@
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 YupPassword(Yup);
-const validationSchema = Yup.object().shape({
+const maxImageSize= 200000
+
+const validFileExtensions = { image: ['jpg', 'png', 'jpeg',] };
+
+function isValidFileType(fileName, fileType) {
+  return fileName && validFileExtensions[fileType].indexOf(fileName.split('.').pop()) > -1;
+}
+function getAllowedExt(type) {
+  return validFileExtensions[type].map((e) => `.${e}`).toString()
+} 
+
+export const addValidation = Yup.object().shape({
   useremail: Yup.string().email('Must be a valid email').max(255).required("Email is required").email("Email is invalid"),
   password: Yup.string()
     .required("Password is required")
@@ -15,7 +26,8 @@ const validationSchema = Yup.object().shape({
   last_name: Yup.string().required("Last name is required"),
   username: Yup.string().required("Username is required"),
   employee_id: Yup.string().required("Employee id is required"),
-  joining_date: Yup.string().required("Joining Date is required"),
+  joining_date: Yup.string().required("joining date id is required"),
+  dob: Yup.string().required("Date of Birth id is required"),
   phone: Yup.number()
   .positive("A phone number can't start with a minus")
   .integer("A phone number can't include a decimal point")
@@ -24,7 +36,37 @@ const validationSchema = Yup.object().shape({
   confirm_password: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Required"),
-  dob: Yup.string().required("Date of birth  is required"),
+  department: Yup.string().required('Please select an option'),
+  role: Yup.string().required('Please select an option'),
+  designation: Yup.string().required('Please select an option'),
+  // profile_image: Yup.string().required("Profile Image is required"),
+  profile_image: Yup
+  .mixed()
+  .required("Required")
+  .test("is-valid-type", "Not a valid image ",
+    value => isValidFileType(value && value.name.toLowerCase(), "image"))
+  .test("is-valid-size", "Max allowed size is 2Mb",
+    value => value && value.size <= maxImageSize), 
+
+
+
+});
+
+export const editValidation = Yup.object().shape({
+  useremail: Yup.string().email('Must be a valid email').max(255).required("Email is required").email("Email is invalid"),
+ 
+  first_name: Yup.string().required("First name is required"),
+  last_name: Yup.string().required("Last name is required"),
+  username: Yup.string().required("Username is required"),
+  employee_id: Yup.string().required("Employee id is required"),
+  joining_date: Yup.string().required("joining date id is required"),
+  dob: Yup.string().required("Date of Birth id is required"),
+  phone: Yup.number()
+  .positive("A phone number can't start with a minus")
+  .integer("A phone number can't include a decimal point")
+  .min(10,' Nunber must be 10 digits')
+  .required('A phone number is required'),
+ 
   department: Yup.string().required('Please select an option'),
   role: Yup.string().required('Please select an option'),
   designation: Yup.string().required('Please select an option'),
@@ -33,12 +75,10 @@ const validationSchema = Yup.object().shape({
   // .mixed()
   // .required("Required")
   // .test("is-valid-type", "Not a valid image ",
-  //   value => validImageType(value && value.name.toLowerCase(), "image"))
+  //   value => isValidFileType(value && value.name.toLowerCase(), "image"))
   // .test("is-valid-size", "Max allowed size is 2Mb",
   //   value => value && value.size <= maxImageSize), 
 
 
 
 });
-
-export default validationSchema;

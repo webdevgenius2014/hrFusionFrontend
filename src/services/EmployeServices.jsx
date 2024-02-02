@@ -19,5 +19,9 @@ class EmployeService {
   getEmployee(page) {
     return instance.get(`${ApiConfig.getEmployees}?page=${page}`);
   }
+  getAllEmployees(page) {
+    return instance.get(ApiConfig.getAllEmployees);
+  }
+  
 }
 export default new EmployeService();

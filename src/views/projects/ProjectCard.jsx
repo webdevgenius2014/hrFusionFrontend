@@ -12,6 +12,10 @@ import Grid from "@mui/material/Grid";
 export const ProjectCard = (props) => {
   
   const data = props?.data
+  // console.log(data)
+  // {data?.team_members?.map((itr, index)=>{
+  //   return <> {console.log(itr)}</>  
+  // })}
   const [daysLeft, setDaysLeft] = React.useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -128,14 +132,16 @@ export const ProjectCard = (props) => {
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
         
-          <span>{data?.team_members.join(',')}</span>
+        <span>{data?.team_members?.map((itr, index)=>{
+          return <div key={index}> {itr?.name} {(data?.team_members?.length-1 > index) && <span> , </span>} </div>  
+        })}</span>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
           <strong>Team Lead
           </strong>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
-          <span>{data?.team_lead}</span>
+          <span>{data?.team_lead?.name}</span>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
           <strong>Cost

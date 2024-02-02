@@ -11,12 +11,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import DepartmentServices from "../../services/DepartmentServices";
-import { useNavigate } from "react-router-dom";
 import {  toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomPagination } from "../../components/CustomPagination";
 import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 
@@ -46,6 +46,7 @@ const Deartments = () => {
         if (res.status === 403) {
           console.log(res.data)
           setServerError(res?.data);
+          console.log(res.data)
           setLoading(false);
         }
         if (res.status === 401) {
@@ -277,7 +278,6 @@ const Deartments = () => {
               }}
             >
               <DepartmentForm
-                // dep_name={dep_name}
                 apiFun={addDepartment}
                 loading={loading}
                 error={serverError}
@@ -289,7 +289,6 @@ const Deartments = () => {
           <CustDataGrid
             data={getdep}
             loading={formLoader}
-            setPage={setPage}
             columns={columns}
             totalPages={totalPages}
           />
@@ -315,7 +314,6 @@ const Deartments = () => {
             dep_name={dep_name}
             apiFun={handleEdit}
             loading={loading}
-            def={dep_name}
             error={serverError}
             btnName={"Save Changes"}
           />
@@ -327,7 +325,7 @@ const Deartments = () => {
       handleDelete={handleDelete}
       loading={loading}
       deleteopen={deleteopen} />
-      {  getdep &&  getdep.length>0 && <div
+      {  totalPages && totalPages>=2 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >
         <CustomPagination totalPages={totalPages} setPage={setPage} />

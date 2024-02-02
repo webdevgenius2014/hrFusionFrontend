@@ -10,8 +10,6 @@ const ApiConfig = {
 
   dashboard: `${apiURL}dashboard`,
 
-   
-
   // department all --------------------------------
   getDepartments: `${apiURL}getDepartments`,
   getAllDepartments: `${apiURL}getAllDepartments`,
@@ -25,7 +23,7 @@ const ApiConfig = {
   editDesignation: `${apiURL}editDesignation`,
   deleteDesignation: `${apiURL}deleteDesignation`,
   getAllDesignations: `${apiURL}getAllDesignations`,
-  
+
   // employee all -----------------------------------
   getEmployees: `${apiURL}getEmployees`,
   addEmployee: `${apiURL}addEmployee`,
@@ -33,12 +31,12 @@ const ApiConfig = {
   deleteEmployee: `${apiURL}deleteEmployee`,
   searchEmployee: `${apiURL}searchEmployee`,
   viewEmployee: `${apiURL}viewEmployee`,
-  
+  getAllEmployees: `${apiURL}getAllEmployees`,
 
-  // designations acording to the department 
-  designationList : `${apiURL}designationList`,
+  // designations acording to the department
+  designationList: `${apiURL}designationList`,
   // role ---------------------------------------------
-  getRoles:`${apiURL}getRoles`,
+  getRoles: `${apiURL}getRoles`,
 
   // Clients --------------------------------
   getClients: `${apiURL}getClients`,
@@ -47,9 +45,9 @@ const ApiConfig = {
   deleteClient: `${apiURL}deleteClient`,
   searchClient: `${apiURL}searchClient`,
   viewClient: `${apiURL}viewClient`,
+  getAllClients: `${apiURL}getAllClients`,
 
-
-  // Projects 
+  // Projects
   getProjects: `${apiURL}getProjects`,
   addProject: `${apiURL}addProject`,
   editProject: `${apiURL}editProject`,
@@ -57,13 +55,31 @@ const ApiConfig = {
   viewProject: `${apiURL}viewProject`,
   searchProject: `${apiURL}searchProject`,
 
-  // Tamplate 
+  // Tamplate
   getTemplate: `${apiURL}getTemplate`,
+  getAllTemplates: `${apiURL}getAllTemplates`,
   addTemplate: `${apiURL}addTemplate`,
   editTemplate: `${apiURL}editTemplate`,
   deleteTemplate: `${apiURL}deleteTemplate`,
   viewTemplate: `${apiURL}viewTemplate`,
 
+  // all teamlead ------------------------------
+  getAllTeamLeads: `${apiURL}getAllTeamLeads`,
+
+  // addChannel ------------------------------
+  addChannel: `${apiURL}addChannel`,
+  editChannel: `${apiURL}editChannel`,
+  getAllChannels: `${apiURL}getAllChannels`,
+  deleteChannel: `${apiURL}deleteChannel`,
+
+  // Lead Platform ------------------------------
+  addPlatform: `${apiURL}addPlatform`,
+  editPlatform: `${apiURL}editPlatform`,
+  getAllPlatforms: `${apiURL}getAllPlatforms`,
+  deletePlatform: `${apiURL}deletePlatform`,
+
+  // send email -----------------------------
+  sendMessageToClient: `${apiURL}sendMessageToClient`,
 };
 
 export default ApiConfig;

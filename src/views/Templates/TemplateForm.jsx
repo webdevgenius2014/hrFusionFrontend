@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { useForm } from "react-hook-form";
@@ -9,12 +9,14 @@ import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
 import JoditEditor from "jodit-react";
 import FormHelperText from "@mui/material/FormHelperText";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const TemplateForm = (props) => {
   const keyWords = ["%CLIENT_NAME%","%CLIENT_EMAIL%","%CLIENT_PHONE%"];
   const data = props?.data || {};
   const editor = useRef(null);
-
+  const navigate = useNavigate()
   
 
   const [html, setHtml] = useState(data?.message || "");
@@ -50,11 +52,67 @@ const TemplateForm = (props) => {
       });
   }, [newErrors]);
  
-
+  const config = {
+    useSearch: false,
+    spellcheck: false,
+    enter: "P",
+    defaultMode: "1",
+    toolbarAdaptive: false,
+    toolbarSticky: false,
+    showCharsCounter: false,
+    showWordsCounter: false,
+    showXPathInStatusbar: false,
+    askBeforePasteHTML: false,
+    askBeforePasteFromWord: false,
+    minHeight: 300,
+    minWidth: null,
+    buttons:
+      "paragraph,bold,strikethrough,underline,italic,|,superscript,subscript,|,ul,ol,|,|,font,fontsize,brush,,link,|,align,undo,redo",
+    editorCssClass: "alic",
+    placeHolder: "",
+    controls: {
+      fontsize: {
+        list: [
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "14",
+          "16",
+          "18",
+          "24",
+          "30",
+          "36",
+          "48",
+          "60",
+          "72",
+          "96",
+          "100"
+        ]
+      },
+      font: {
+        command: "fontname",
+        list: {
+          "": "Default",
+          "'Open Sans',sans-serif": "Open Sans",
+          "Helvetica,sans-serif": "Helvetica",
+          "Arial,Helvetica,sans-serif": "Arial",
+          "Georgia,serif": "Georgia",
+          "Impact,Charcoal,sans-serif": "Impact",
+          "Tahoma,Geneva,sans-serif": "Tahoma",
+          "'Times New Roman',Times,serif": "Times New Roman",
+          "Verdana,Geneva,sans-serif": "Verdana"
+        }
+      }
+    }
+  };
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={1}>
+      
+        <Grid container >
+        
           <Grid item xs={12}>
             <Box
               component="form"
@@ -62,8 +120,8 @@ const TemplateForm = (props) => {
               onSubmit={handleSubmit((values) => props.apiFun(values, html))}
               sx={{ mt: 1 }}
             >
-              <Grid container justifyContent="space-between">
-                <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Grid container sx={{pr:1}}>
+                <Grid item xs={12} sm={12} md={12} lg={12} >
                   <FormInputText
                     autoComplete="given-name"
                     name="title"
@@ -91,11 +149,13 @@ const TemplateForm = (props) => {
                     defaultValue={data?.subject || ""}
                   />
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
+                <Grid  xs={12} sm={9} md={9} lg={9} sx={{paddingLeft:'5px'}}>
                   <JoditEditor
                     ref={editor}
-                    value={props?.data?.message || []}
-                    tabIndex={2} // tabIndex of textarea
+                    value={props?.data?.message || ''}
+                    tabIndex={1} // tabIndex of textarea
+                    // config={{minHeight: 300,
+                    //   minWidth: null,}}
                     onChange={(newContent) => {
                       onChange(newContent);
                     }}
@@ -109,26 +169,27 @@ const TemplateForm = (props) => {
                     {errors?.message}
                   </FormHelperText>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <div
-                    style={{
-                      fontSize: "10px",
+                <Grid  xs={12} sm={3} md={3} lg={3} >
+                  <Box
+                    sx={{
+                      fontSize: "16px",
                       fontWeight: 600,
                       color: "#808080",
                       gap:'5px',
                     }}
-                  >
+                  ><Box sx={{fontWeight:600 , textDecoration:'underline',textAlign:'center' , color:'gray'}}> Keywords  </Box>
                     {keyWords?.map((text,index) => {
-                      return (<>
-                        <CopyToClipboardButton key={index} text={text} /> 
-                        <span> , </span>
-                        </>
+                      return (<Box sx={{ textAlign:'center'}}>
+                        <CopyToClipboardButton key={text} text={text} /> 
+                          <br/>
+                        </Box>
                       );
                     })}
-                  </div>
+                  </Box>
                 </Grid>
               </Grid>
-              <SubmitButton loading={props?.loading} btnName={props?.btnName} />
+              <Grid  xs={9} > <SubmitButton loading={props?.loading} btnName={props?.btnName} /></Grid>
+             
             </Box>
           </Grid>
         </Grid>
@@ -149,7 +210,7 @@ function CopyToClipboardButton({ text }) {
   };
 
   return (
-    <span onClick={handleCopyClick} style={{ cursor: 'pointer' }}>
+    <span onClick={handleCopyClick} style={{ cursor: 'pointer', textAlign:'center' ,fontSize:'10px' }}>
       {text}
     </span>
   );

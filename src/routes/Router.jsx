@@ -32,11 +32,20 @@ const ResetPassword = Loadable(
 const ClientProfile = Loadable(
   lazy(() => import("../views/clients/ClientProfile"))
 );
+const ClientMessage = Loadable(
+  lazy(() => import("../views/clients/ClientMessage"))
+);
 const Tamplates = Loadable(
   lazy(() => import("../views/Templates/Templates"))
 );
+const TemplateForm = Loadable(
+  lazy(() => import("../views/Templates/TemplateForm"))
+);
 const EmpBirthday = Loadable(
   lazy(() => import("../views/emp_birthday/EmpBirthday"))
+);
+const GeneralSettings = Loadable(
+  lazy(() => import("../views/GeneralSettings/GeneralSetting"))
 );
 
 
@@ -114,6 +123,15 @@ const privateRoutes = [
         element: <ClientProfile />,
       },
       {
+        path: "/Client-Message/:id",
+        element: <ClientMessage />,
+      },
+      {
+        path: "/TemplateForm",
+        element: <TemplateForm />,
+      },
+    
+      {
         path: "/Projects",
         element: <Projects />,
       },
@@ -124,6 +142,10 @@ const privateRoutes = [
       {
         path: "/Employees-Birthday",
         element: <EmpBirthday />,
+      },
+      {
+        path: "/generalSettings",
+        element: <GeneralSettings />,
       },
     ],
   },
