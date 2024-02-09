@@ -18,7 +18,8 @@ const ODD_OPACITY = 0.2;
     "& .MuiDataGrid-cell": {
       lineHeight: "unset !important",
       maxHeight: "none !important",
-      whiteSpace: "normal"
+      whiteSpace: "normal",
+      
     },
     "& .MuiDataGrid-row": {
       maxHeight: "none !important"

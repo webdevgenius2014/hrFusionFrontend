@@ -6,7 +6,7 @@ import CommonModal from "../../components/modal/commonModal";
 import BeatLoader from "react-spinners/ClipLoader";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
+import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
 import SearchIcon from "@mui/icons-material/Search";
 import ClientsServices from "../../services/ClientsServices";
 import ClientsForm from "./ClientsForm";
@@ -308,7 +308,7 @@ const  [record,setRecord]=useState();
         <DatagridHeader name={"Clients"}>
           <>
             {!srchbtn ? (
-              <Button
+              <Buttons
                 onClick={() => {
                   handleSearchOpen(true);
                   setSerchBtn(true);
@@ -318,9 +318,9 @@ const  [record,setRecord]=useState();
                 variant="contained"
               >
                 Search
-              </Button>
+              </Buttons>
             ) : (
-              <Button
+              <Buttons
                 onClick={() => {
                   getClientsfn();
                   setSerchBtn(false);
@@ -329,16 +329,16 @@ const  [record,setRecord]=useState();
                 variant="contained"
               >
                 Clear Search
-              </Button>
+              </Buttons>
             )}
 
-            <Button
+            <AddButton
               startIcon={<AddIcon />}
               variant="contained"
               onClick={handleOpen}
             >
               Add
-            </Button>
+            </AddButton>
           </>
         </DatagridHeader>
         {searchFlag && searchFlag === true && (

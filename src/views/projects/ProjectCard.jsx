@@ -6,16 +6,16 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import ProgressBar from "../../components/ProgressBar";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import Grid from "@mui/material/Grid";
+import {Grid , Box} from "@mui/material/";
+import { useNavigate } from 'react-router-dom';
 
 export const ProjectCard = (props) => {
-  
+  const navigate = useNavigate();
+
   const data = props?.data
-  // console.log(data)
-  // {data?.team_members?.map((itr, index)=>{
-  //   return <> {console.log(itr)}</>  
-  // })}
+  
   const [daysLeft, setDaysLeft] = React.useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -23,7 +23,9 @@ export const ProjectCard = (props) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  const handleNavigate = (id) => {
+    navigate(`/Project/${id}`);
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -50,8 +52,8 @@ export const ProjectCard = (props) => {
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <div
-        style={{
+      <Box
+        sx={{
           display: "flex",
           flexDirection: "row",
           marginBottom: "10px",
@@ -59,7 +61,7 @@ export const ProjectCard = (props) => {
         }}
       >
         <h4 style={{ margin: "2px", color: "#333" }}>{data.project_name}</h4>
-        <div style={{ textAlign: "right" }}>
+        <Box sx={{ textAlign: "right" }}>
           <Button
             id="basic-button"
             aria-controls={open ? "basic-menu" : undefined}
@@ -79,9 +81,17 @@ export const ProjectCard = (props) => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={() => props?.handleEditProject(data.id, data)}>
+            <MenuItem onClick={() => props?.handleEditProject(data?.id, data)}>
               <EditIcon />
               Edit
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleNavigate(data?.id);
+              }}
+            >
+              <VisibilityIcon />
+              View
             </MenuItem>
             <MenuItem
               onClick={() => {
@@ -92,33 +102,20 @@ export const ProjectCard = (props) => {
               Delete
             </MenuItem>
           </Menu>
-        </div>
-      </div>
-      <div>
-        <div>
-          <span
-            style={{
-              padding: "5px",
-              borderRadius: "4px",
-              color: "white",
-              background: "#5d87ff",
-            }}
-          >
-            {data.language}
-          </span>
-        </div>
-        <div style={{ marginTop: "15px", position: "relative", bottom: 0 }}>
+        </Box>
+      </Box>
+      
+       
+        <Box style={{  position: "relative", bottom: 0 }}>
           <ProgressBar />
-        </div>
-        <div style={{ width: "100%", margin: "0px", color: "#555" }}>
-          <p style={{ margin: "0px 0px 10px 0px" }}>{data.description}</p>
-        </div>
-      </div>
+        </Box>
+       
+    
       <Grid
         container
         spacing={{ xs:0 , md: 0 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
-         sx={{marginBottom:'25px', }} 
+         sx={{marginBottom:'10px', }} 
         >
         <Grid item xs={2} sm={4} md={6}>
           <strong>Payment Status</strong>
@@ -127,31 +124,16 @@ export const ProjectCard = (props) => {
           <span>{data?.payment_status}</span>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
-          <strong>Team Members
-          </strong>
+          <strong>Status</strong>
         </Grid>
         <Grid item xs={2} sm={4} md={6}>
-        
-        <span>{data?.team_members?.map((itr, index)=>{
-          return <div key={index}> {itr?.name} {(data?.team_members?.length-1 > index) && <span> , </span>} </div>  
-        })}</span>
-        </Grid>
-        <Grid item xs={2} sm={4} md={6}>
-          <strong>Team Lead
-          </strong>
-        </Grid>
-        <Grid item xs={2} sm={4} md={6}>
-          <span>{data?.team_lead?.name}</span>
-        </Grid>
-        <Grid item xs={2} sm={4} md={6}>
-          <strong>Cost
-          </strong>
-        </Grid>
-        <Grid item xs={2} sm={4} md={6}>
-          <strong>{data?.cost}</strong>
+          <span>{data?.status}</span>
         </Grid>
       </Grid>
-      <div  >
+      <Box   sx={{display:'flex',justifyContent:'space-between'}}>
+     
+      
+    
         <span
           style={{
             background: "#8ab0cd",
@@ -159,14 +141,26 @@ export const ProjectCard = (props) => {
             fontSize: "11px",
             borderRadius: "4px",
             fontWeight: "700",
-            position: 'absolute',
+            position: '',
+            textAlign: 'center',
             bottom: "10px",
             color: "white",
+            margin:'auto 0',
           }}
         >
           {daysLeft > 0 ? `${daysLeft} Days left` : "Project Ended"}
         </span>
-      </div>
+        <span
+        style={{
+          padding: "5px",
+          borderRadius: "4px",
+          color: "white",
+          background: "#5d87ff",
+        }}
+      >
+        {data.language}
+      </span>
+      </Box>
     </Card>
   );
 };

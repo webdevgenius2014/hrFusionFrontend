@@ -8,7 +8,7 @@ import EmployeServices from "../../../services/EmployeServices";
 import EmployeesForm from '../EmployeeForm'
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
-import {getAllDepartmentfn , allRoles,desByDep} from '../../../helperApis/HelperApis'
+import {getAllDepartmentfn , allRoles,desByDep,allDocList} from '../../../helperApis/HelperApis'
 
 const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const [serverError,setServerError]=useState();
@@ -64,8 +64,20 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       console.log("getAllDepartmentsFn", error);
     }
   };
-  // end all department --------------------
-  // get all designations --------------------
+  //  --------------------
+  // get all documentTypes --------------------------------
+  const [getDocType, setGetDocType] = useState([]);
+  const allDocTypeFn = async () => {
+    try {
+      const result = await allDocList();
+      console.log(result)
+      setGetDocType(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
+  };
+  //  --------------------
+  // get  designations  by department --------------------
   const [getDesig, setGetDesig] = useState([]);
 
   const desByDepFn = async (payload) => {
@@ -91,7 +103,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
   useEffect(() => {
     getAllDepartmentsFn();
     getAllRole();
-
+    allDocTypeFn();
   }, []);
 
   // end api integration --------------------------------
@@ -144,6 +156,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
        getRole={getRole}
        serverError={serverError}
        getDesig={getDesig}
+       getDocType={getDocType}
        handleChangeDep={handleChangeDep}
        handleChangeRole={handleChangeRole}
        handleChangeDesig={handleChangeDesig}

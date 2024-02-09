@@ -39,7 +39,6 @@ export const addValidation = Yup.object().shape({
   department: Yup.string().required('Please select an option'),
   role: Yup.string().required('Please select an option'),
   designation: Yup.string().required('Please select an option'),
-  // profile_image: Yup.string().required("Profile Image is required"),
   profile_image: Yup
   .mixed()
   .required("Required")

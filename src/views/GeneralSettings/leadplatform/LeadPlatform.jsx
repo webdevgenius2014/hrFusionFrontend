@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import CommonModal from "../../../components/modal/commonModal";
-import Button from "@mui/material/Button";
+import {AddButton , Buttons} from  '../../../components/Buttons/AllButtons';
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -219,13 +219,13 @@ export const LeadPlatform = () => {
     <Container style={{ padding: 0 }}>
       <Box>
         <DatagridHeader name={"Lead Platform "}>
-          <Button
+          <AddButton
             startIcon={<AddIcon />}
             variant="contained"
             onClick={handleOpen}
           >
             Add
-          </Button>
+          </AddButton>
         </DatagridHeader>
         <CommonModal isOpen={open} isClose={handleClose}>
           <Typography

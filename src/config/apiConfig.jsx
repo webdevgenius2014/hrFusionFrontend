@@ -80,6 +80,12 @@ const ApiConfig = {
 
   // send email -----------------------------
   sendMessageToClient: `${apiURL}sendMessageToClient`,
+
+  // Document   -----------------------------
+  getAllDocumentTypes: `${apiURL}getAllDocumentTypes`,
+  addDocumentType: `${apiURL}addDocumentType`,
+  editDocumentType: `${apiURL}editDocumentType`,
+  deleteDocumentType: `${apiURL}deleteDocumentType`,
 };
 
 export default ApiConfig;

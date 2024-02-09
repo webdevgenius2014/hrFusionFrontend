@@ -1,6 +1,7 @@
 import instance from "./ImageInterceptor";
 import ApiConfig from "../config/apiConfig";
 class GeneralServices {
+  // channel -------------------------------------------------------------------
     deleteChannel(payload) {
     return instance.post(ApiConfig.deleteChannel, payload);
   }
@@ -14,6 +15,9 @@ class GeneralServices {
     // console.log(`${ApiConfig.getClients}?page=${page}`)
     return instance.get(ApiConfig.getAllChannels);
   }
+
+// platform ----------------------------------------------------------------
+
   deletePlatform(payload) {
     return instance.post(ApiConfig.deletePlatform, payload);
   }
@@ -26,6 +30,22 @@ class GeneralServices {
   getAllPlatforms() {
     // console.log(`${ApiConfig.getClients}?page=${page}`)
     return instance.get(ApiConfig.getAllPlatforms);
+  }
+
+// Document upload  ----------------------------------------------------------------
+
+deleteDocumentType(payload) {
+    return instance.post(ApiConfig.deleteDocumentType, payload);
+  }
+  editDocumentType(payload) {
+    return instance.post(ApiConfig.editDocumentType, payload);
+  }
+  addDocumentType(payload) {
+    return instance.post(ApiConfig.addDocumentType, payload);
+  }
+  getAllDocumentTypes() {
+    // console.log(`${ApiConfig.getClients}?page=${page}`)
+    return instance.get(ApiConfig.getAllDocumentTypes);
   }
  
 }

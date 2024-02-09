@@ -5,7 +5,7 @@ import CommonModal from "../../components/modal/commonModal";
 import BeatLoader from "react-spinners/ClipLoader";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import Button from "@mui/material/Button";
+import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { useNavigate } from "react-router-dom";
 import TemplateServices from "../../services/TemplateServices";
@@ -195,13 +195,11 @@ const Templates = () => {
       <Container style={{ padding: 0 }}>
         <DatagridHeader name={"Templates"}>
           <>
-            <Button
-              startIcon={<AddIcon />}
-              variant="contained"
+            <AddButton
               onClick={handleOpen}
             >
               Add
-            </Button>
+            </AddButton>
           </>
         </DatagridHeader>
         <Box>

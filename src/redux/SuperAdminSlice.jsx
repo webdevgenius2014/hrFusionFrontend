@@ -15,7 +15,7 @@ export const superAdminSlice = createSlice({
   initialState,
   reducers: {
     superAdminData: (state, action) => {
-      console.log(" redux super admin loged in");
+      // console.log(" redux super admin loged in");
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.email = action.payload.email;

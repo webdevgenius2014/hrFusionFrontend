@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import CardMedia from "@mui/material/CardMedia";
 import { useParams } from "react-router-dom";
-
 import ClientsServices from "../../services/ClientsServices";
+import CardMedia from "@mui/material/CardMedia";
 import { ImagePath } from "../../helperFunctions/ImagePath";
-import dateFormat from "dateformat";
 import { Link } from "react-router-dom";
+import dateFormat from "dateformat";
 import { ClientView } from "./ClientView";
 import { Box } from "@mui/system";
 

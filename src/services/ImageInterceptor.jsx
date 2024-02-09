@@ -8,7 +8,6 @@ instance.interceptors.response.use(
     (error)=> errorHandler(error),    
 );
 const requestHandler = async request => {   
-    // let token = useSelector((state) => state.SuperAdmin.token); 
     let token =sessionStorage.getItem("token");
     request.headers = {
         Accept: "application/json",

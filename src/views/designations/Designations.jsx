@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import DesignationForm from "./DesignationForm";
 import CommonModal from "../../components/modal/commonModal";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
-import Button from "@mui/material/Button";
+import {AddButton} from  '../../components/Buttons/AllButtons';
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
@@ -298,13 +298,14 @@ const Designations = () => {
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader name={"Designation"}>
-            <Button
-              startIcon={<AddIcon />}
-              variant="contained"
-              onClick={handleOpen}
-            >
-              Add
-            </Button>
+         
+          <AddButton
+          startIcon={<AddIcon />}
+          variant="contained"
+          onClick={handleOpen}
+        >
+          Add Fields
+        </AddButton>
           </DatagridHeader>
           <CommonModal isOpen={open} isClose={handleClose}>
             <Typography id="modal-modal-title" variant="h6" component="h2">

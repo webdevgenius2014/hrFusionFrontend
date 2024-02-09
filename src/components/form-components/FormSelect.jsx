@@ -1,10 +1,6 @@
 import * as React from "react";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
+import {Select,MenuItem,InputLabel,FormHelperText,FormControl} from "@mui/material/";
 import { Controller } from "react-hook-form";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from '@mui/material/FormControl';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -71,12 +67,12 @@ export const FormSelect = ({
               data.map((item, index) => (
                 <MenuItem
                   key={item[index]}
-                  onClick={() =>{if(pass_fun){ pass_fun(item?.id)}}}
+                  onClick={() =>{if(pass_fun){ pass_fun(item?.id , index)}}}
                   value={item[fieldaname]}
                 >
                   {item[fieldaname]}
                 </MenuItem>
-              ))): (<MenuItem disabled={true} value={' '} >{label}</MenuItem>)
+              ))): (<MenuItem disabled={true} value={' '} >No Record</MenuItem>)
             }
           </Select>
           <FormHelperText style={{ color: error?.message ? ' #f79277' : '' }}><span>{error?.message}</span></FormHelperText>

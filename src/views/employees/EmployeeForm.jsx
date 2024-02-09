@@ -11,15 +11,16 @@ import { FileUploader } from "../../components/form-components/FormFileupload";
 import { FormInputText } from "../../components/form-components/formInputText";
 import { FormInputEmail } from "../../components/form-components/formInputEmail";
 import { FormInputPassword } from "../../components/form-components/formInputPassword";
-
 const EmployeesForm = (props) => {
   const [data] = useState(() => props?.data);
   let showRole = props?.showRole;
-
+console.log("emp edit",data)
+  
 
   const {
     control,
     setError,
+    getValues,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -38,19 +39,12 @@ const EmployeesForm = (props) => {
       role: showRole,
       department: data?.department_id,
       profile_image: data?.profile_image,
+      documents : data?.documents,
       editForm: props?.editForm || false,
+      documents:data?.documents
     },
   });
-  const [filesToUpload, setFilesToUpload] = useState([]);
-
-  const handleFileChange = (newFiles) => {
-    setFilesToUpload(newFiles);
-  };
-  // console.log("files",filesToUpload)
-  const handleRemoveFile = (newFiles) => {
-    setFilesToUpload(newFiles);
-  };
-  
+ 
   useEffect (()=>{
     if(props.serverError){
      Object.keys(props.serverError).forEach((field) => {
@@ -78,7 +72,7 @@ const EmployeesForm = (props) => {
           component="form"
           noValidate
           onSubmit={handleSubmit((data) => {
-            props.apiFunc(data);
+            props.apiFunc(data); console.log(data)
           })}
           sx={{ mt: 1 }}
         >
@@ -233,7 +227,7 @@ const EmployeesForm = (props) => {
             {data && (
               <>
                 <Grid item xs={12} sm={6}>
-                  <div style={{ marginTop: "18px" }}>
+                  <div style={{ marginTop: "3px" }}>
                     <FormInputText
                       fullWidth
                       id="Leaving Reason"
@@ -343,7 +337,14 @@ const EmployeesForm = (props) => {
               defaultValue={data?.profile_image || ""}
             />
           </Grid>
-           
+          <Grid item xs={12} sm={12}>
+          <FileUploader 
+          fileData={data?.documents}
+          setValue={setValue}
+          control={control}
+          getValues={getValues}
+          getDocType={props?.getDocType}    />
+          </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">
             <Grid item></Grid>

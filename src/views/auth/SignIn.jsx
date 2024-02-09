@@ -73,6 +73,15 @@ const SignIn = () => {
           setLoading(false);
           toast.error(response?.data?.message);
         }
+        if (response.status === 403) {
+          setLoading(false);
+          console.log(...response?.data?.errors?.email);
+          toast.error(...response?.data?.errors?.email);
+        }
+        if (response.status === 404) {
+          setLoading(false);
+          toast.error(response?.data?.message);
+        }
       })
       .catch((error) => {
         setLoading(false);

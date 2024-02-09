@@ -11,7 +11,7 @@ import DepartmentServices from "../../../services/DepartmentServices";
 import commonServices  from '../../../services/CommonServices'
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
-import {getAllDepartmentfn , allRoles} from '../../../helperApis/HelperApis'
+import {getAllDepartmentfn , allRoles,desByDep,allDocList} from '../../../helperApis/HelperApis'
 
 
 const EditEmployee = (props) => {
@@ -63,6 +63,18 @@ const EditEmployee = (props) => {
         console.log('edit employee error',err)
       });
   };
+   // get all documentTypes --------------------------------
+   const [getDocType, setGetDocType] = useState([]);
+   const allDocTypeFn = async () => {
+     try {
+       const result = await allDocList();
+       console.log(result)
+       setGetDocType(result);
+     } catch (error) {
+       console.log("getAllDepartmentsFn", error);
+     }
+   };
+   //  --------------------
   // get all departments --------------------------------
   const [getdep, setGetdep] = useState([]);
   const getAllDepartmentsFn = async () => {
@@ -88,32 +100,18 @@ const EditEmployee = (props) => {
   };
 // console.log(data)
   // end  get roles -------------------
-  // get all designations --------------------
+  // get  designations  by department --------------------
   const [getDesig, setGetDesig] = useState([]);
-  const desigByDep =  (id) => {
-    DesignationServices.designationsByDep(id)
-      .then((res) => {
-        if (res) {
-          setGetDesig(res.data.data);
-          // EmployeServices.getEmployee();
-        } else {
-          setGetDesig([]);
-        }
-        if (res.status === 401) {
-          // con9sole.log()
-          dispatch(superAdminLogout());
-          setLoading(false);
-        navigate("/");
-      }
-      })
-      .catch((err) => {
-        console.log("getDesignations", err);
-      });
-  };
-  // end all designations --------------------
-  // end get  all department -------------------------------
 
-  // end add employee --------------------------------
+  const desByDepFn = async (payload) => {
+    try {
+      const result = await desByDep(payload);
+      setGetDesig(result);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
+  };
+
   const [addDesignation_id, setAddDesignation_id] = useState(
     data?.designation?.id
     );
@@ -124,7 +122,7 @@ const EditEmployee = (props) => {
       
       const handleChangeDep = (id) => {
         setshowDesig(()=>'Select designation')
-        desigByDep({department_id:addDepartment_id});
+        desByDepFn({department_id:id});
     setAddDepartment_id(() => id);
   };
   // console.log("dep", addDepartment_id);
@@ -139,7 +137,8 @@ const EditEmployee = (props) => {
   useEffect(() => {
     getAllDepartmentsFn();
     getAllRole();
-   desigByDep({id:addDepartment_id});
+    allDocTypeFn();
+    desByDepFn({department_id:addDepartment_id});
 
   }, []);
  
@@ -173,6 +172,7 @@ const EditEmployee = (props) => {
        getRole={getRole}
        showRole={showRole}
        getDesig={getDesig}
+       getDocType={getDocType}
        showDesig={showDesig}
        handleChangeDep={handleChangeDep}
        handleChangeRole={handleChangeRole}

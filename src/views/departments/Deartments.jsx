@@ -5,7 +5,7 @@ import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import DepartmentForm from "./DepartmentForm";
 import CommonModal from "../../components/modal/commonModal";
-import Button from "@mui/material/Button";
+import {AddButton} from  '../../components/Buttons/AllButtons';
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -254,13 +254,13 @@ const Deartments = () => {
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader name={"Department"} >
-          <Button
+          <AddButton
           startIcon={<AddIcon />}
           variant="contained"
           onClick={handleOpen}
         >
-          Add
-        </Button>
+          Add Fields
+        </AddButton>
           </DatagridHeader>
           <CommonModal isOpen={open} isClose={handleClose}>
             <Typography

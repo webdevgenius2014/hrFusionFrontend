@@ -1,8 +1,7 @@
 import * as React from "react";
 import { Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
-import {TextField ,InputLabel } from "@mui/material";
-import FormControl from '@mui/material/FormControl';
+import {TextField ,InputLabel, FormControl ,Box } from "@mui/material";
 import FormHelperText from "@mui/material/FormHelperText";
 
 
@@ -45,9 +44,9 @@ export const FormImage = ({
         control={control}
         defaultValue={d_value}
         render={({ field }) => (
-          <div>
-          <InputLabel >{label}</InputLabel>          
-
+          <Box>
+          
+          <InputLabel  labelId="demo-simple-select-label"  >{label}</InputLabel>          
           <FormControl size="small" fullWidth  >
               <input
               labelId="demo-simple-select-label"
@@ -78,7 +77,7 @@ export const FormImage = ({
             }
             </FormControl >
 
-          </div>
+          </Box>
         )}
       />
     </>

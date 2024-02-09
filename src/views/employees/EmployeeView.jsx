@@ -147,6 +147,12 @@ const EmployeeView = () => {
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_meta?.username} </span>
                 </Grid>
+                <Grid item xs={2}>
+                  <span style={{ fontWeight: 600 }}> Documents</span>
+                </Grid>
+                <Grid item xs={4}>
+                  <span>{viewEmployees?.user_meta?.documents?.map((itr,index)=>{ return <> <>{itr.filename}</> {index < viewEmployees?.user_meta?.documents?.length -1 &&<span>,</span>}</> })} </span>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>

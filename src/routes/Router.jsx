@@ -47,6 +47,9 @@ const EmpBirthday = Loadable(
 const GeneralSettings = Loadable(
   lazy(() => import("../views/GeneralSettings/GeneralSetting"))
 );
+const ProjectView = Loadable(
+  lazy(() => import("../views/projects/ProjectView"))
+);
 
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -134,6 +137,10 @@ const privateRoutes = [
       {
         path: "/Projects",
         element: <Projects />,
+      },
+      {
+        path: "/Project/:id",
+        element: <ProjectView />,
       },
       {
         path: "/template",

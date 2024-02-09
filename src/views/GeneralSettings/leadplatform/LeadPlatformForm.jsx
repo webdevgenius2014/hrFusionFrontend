@@ -31,7 +31,7 @@ export const LeadPlatformForm = (props) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      channel_name: props?.platform_name,
+      platform_name: props?.platform_name,
     },
     resolver: yupResolver(validationSchema),
   });

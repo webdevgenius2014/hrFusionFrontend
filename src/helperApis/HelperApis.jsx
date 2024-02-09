@@ -3,14 +3,14 @@ import DesignationServices from "../services/DesignationServices";
 import CommonServices from "../services/CommonServices";
 import ClientsServices from "../services/ClientsServices";
 import EmployeServices from "../services/EmployeServices";
-
+import GeneralServices from "../services/GeneralServices";
 export const getAllDepartmentfn = async () => {
   try {
     const res = await DepartmentServices.getAllDepartments();
     if (res.status === 200 && res?.data?.success === true) {
+      // console.log("get all department", res?.data.data);
       return res.data.data;
     } else if (res.status === 200 && res?.data?.success === false) {
-      // console.log("yes res", res?.data);
       return [];
     }
   } catch (err) {
@@ -97,6 +97,19 @@ export const allLeads = async () => {
     }
   } catch (err) {
     console.log("allEmployees", err);
+  }
+};
+export const allDocList = async () => {
+  try {
+    const res = await GeneralServices.getAllDocumentTypes();
+    if (res.status === 200 && res?.data?.success === true) {
+      // console.log("all doc type",res.data.data)
+        return res?.data?.data;
+    } else if (res.status === 200 && res?.data?.success === false) {
+      return [];
+    }
+  } catch (err) {
+    console.log("allDocList", err);
   }
 };
 

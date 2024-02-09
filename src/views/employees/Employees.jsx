@@ -5,7 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import SearchIcon from "@mui/icons-material/Search";
 import {DatagridHeader} from '../../components/dataGrid/DatagridHeader'
 import CommonModal from "../../components/modal/commonModal";
-import Button from "@mui/material/Button";
+import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
 import AddIcon from "@mui/icons-material/Add";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import EditIcon from "@mui/icons-material/Edit";
@@ -272,7 +272,8 @@ const Employees = () => {
         >
          <>
               {!srchbtn ? (
-                <Button
+                <Buttons
+                sx={{margin:0 ,height:'auto',padding:"0 16px 0 16px"}}
                   onClick={() => {
                     handleSearchOpen(true); 
                     setSerchBtn(true);
@@ -282,9 +283,9 @@ const Employees = () => {
                   variant="contained"
                 >
                   Search
-                </Button>
+                </Buttons>
               ) : (
-                <Button
+                <Buttons
                   onClick={() => {
                     getAllEmployees();
                     setSerchBtn(false);
@@ -293,16 +294,15 @@ const Employees = () => {
                   variant="contained"
                 >
                   Clear
-                </Button>
+                </Buttons>
               )}
 
-              <Button
-                startIcon={<AddIcon />}
-                variant="contained"
-                onClick={handleOpen}
-              >
-                Add
-              </Button>
+              <AddButton
+              variant="contained"
+              onClick={handleOpen}
+            >
+              Add Fields
+            </AddButton>
             </>
 
         </DatagridHeader>

@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import { CustomPagination } from "../../components/CustomPagination";
 import BeatLoader from "react-spinners/ClipLoader";
 import CommonModal from "../../components/modal/commonModal";
-import Button from "@mui/material/Button";
+import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
@@ -283,7 +283,7 @@ const Projects = () => {
           >
             <>
               {!srchbtn ? (
-                <Button
+                <Buttons
                   onClick={() => {
                     handleSearchOpen(true);
                     setSerchBtn(true);
@@ -292,9 +292,9 @@ const Projects = () => {
                   variant="contained"
                 >
                   Search
-                </Button>
+                </Buttons>
               ) : (
-                <Button
+                <Buttons
                   onClick={() => {
                     getProjectsFn();
                     setSerchBtn(false);
@@ -303,16 +303,15 @@ const Projects = () => {
                   variant="contained"
                 >
                   Clear
-                </Button>
+                </Buttons>
               )}
 
-              <Button
-                startIcon={<AddIcon />}
-                variant="contained"
+              <AddButton
+              
                 onClick={handleOpen}
               >
                 Add
-              </Button>
+              </AddButton>
             </>
           </DatagridHeader>
           {searchFlag && searchFlag === true && (
