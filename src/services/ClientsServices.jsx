@@ -26,6 +26,9 @@ class ClientService {
   getAllClients() {
     return instance.get(ApiConfig.getAllClients);
   }
+  sendMessageToClient(payload) {
+    return instance.post(ApiConfig.sendMessageToClient , payload);
+  }
 }
 
 export default new ClientService();

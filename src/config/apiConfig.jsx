@@ -63,8 +63,10 @@ const ApiConfig = {
   deleteTemplate: `${apiURL}deleteTemplate`,
   viewTemplate: `${apiURL}viewTemplate`,
 
-  // all teamlead ------------------------------
+  // all common view ------------------------------
   getAllTeamLeads: `${apiURL}getAllTeamLeads`,
+  getAllHRs : `${apiURL}getAllHRs `,
+  getAllTeamManagers : `${apiURL}getAllTeamManagers `,
 
   // addChannel ------------------------------
   addChannel: `${apiURL}addChannel`,

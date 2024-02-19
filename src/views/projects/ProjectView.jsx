@@ -9,20 +9,21 @@ import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import ProjectServices from "../../services/ProjectServices";
 
 const ProjectView = () => {
-  const [viewProject, setViewProject] = useState([1, 2, 3]);
+  const [viewProject, setViewProject] = useState([]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const projectId = id;
-
+  const [ProjectHistory,setProjectHistory] = useState([]);
   const ViewProject = () => {
     setLoading(true);
     const payload = { id: projectId };
     ProjectServices.viewProjects(payload)
       .then((res) => {
-        console.log(" project viwe", res?.data?.data);
+        // console.log(" project viwe", res?.data?.data);
         if (res.status === 200) {
           // console.log(res?.data?.data)
           setViewProject(res?.data?.data);
+          setProjectHistory(() => viewProject?.project_history)
           setLoading(false);
         } else {
           setLoading(false);
@@ -32,7 +33,7 @@ const ProjectView = () => {
           setLoading(false);
         }
         if (res.status === 404) {
-          console.log(res.data.message);
+          console.log(res?.data?.message);
           setLoading(false);
         }
         setLoading(false);
@@ -136,12 +137,12 @@ const ProjectView = () => {
                 {" "}
                 {viewProject?.team_members?.map((itr, index) => {
                   return (
-                    <>
+                    <Box key={index}>
                       {itr.name}
                       {index < viewProject?.team_members?.length - 1 && (
                         <span>,</span>
                       )}
-                    </>
+                    </Box>
                   );
                 })}
               </span>
@@ -163,12 +164,12 @@ const ProjectView = () => {
       </Grid>
     </Grid>
     <h2 style={{ marginTop: "20px" }}>Projects History:-</h2>
-    <CustDataGrid
-          data={viewProject?.project_history}
-          loading={false}
-          columns={columns}
-          totalPages={0}
-        />
+        <CustDataGrid
+        data={viewProject?.project_history||[]}
+        loading={false}
+        columns={columns}
+        totalPages={0}
+      />
     </>
   );
 };

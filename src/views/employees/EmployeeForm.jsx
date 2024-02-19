@@ -1,21 +1,32 @@
 import React, { useEffect, useState } from "react";
-import {Box,Grid} from "@mui/material/";
+import { Box, Grid } from "@mui/material/";
 import { useForm } from "react-hook-form";
-import {editValidation,addValidation} from "./validation";
+import { editValidation, addValidation } from "./validation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormDate } from "../../components/form-components/FormDate";
 import { FormImage } from "../../components/form-components/FormImage";
 import SubmitButton from "../../components/form-components/submitButton";
 import { FormSelect } from "../../components/form-components/FormSelect";
 import { FileUploader } from "../../components/form-components/FormFileupload";
+import CommonModal from "../../components/modal/commonModal";
 import { FormInputText } from "../../components/form-components/formInputText";
 import { FormInputEmail } from "../../components/form-components/formInputEmail";
 import { FormInputPassword } from "../../components/form-components/formInputPassword";
+import EmpDocView from './EmpDocView'
+
 const EmployeesForm = (props) => {
   const [data] = useState(() => props?.data);
   let showRole = props?.showRole;
-console.log("emp edit",data)
-  
+  // console.log("emp edit", data);
+  const [files, setFiles] = useState(props?.data?.documents || []);
+  console.log(files,"files")
+  const [viewDoc, setViewDoc] = useState(false);
+  const openDocView = () => {
+    setViewDoc(true);
+  };
+  const closeDocView = () => {
+    setViewDoc(false);
+  };
 
   const {
     control,
@@ -39,31 +50,29 @@ console.log("emp edit",data)
       role: showRole,
       department: data?.department_id,
       profile_image: data?.profile_image,
-      documents : data?.documents,
+      documents: data?.documents,
       editForm: props?.editForm || false,
-      documents:data?.documents
+      documents: data?.documents,
     },
   });
- 
-  useEffect (()=>{
-    if(props.serverError){
-     Object.keys(props.serverError).forEach((field) => {
-       console.log(field);
-       if (field !== "email")
-         setError(field, {
-           type: "manual",
-           message: props.serverError[field],
-         });
-       else
-         setError("useremail", {
-           type: "manual",
-           message: props.serverError[field],
-         });
-     });
-   }
- 
-   },[props.serverError])
- 
+
+  useEffect(() => {
+    if (props.serverError) {
+      Object.keys(props.serverError).forEach((field) => {
+        console.log(field);
+        if (field !== "email")
+          setError(field, {
+            type: "manual",
+            message: props.serverError[field],
+          });
+        else
+          setError("useremail", {
+            type: "manual",
+            message: props.serverError[field],
+          });
+      });
+    }
+  }, [props.serverError]);
 
   return (
     <>
@@ -72,7 +81,8 @@ console.log("emp edit",data)
           component="form"
           noValidate
           onSubmit={handleSubmit((data) => {
-            props.apiFunc(data); console.log(data)
+            props.apiFunc(data);
+            console.log(data);
           })}
           sx={{ mt: 1 }}
         >
@@ -131,36 +141,36 @@ console.log("emp edit",data)
                 defaultValue={data?.username}
               />
             </Grid>
-            { !props?.data && <>
-                          <Grid item xs={12} sm={6}>
-              <FormInputPassword
-                name="password"
-                control={control}
-                label="Password"
-                required
-                size="small"
-                error={errors && errors?.password}
-                // autoComplete="current-password"
-                // size="small"
-                // defaultValue={''}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormInputPassword
-                name="confirm_password"
-                control={control}
-                label="confirm_password"
-                size="small"
-                required
-                error={errors && errors?.confirm_password}
-                // autoComplete="current-password"
-                // size="small"
-                // defaultValue={'' }
-              />
-            </Grid>
-            </>
-
-            }
+            {!props?.data && (
+              <>
+                <Grid item xs={12} sm={6}>
+                  <FormInputPassword
+                    name="password"
+                    control={control}
+                    label="Password"
+                    required
+                    size="small"
+                    error={errors && errors?.password}
+                    // autoComplete="current-password"
+                    // size="small"
+                    // defaultValue={''}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormInputPassword
+                    name="confirm_password"
+                    control={control}
+                    label="confirm_password"
+                    size="small"
+                    required
+                    error={errors && errors?.confirm_password}
+                    // autoComplete="current-password"
+                    // size="small"
+                    // defaultValue={'' }
+                  />
+                </Grid>
+              </>
+            )}
             <Grid item xs={12} sm={6}>
               <FormInputText
                 required
@@ -291,7 +301,7 @@ console.log("emp edit",data)
                 />
               )}
             </Grid>
-         
+
             <Grid item xs={12} sm={6}>
               {props?.getDesig && props?.getDesig?.length > 0 ? (
                 <FormSelect
@@ -321,30 +331,36 @@ console.log("emp edit",data)
               )}
             </Grid>
             <Grid item xs={12} sm={6}>
-            <FormImage
-              required
-              fullWidth
-              focused
-              id="profile_image"
-              label="Profile Image"
-              name="profile_image"
-              size="small"
-              setValue={setValue}
-              setError={setError}
-              error={errors && errors.profile_image}
-              control={control}
-              d_value={data?.profile_image}
-              defaultValue={data?.profile_image || ""}
-            />
-          </Grid>
-          <Grid item xs={12} sm={12}>
-          <FileUploader 
-          fileData={data?.documents}
-          setValue={setValue}
-          control={control}
-          getValues={getValues}
-          getDocType={props?.getDocType}    />
-          </Grid>
+              <FormImage
+                required
+                fullWidth
+                focused
+                id="profile_image"
+                label="Profile Image"
+                name="profile_image"
+                size="small"
+                setValue={setValue}
+                setError={setError}
+                error={errors && errors.profile_image}
+                control={control}
+                d_value={data?.profile_image}
+                defaultValue={data?.profile_image || ""}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FileUploader
+               files  ={files}
+               setFiles={setFiles}
+                fileData={data?.files}
+                setValue={setValue}
+                control={control}
+                getValues={getValues}
+                getDocType={props?.getDocType}
+              />
+              {
+
+              }
+            </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">
             <Grid item></Grid>
@@ -352,11 +368,23 @@ console.log("emp edit",data)
           <SubmitButton loading={props.loading} btnName={props.btnName} />
         </Box>
       </Box>
+      
+      {
+        files && files?.map((file, i) =>{ 
+          return <Box key={i}>
+          <span onClick={openDocView}>
+          {file?.filename}
+          </span>
+          <CommonModal isOpen={viewDoc} isClose={closeDocView}>
+          <EmpDocView doc={{uri:file?.file}}/>
+          </CommonModal>
+          </Box> 
+        })
+      }       
     </>
   );
 };
 export default EmployeesForm;
-
 
 // <Grid item xs={12} sm={12}>
 // <FileUploader

@@ -7,6 +7,7 @@ import SubmitButton from "../../components/form-components/submitButton";
 
 const DeartmentsForm = (props) => {
   const newErrors= props?.error;
+  // console.log(newErrors)
   useEffect(()=>{
     setError ("department_name", {
       type: "manual",
@@ -41,7 +42,7 @@ return (
           label="Department"
           name="department_name"
           size="small"
-          defaultValue={props.dep_name }
+          defaultValue={props?.dep_name }
           error={errors && errors?.department_name}
           control={control}
           autoComplete="family-name"

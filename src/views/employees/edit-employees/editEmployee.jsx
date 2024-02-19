@@ -6,9 +6,6 @@ import Typography from "@mui/material/Typography";
 import EmployeServices from "../../../services/EmployeServices";
 import { useNavigate } from "react-router-dom";
 import {toast } from "react-toastify";
-import DesignationServices from "../../../services/DesignationServices";
-import DepartmentServices from "../../../services/DepartmentServices";
-import commonServices  from '../../../services/CommonServices'
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import {getAllDepartmentfn , allRoles,desByDep,allDocList} from '../../../helperApis/HelperApis'
@@ -22,8 +19,10 @@ const EditEmployee = (props) => {
   const [serverError , setServerError] = useState('')
   const [id] = useState(() => props?.data?.id);
   const [data] = useState(() => props.data.row?.user_meta);
-  const [showRole] = useState(() => props.data.row?.user_role.role);
+  const [showRole] = useState(() => props.data.row?.user_role?.role);
   const [showDesig,setshowDesig]= useState(() => props.data.row?.user_meta.designation.designation_name)
+ 
+  
   // api integration --------------------------------
   // Edit employee --------------------------------
   const handleEditEmployee = (formData) => {

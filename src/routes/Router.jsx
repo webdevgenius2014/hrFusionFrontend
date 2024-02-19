@@ -50,6 +50,9 @@ const GeneralSettings = Loadable(
 const ProjectView = Loadable(
   lazy(() => import("../views/projects/ProjectView"))
 );
+const HrTeamLeadMangar = Loadable(
+  lazy(() => import("../views/commonView/HrTeamLeadMangar"))
+);
 
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -139,7 +142,7 @@ const privateRoutes = [
         element: <Projects />,
       },
       {
-        path: "/Project/:id",
+        path: "/Projects/:id",
         element: <ProjectView />,
       },
       {
@@ -153,6 +156,18 @@ const privateRoutes = [
       {
         path: "/generalSettings",
         element: <GeneralSettings />,
+      },
+      {
+        path: "/team-leaders",
+        element: <HrTeamLeadMangar />,
+      },
+      {
+        path: "/team-managers",
+        element: <HrTeamLeadMangar />,
+      },
+      {
+        path: "/hr",
+        element: <HrTeamLeadMangar />,
       },
     ],
   },

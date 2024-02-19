@@ -17,9 +17,6 @@ import SubmitButton from "../../components/form-components/submitButton";
 
 
 const ClientForm = (props) => {
-    
-
-
   const [leadVal, setLeadVal] = React.useState();
   const [data] = useState(props?.clientData);
   const serverErrors = props?.serverError;

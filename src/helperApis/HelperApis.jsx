@@ -86,15 +86,17 @@ export const allEmployees = async () => {
   }
 };
 
-export const allLeads = async () => {
+export const allLeads = async (url) => {
   try {
-    const res = await CommonServices.getAllTeamLeads();
-    if (res.status === 200 && res?.data?.success === true) {
-      // console.log("all lead",res.data.data)
-        return res?.data?.data;
-    } else if (res.status === 200 && res?.data?.success === false) {
-      return [];
-    }
+    let res;
+    if(url==='hr')
+     res = await CommonServices.getAllHRs();
+    else if( url === 'team-leaders')
+    res = await CommonServices.getAllTeamLeads();
+    else if( url === 'team-managers') 
+    res = await CommonServices.getAllTeamManagers();
+        return res;
+   
   } catch (err) {
     console.log("allEmployees", err);
   }

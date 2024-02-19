@@ -160,7 +160,7 @@ const Designations = () => {
         }
 
         if (res.status === 403) {
-          setServerError(() => res.data);
+          setServerError(() => res?.data);
           setLoading(false);
         }
         if (res.status === 401) {

@@ -21,15 +21,15 @@ const DashboardCard = (props) => {
       return <> {designations} </>;
     }
    else if (key.toString() === "HR") {
-    setLink(()=>'/')
+    setLink(()=>'/hr')
       return <> {hr} </>;
     }
    else if (key.toString() === "Team Managers") {
-    setLink(()=>'/')
+    setLink(()=>'/team-managers')
       return <> {team_Managers} </>;
     }
    else if (key.toString() === "Team Leaders") {
-    setLink(()=>'/')
+    setLink(()=>'/team-leaders')
      return <> {team_Leaders} </>;
     }
    else if (key.toString() === "Employees") {

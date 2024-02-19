@@ -12,26 +12,25 @@ import {
 import { FormSelect } from "./FormSelect";
 
 export const FileUploader = (props) => {
-  const [files, setFiles] = useState(props?.fileData || []);
-  const [fileName , setFileName] = useState(' ');
+  // const [files, setFiles] = useState(props?.fileData || []);
   // console.log(files);
   const handleFileChange = (event, index) => {
     const selectedFile = event.target.files[0];
-    const newFiles = [...files];
+    const newFiles = [...props?.files];
     newFiles[index] = {...newFiles[index] , file: selectedFile };
-    setFiles(newFiles);
+    props?.setFiles(newFiles);
   };
 
   const handleAddFileInput = () => {
-    setFiles((prevFiles) => [...prevFiles, { filename: " ", file: null }]);
+    props?.setFiles((prevFiles) => [...prevFiles, { filename: " ", file: null }]);
   };
 
   const handleRemoveFileInput = (index) => {
-    const newFiles = [...files];
+    const newFiles = [...props?.files];
     newFiles.splice(index, 1);
-    setFiles(()=>newFiles);
+    props?.setFiles(()=>newFiles);
   };
-  props?.setValue('documents',files)
+  props?.setValue('documents',props?.files)
   return (
     <Box >
     <Grid item xs={12} sm={12} >
@@ -39,9 +38,8 @@ export const FileUploader = (props) => {
     <Button  variant="contained" onClick={handleAddFileInput}>Add File</Button>
     </Grid>
 
-    {files.map((file, index) => (
+    {props?.files.map((file, index) => (
       <Box key={index} sx={{ display: "flex", gap: 1, mt: 1 }}>
-      {console.log(file)}
       <FormControl fullWidth>
         <InputLabel id={`Document-label-${index}`}>
           Select Document Type
@@ -54,12 +52,12 @@ export const FileUploader = (props) => {
           defaultValue={file?.filename}
           onChange={(event) => {
             
-            const newFiles = [...files];
+            const newFiles = [...props?.files];
             newFiles[index] = {
               ...newFiles[index],
               filename: event.target.value,
             };
-            setFiles(newFiles);
+            props?.setFiles(newFiles);
           }}
         >
           {props?.getDocType && props?.getDocType.length > 0 ? (
@@ -89,7 +87,7 @@ export const FileUploader = (props) => {
         </Button>
       </Box>
     ))}
-    
+   
     </Box>
   );
 };

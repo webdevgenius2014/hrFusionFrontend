@@ -6,11 +6,11 @@ export const FormInputEmail= ({name, control, label, required,focused, error, ..
         <Controller
             control={control}
             name={name}
-            rules={{
-                required: required===true?label+' is required':required,
-                pattern: /^[a-zA-Z0-9]+@+[a-zA-Z0-9]+.+[A-z]/
+            // rules={{
+            //     required: required===true?label+' is required':required,
+            //     pattern: /^[a-zA-Z0-9]+@+[a-zA-Z0-9]+.+[A-z]/
             
-            }}                      
+            // }}                      
             render={({field:{onChange, value, ref}}) => (
                 <TextField                    
                     key={name} 

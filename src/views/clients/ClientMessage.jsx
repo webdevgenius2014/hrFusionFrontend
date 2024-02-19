@@ -14,7 +14,6 @@ import Select from "@mui/material/Select";
 import TemplateForm from "../Templates/TemplateForm";
 import TemplateServices from "../../services/TemplateServices";
 import BeatLoader from "react-spinners/ClipLoader";
-import CommonServices from '../../services/CommonServices';
 import { Box } from "@mui/system";
 import TemplateCard from "../Templates/TemplateCard";
 import { TemplateView } from "../Templates/TemplateView";
@@ -132,7 +131,7 @@ const ClientMessage = () => {
       message_type:msgType,
     }
     console.log("payload",payload)
-    CommonServices.sendMessageToClient(payload)
+    ClientsServices.sendMessageToClient(payload)
       .then((res) => {
         if (res.status === 200) {
           setLoading(false);

@@ -10,10 +10,10 @@ import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
 import SearchIcon from "@mui/icons-material/Search";
 import ClientsServices from "../../services/ClientsServices";
 import ClientsForm from "./ClientsForm";
-import { toast } from "react-toastify";
 import { ClientsCard } from "./ClientsCard";
 import { CustomPagination } from "../../components/CustomPagination";
 import { Searching } from "../../components/Searching";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import  ClientProfile  from "./ClientProfile";
 import { DeleteDilagBox } from "../../components/modal/DeleteModal";
@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import GeneralServices from "../../services/GeneralServices";
+import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
 
 const Clients = () => {
   const navigate = useNavigate();
@@ -107,17 +108,12 @@ const Clients = () => {
   // get api channel
   const [getAddChannel,setGetAddChannel]=useState([])
   const getAllChannel = () => {
-    // setFormLoader(true);
     GeneralServices.getAllChannels()
       .then((res) => {
-        // console.log(res?.data?.data)
         if (res.status === 200 && res?.data?.success === true) {
-          // setFormLoader(false);
           setGetAddChannel(res?.data?.data);
-          // console.log(res?.data?.data)
         }
         if (res.status === 200 && res?.data?.success === false) {
-          // setFormLoader(false);
         }
         if (res.status === 401) {
           dispatch(superAdminLogout());
@@ -125,8 +121,7 @@ const Clients = () => {
         }
       })
       .catch((err) => {
-        // setFormLoader(false);
-        console.log("getdep error", err);
+        console.log("getAllChannel error", err);
       });
   };
   // get api leadplatform -----------------------
@@ -190,13 +185,13 @@ const Clients = () => {
           getClientsfn();
           toast.success(res?.data?.message);
         }
-        if (res.status === 401) {
+       else if  (res.status === 401) {
           // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
         navigate("/");
         }
-        if (res.status === 403) {
+       else if (res.status === 403) {
           setServerError(() => res.data.errors);
           setLoading(false);
         }
@@ -339,6 +334,8 @@ const  [record,setRecord]=useState();
             >
               Add
             </AddButton>
+            <CsvUploadBtn/>
+           
           </>
         </DatagridHeader>
         {searchFlag && searchFlag === true && (

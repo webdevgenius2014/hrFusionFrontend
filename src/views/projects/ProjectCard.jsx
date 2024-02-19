@@ -24,7 +24,7 @@ export const ProjectCard = (props) => {
     setAnchorEl(event.currentTarget);
   };
   const handleNavigate = (id) => {
-    navigate(`/Project/${id}`);
+    navigate(`/Projects/${id}`);
   };
   const handleClose = () => {
     setAnchorEl(null);

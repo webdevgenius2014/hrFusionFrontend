@@ -44,9 +44,7 @@ const Deartments = () => {
           getDepartmentfn();
         }
         if (res.status === 403) {
-          console.log(res.data)
           setServerError(res?.data);
-          console.log(res.data)
           setLoading(false);
         }
         if (res.status === 401) {
@@ -121,7 +119,7 @@ const Deartments = () => {
           toast.success(res?.data?.message);
         }
         if (res.status === 403) {
-          setServerError(res?.data?.errors);
+          setServerError(res?.data);
           setLoading(false);
         }
         if (res.status === 401) {
@@ -262,6 +260,7 @@ const Deartments = () => {
           Add Fields
         </AddButton>
           </DatagridHeader>
+          </Box>
           <CommonModal isOpen={open} isClose={handleClose}>
             <Typography
               id="modal-modal-title"
@@ -293,7 +292,7 @@ const Deartments = () => {
             totalPages={totalPages}
           />
           {/* checkboxSelection  upline */}
-        </Box>
+       
       </Container>
       <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
         <Typography

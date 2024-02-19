@@ -20,8 +20,11 @@ class CommonServices {
   getAllTeamLeads() {
     return instance.get(ApiConfig.getAllTeamLeads);
   }
-  sendMessageToClient(payload) {
-    return instance.post(ApiConfig.sendMessageToClient , payload);
+  getAllHRs() {
+    return instance.get(ApiConfig.getAllHRs );
+  }
+  getAllTeamManagers() {
+    return instance.get(ApiConfig.getAllTeamManagers );
   }
 }
 export default new CommonServices();
