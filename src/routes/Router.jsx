@@ -41,9 +41,7 @@ const Tamplates = Loadable(
 const TemplateForm = Loadable(
   lazy(() => import("../views/Templates/TemplateForm"))
 );
-const EmpBirthday = Loadable(
-  lazy(() => import("../views/emp_birthday/EmpBirthday"))
-);
+
 const GeneralSettings = Loadable(
   lazy(() => import("../views/GeneralSettings/GeneralSetting"))
 );
@@ -51,7 +49,16 @@ const ProjectView = Loadable(
   lazy(() => import("../views/projects/ProjectView"))
 );
 const HrTeamLeadMangar = Loadable(
-  lazy(() => import("../views/commonView/HrTeamLeadMangar"))
+  lazy(() => import("../views/hr_tm-lead_mnagr_Ep-bdy/CommonView"))
+);
+const Holidays = Loadable(
+  lazy(() => import("../views/Holidays/Holidays"))
+);
+const Events = Loadable(
+  lazy(() => import("../views/events/Events"))
+);
+const Leaves = Loadable(
+  lazy(() => import("../views/Leaves/Leaves"))
 );
 
 
@@ -129,7 +136,7 @@ const privateRoutes = [
         element: <ClientProfile />,
       },
       {
-        path: "/Client-Message/:id",
+        path: "/client-Message/:id",
         element: <ClientMessage />,
       },
       {
@@ -151,7 +158,7 @@ const privateRoutes = [
       },
       {
         path: "/Employees-Birthday",
-        element: <EmpBirthday />,
+        element: <HrTeamLeadMangar />,
       },
       {
         path: "/generalSettings",
@@ -168,6 +175,18 @@ const privateRoutes = [
       {
         path: "/hr",
         element: <HrTeamLeadMangar />,
+      },
+      {
+        path: "/holidays",
+        element: <Holidays />,
+      },
+      {
+        path: "/events",
+        element: <Events />,
+      },
+      {
+        path: "/leaves",
+        element: <Leaves />,
       },
     ],
   },

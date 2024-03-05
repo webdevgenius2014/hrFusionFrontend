@@ -2,17 +2,14 @@ import * as React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Person3Icon from "@mui/icons-material/Person3";
-import WorkIcon from "@mui/icons-material/Work";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import AddCommentIcon from "@mui/icons-material/AddComment";
 import { NavLink } from "react-router-dom";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useLocation } from 'react-router-dom';
+import {useLocation } from 'react-router-dom';
 
 export const ClientAccordion = (props) => {
   const url = useLocation();

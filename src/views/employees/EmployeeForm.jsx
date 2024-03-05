@@ -57,7 +57,7 @@ const EmployeesForm = (props) => {
   });
 
   useEffect(() => {
-    if (props.serverError) {
+    if (props?.serverError) {
       Object.keys(props.serverError).forEach((field) => {
         console.log(field);
         if (field !== "email")
@@ -72,7 +72,7 @@ const EmployeesForm = (props) => {
           });
       });
     }
-  }, [props.serverError]);
+  }, [props?.serverError]);
 
   return (
     <>

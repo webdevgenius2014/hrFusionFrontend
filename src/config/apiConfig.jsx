@@ -83,11 +83,36 @@ const ApiConfig = {
   // send email -----------------------------
   sendMessageToClient: `${apiURL}sendMessageToClient`,
 
+  // Csv upload -----------------------------
+  uploadClientCSV: `${apiURL}uploadClientCSV`,
+
   // Document   -----------------------------
   getAllDocumentTypes: `${apiURL}getAllDocumentTypes`,
   addDocumentType: `${apiURL}addDocumentType`,
   editDocumentType: `${apiURL}editDocumentType`,
   deleteDocumentType: `${apiURL}deleteDocumentType`,
+
+  // department all --------------------------------
+  getHolidays: `${apiURL}getHolidays`,
+  get_upcoming_holidays: `${apiURL}get-upcoming-holidays`,
+  addHoliday: `${apiURL}addHoliday`,
+  editHoliday: `${apiURL}editHoliday`,
+  deleteHoliday: `${apiURL}deleteHoliday`,
+  thisYear_holidays: `${apiURL}thisYear-holidays`,
+  upcomingThreeHoliday: `${apiURL}upcomingThreeHoliday`,
+
+  // event all api
+  getEvents: `${apiURL}getEvents`,
+  addEvent: `${apiURL}addEvent`,
+  editEvent: `${apiURL}editEvent`,
+  deleteEvent: `${apiURL}deleteEvent`,
+  
+  // Leaves 
+  getLeaves : `${apiURL}getLeaves`,
+  updateLeaveStatus : `${apiURL}updateLeaveStatus`,
+  getLeaveByStatus : `${apiURL}getLeaveByStatus`,
+  editLeave : `${apiURL}editLeave`,
+  addLeave : `${apiURL}addLeave`,
 };
 
 export default ApiConfig;

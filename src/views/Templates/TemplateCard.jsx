@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
@@ -10,16 +10,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import {TemplateView} from './TemplateView'
+import { TemplateView } from "./TemplateView";
 import parser from "react-html-parser";
 
 const TemplateCard = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
-  const [openView, setOpenView] = useState(false);
-  const handleOpenView = () => setOpenView(true);
-  const handleCloseView = () => setOpenView(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,6 +24,10 @@ const TemplateCard = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [openView, setOpenView] = useState(false);
+  const handleOpenView = () => setOpenView(true);
+  const handleCloseView = () => setOpenView(false);
 
   return (
     <>
@@ -76,7 +76,7 @@ const TemplateCard = (props) => {
                 >
                   <MenuItem
                     onClick={() =>
-                      props?.handleEditClick(props?.data?.id, props?.data)
+                      props?.handleEditClick(props?.data)
                     }
                   >
                     <EditIcon />
@@ -89,9 +89,7 @@ const TemplateCard = (props) => {
                     <DeleteIcon />
                     Delete
                   </MenuItem>
-                  <MenuItem
-                    onClick={()=>  handleOpenView()}
-                  >
+                  <MenuItem onClick={() => handleOpenView()}>
                     <VisibilityIcon />
                     View
                   </MenuItem>
@@ -135,10 +133,11 @@ const TemplateCard = (props) => {
           )}
         </Box>
       </Card>
-      <TemplateView 
-    data={props?.data}
-    open={openView}
-      handleClose={handleCloseView}/> 
+      <TemplateView
+        data={props?.data}
+        open={openView}
+        handleClose={handleCloseView}
+      />
     </>
   );
 };

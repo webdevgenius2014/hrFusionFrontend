@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {persistor} from './Store'
 
 const initialState = {
   id: "",

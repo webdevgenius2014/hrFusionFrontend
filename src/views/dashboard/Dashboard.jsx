@@ -19,14 +19,13 @@ const Dashboard = () => {
   const [useName,setUserName]=useState(userData?.payload?.SuperAdmin?.name)
   // get Dashboard ------------------------------------------------
   const [dashboardData, setDashboardData] = useState();
+  // dashboard api
   const dashboarData = () => {
     setLoading(true);
-    commonServices
-      .dashboard()
+    commonServices.dashboard()
       .then((res) => {
         if (res.status === 200) {
           setDashboardData(res?.data?.data);
-          // console.log(res?.data?.data)
           setLoading(false);
           if (res.status === 200 && res?.success === false) {
             setLoading(false);
@@ -34,7 +33,6 @@ const Dashboard = () => {
           }
         }
         if (res.status === 401) {
-          console.log("entred 401");
           setLoading(false);
           dispatch(superAdminLogout());
           navigate("/");
@@ -43,9 +41,8 @@ const Dashboard = () => {
       .catch((err) => {
         console.log("dashboard", err);
       });
-  };
-
-  // end Dashboard --------------------------------
+  }
+// date and time 
   const getCurrentTime = () => {
     const currentHour = new Date().getHours();
 
@@ -59,6 +56,7 @@ const Dashboard = () => {
       setGreeting('Good Night');
     }
   };
+  
   useEffect(() => {
     dashboarData();
     getCurrentTime();

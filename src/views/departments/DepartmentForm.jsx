@@ -6,33 +6,33 @@ import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
 
 const DeartmentsForm = (props) => {
-  const newErrors= props?.error;
-  // console.log(newErrors)
-  useEffect(()=>{
-    setError ("department_name", {
-      type: "manual",
-      message:newErrors?.message
-      ,
-    });
-  },[newErrors])
-    
+  const newErrors = props?.error;
   const validationSchema = Yup.object().shape({
     department_name: Yup.string().required("Department name is required"),
-  })
+  });
+
   const {
     control,
     setError,
-    setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm ({ defaultValues: {
-    department_name: props?.showDepartment,},
+  } = useForm({
+    defaultValues: {
+      department_name: props?.showDepartment,
+    },
     resolver: yupResolver(validationSchema),
-   
   });
-  
 
-return (
+  useEffect(() => {
+    if(newErrors){
+      setError("department_name", {
+        type: "manual",
+        message: newErrors?.message,
+      });
+    }
+  }, [newErrors, setError]);
+
+  return (
     <>
       <form noValidate onSubmit={handleSubmit(props?.apiFun)}>
         <FormInputText
@@ -42,13 +42,12 @@ return (
           label="Department"
           name="department_name"
           size="small"
-          defaultValue={props?.dep_name }
+          defaultValue={props?.dep_name}
           error={errors && errors?.department_name}
           control={control}
           autoComplete="family-name"
         />
-
-        <SubmitButton loading={props.loading} btnName={props.btnName}/>
+        <SubmitButton loading={props.loading} btnName={props.btnName} />
       </form>
     </>
   );

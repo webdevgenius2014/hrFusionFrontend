@@ -12,14 +12,8 @@ import SubmitButton from "../../components/form-components/submitButton";
 import { DataGrid } from "@mui/x-data-grid";
 
 const ProjectForm = (props) => {
-  const [data, setData] = useState(props?.projectData);
-  const statusData = [
-    { id: 1, value: "completed" },
-    { id: 0, value: "In progress" },
-    { id: 2, value: "On hold" },
-  ];
   const serverErrors = props?.serverError;
-  // console.log(data?.team_members?.map((i)=>{return i?.name}))
+  const [data] = useState(props?.projectData);
   const [team_membersView] = useState(
     data?.team_members?.map((i) => {
       return i?.name;
@@ -30,8 +24,12 @@ const ProjectForm = (props) => {
       return i?.id;
     }) || []
   );
+  const statusData = [
+    { id: 1, value: "completed" },
+    { id: 0, value: "In progress" },
+    { id: 2, value: "On hold" },
+  ];
 
-  // console.log(data.status)
   const validationSchema = Yup.object().shape({
     client_name: Yup.string().required("Client name is required"),
     cost: Yup.string().required("Lead From Platform is required"),
@@ -41,10 +39,10 @@ const ProjectForm = (props) => {
     project_name: Yup.string().required("Project name is required"),
     team_lead: Yup.string().required("Team lead is required"),
     team_members: Yup.array().min(1, "Please select at least one option"),
-
     status: Yup.string().required("Status is required"),
     description: Yup.string().required("Description is required"),
   });
+
   const {
     control,
     setError,
@@ -67,34 +65,30 @@ const ProjectForm = (props) => {
     },
     resolver: yupResolver(validationSchema),
   });
+
   const handleClintId = (id) => {
-    // console.log(id)
     setValue("client_id", id || data?.client?.id);
   };
+
   const handleStatusId = (status) => {
-    //  console.log(id)
     setValue("status", status || data?.status);
   };
 
   const handleTeamleadId = (id) => {
-    console.log(id);
     setValue("team_lead", id || data?.team_lead?.id);
   };
+
   const handlePaymentStatus = (name) => {
-    console.log(name);
     setValue("payment_status", name || data?.payment_status);
   };
+
   const handleEmployeesId = (id) => {
     let selectedData = empID;
-    // console.log(empID)
     if (empID.includes(id)) {
       selectedData = selectedData.filter((selected) => selected !== id);
       setValue("team_members", selectedData || team_membersView);
-
-      // setEmpId(()=>empID.filter((selected) => selected !== id));
     } else {
       selectedData = [...selectedData, id];
-      // setEmpId([...empID, id]);
       setValue("team_members", selectedData || team_membersView);
     }
     setEmpId(selectedData);
@@ -168,27 +162,27 @@ const ProjectForm = (props) => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-            <Box sx={{marginTop:'8px'}}>
-            <FormDate
-            required
-                fullWidth
-                focused
-                // format="yyyy-MM-dd"
-                type="date"
-                id="deadline"
-                label="Deadline "
-                name="deadline"
-                size="small"
-                setValue={setValue}
-                error={errors && errors?.deadline}
-                control={control}
-                d_value={data?.deadline}
-                value={data?.deadline || ""}
-              />
+              <Box sx={{ marginTop: "8px" }}>
+                <FormDate
+                  required
+                  fullWidth
+                  focused
+                  // format="yyyy-MM-dd"
+                  type="date"
+                  id="deadline"
+                  label="Deadline "
+                  name="deadline"
+                  size="small"
+                  setValue={setValue}
+                  error={errors && errors?.deadline}
+                  control={control}
+                  d_value={data?.deadline}
+                  value={data?.deadline || ""}
+                />
               </Box>
-              </Grid>
+            </Grid>
 
-              <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
               <FormMultiSelect
                 name="team_members_names"
                 data={data?.team_members}
@@ -250,22 +244,22 @@ const ProjectForm = (props) => {
                 required
               />
             </Grid>
-          
+
             <Grid item xs={12} sm={6}>
-            <FormSelect
-              label="Client Name"
-              name={"client_name"}
-              fieldaname="name"
-              data={props?.clientsData}
-              control={control}
-              onchange={onchange}
-              pass_fun={handleClintId}
-              // getValue={getValues}
-              def={data?.client?.name}
-              error={errors && errors?.client_name}
-              required
-            />
-          </Grid>
+              <FormSelect
+                label="Client Name"
+                name={"client_name"}
+                fieldaname="name"
+                data={props?.clientsData}
+                control={control}
+                onchange={onchange}
+                pass_fun={handleClintId}
+                // getValue={getValues}
+                def={data?.client?.name}
+                error={errors && errors?.client_name}
+                required
+              />
+            </Grid>
             <Grid item xs={12} sm={12}>
               <FormInputText
                 required

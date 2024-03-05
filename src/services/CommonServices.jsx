@@ -26,5 +26,6 @@ class CommonServices {
   getAllTeamManagers() {
     return instance.get(ApiConfig.getAllTeamManagers );
   }
+ 
 }
 export default new CommonServices();

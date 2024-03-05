@@ -4,52 +4,38 @@ import Container from "@mui/material/Container";
 import CommonModal from "../../components/modal/commonModal";
 import BeatLoader from "react-spinners/ClipLoader";
 import Typography from "@mui/material/Typography";
-import AddIcon from "@mui/icons-material/Add";
-import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
+import { AddButton } from "../../components/Buttons/AllButtons";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { useNavigate } from "react-router-dom";
 import TemplateServices from "../../services/TemplateServices";
 import TemplateCard from "./TemplateCard";
 import { toast } from "react-toastify";
 import TemplateForm from "./TemplateForm";
-import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { CustomPagination } from "../../components/CustomPagination";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
-import { TemplateView } from "./TemplateView";
 
 const Templates = () => {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [noRecord, setNoRecord] = useState();
-  const [page, setPage] = useState(1);
-
-  const [serverErr, setServerErr] = useState();
-
-  const [loading, setLoading] = useState(false);
-  const [totalPages, setTotalPages] = useState();
-
-  const [editopen, setEditOpen] = useState(false);
-  const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
-
-  const [deleteopen, setDeleteOpen] = useState(false);
-  const handleDeleteOpen = () => setDeleteOpen(true);
-  const handleDeleteClose = () => setDeleteOpen(false);
-
   const navigate = useNavigate();
 
-  // api integration --------------------------------
+  const [page, setPage] = useState(1);
+  const [noRecord, setNoRecord] = useState();
+  const [serverErr, setServerErr] = useState();
+  const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState();
+  // api states
   const [templData, setTemplData] = useState();
+  const [editTempData, setEditTempData] = useState();
+  const [deleteTemp, setDeleteTemp] = useState();
+
+  // api get template --------------------------------
   const getTemplate = () => {
     setLoading(true);
     TemplateServices.getTemplate(page)
       .then((res) => {
-        // console.log(res)
         if (res.status === 200) {
-          // console.log(res?.data)
           setTotalPages(res?.data?.data?.last_page);
           setTemplData(res?.data?.data?.data);
           setLoading(false);
@@ -71,7 +57,6 @@ const Templates = () => {
         console.log("getdep error", err);
       });
   };
-
   // add templates ----------------------------------------------------------------
   const addTemplate = (data, html) => {
     setLoading(true);
@@ -79,7 +64,6 @@ const Templates = () => {
     TemplateServices.addTemplate(payload)
       .then((res) => {
         if (res.status === 200) {
-          // console.log(res.data.message);
           setLoading(false);
           toast.success(res?.data?.message);
           getTemplate();
@@ -87,11 +71,9 @@ const Templates = () => {
         }
         if (res.status === 403) {
           setLoading(false);
-          // toast.error(...res?.data?.errors?.message);
           setServerErr(res?.data?.errors);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -103,19 +85,8 @@ const Templates = () => {
       });
   };
   //  Edit template ----------------------------------------------------------------
-  const [template_Id, setTemplate_Id] = useState();
-  const [editTempData, setEditTempData] = useState();
-  const handleEditClick = (id, data) => {
-    console.log(id, data);
-    setTemplate_Id(id);
-    setEditTempData(() => data);
-    handleEditOpen();
-  };
-
   const handleEdit = (data, html) => {
-    console.log(data);
-    let payload = { ...data, template_id: template_Id, message: html };
-    console.log(payload);
+    let payload = { ...data, template_id: editTempData?.id, message: html };
     setLoading(true);
     TemplateServices.editTemplate(payload)
       .then((res) => {
@@ -129,7 +100,6 @@ const Templates = () => {
           setLoading(false);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -140,18 +110,12 @@ const Templates = () => {
         console.log("Edit template error: " + err);
       });
   };
-
   // delete template --------------------------------
-  const [deleteTemp, setDeleteTemp] = useState();
-  const handleDeleteClick = (id) => {
-    setDeleteTemp(id);
-    handleDeleteOpen();
-  };
   const handleDelete = (e) => {
-    let id = { id: deleteTemp };
+    const payload = { id: deleteTemp };
     setLoading(true);
     e.preventDefault();
-    TemplateServices.deleteTemplate(id)
+    TemplateServices.deleteTemplate(payload)
       .then((res) => {
         if (res.status === 200 || res.status === 404) {
           setLoading(false);
@@ -161,12 +125,10 @@ const Templates = () => {
         } else if (res.status === 401) {
           navigate("/");
           setLoading(false);
-
           toast.error("error");
         }
         if (res.status === 403) {
           setLoading(false);
-
           toast.error(res.data.message);
         }
         if (res.status === 401) {
@@ -181,25 +143,39 @@ const Templates = () => {
         setLoading(false);
       });
   };
+  // edit click
+  const handleEditClick = (data) => {
+    setEditTempData(() => data);
+    handleEditOpen();
+  };
+  // delete click
+  const handleDeleteClick = (id) => {
+    setDeleteTemp(id);
+    handleDeleteOpen();
+  };
 
-  // ----------------------------------------------------------------
-  useEffect(() => {
-    getTemplate();
-  }, []);
   useEffect(() => {
     getTemplate(page);
   }, [page]);
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [editopen, setEditOpen] = useState(false);
+  const handleEditOpen = () => setEditOpen(true);
+  const handleEditClose = () => setEditOpen(false);
+
+  const [deleteopen, setDeleteOpen] = useState(false);
+  const handleDeleteOpen = () => setDeleteOpen(true);
+  const handleDeleteClose = () => setDeleteOpen(false);
 
   return (
     <>
       <Container style={{ padding: 0 }}>
         <DatagridHeader name={"Templates"}>
           <>
-            <AddButton
-              onClick={handleOpen}
-            >
-              Add
-            </AddButton>
+            <AddButton onClick={handleOpen}>Add</AddButton>
           </>
         </DatagridHeader>
         <Box>
@@ -248,7 +224,7 @@ const Templates = () => {
               id="modal-modal-title"
               variant="h6"
               component="h2"
-              sx={{ marginBottom: "20px", fontWeight: "600" ,}}
+              sx={{ marginBottom: "20px", fontWeight: "600" }}
             >
               Add Template
             </Typography>
@@ -257,14 +233,13 @@ const Templates = () => {
                 mb: 2,
                 display: "flex",
                 flexDra: { xs: "wrap" },
-                minWidth: { xs:900 },
+                minWidth: { xs: 900 },
                 height: 440,
                 overflow: "hidden",
                 overflowY: "scroll",
               }}
             >
               <TemplateForm
-
                 apiFun={addTemplate}
                 btnName={"Save "}
                 loading={loading}
@@ -300,15 +275,15 @@ const Templates = () => {
               />
             </Box>
           </CommonModal>
-         
-          <DeleteDilagBox
+
+          <DltndConf
             title="Delete Template"
-            handleDeleteClose={handleDeleteClose}
+            handleClose={handleDeleteClose}
             handleDelete={handleDelete}
             loading={loading}
-            deleteopen={deleteopen}
+            open={deleteopen}
           />
-          {totalPages && totalPages>= '2' && (
+          {totalPages && totalPages >= "2" && (
             <Box
               style={{ width: "100%", marginTop: "10px", background: "white" }}
             >
@@ -316,7 +291,6 @@ const Templates = () => {
             </Box>
           )}
         </Box>
-        
       </Container>
     </>
   );

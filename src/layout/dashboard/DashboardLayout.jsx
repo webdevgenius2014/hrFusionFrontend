@@ -24,7 +24,6 @@ import { Footer } from "./Footer";
 import Brand from "../../components/Brand";
 import { defaultTheme } from "../../theme/theme";
 import CommonServices from "../../services/CommonServices";
-import { persistor } from "../../redux/Store";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
@@ -113,11 +112,10 @@ const DashboardLayout = () => {
   });
   const {
     control,
-    setError,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({ resolver: yupResolver(validationSchema) });
+ 
   const settings = ["Account", "Change password", "Logout"];
   const toggleDrawer = () => {
     setOpen(!open);
@@ -139,12 +137,6 @@ const DashboardLayout = () => {
     if (setting === "Change password") {
       handlePassOpen();
     }
-  };
-  const handleClearPersistedData = () => {
-    dispatch(superAdminLogout());
-    persistor.purge();
-    sessionStorage.clear();
-    localStorage.clear();
   };
   // api calls ----------------------------------------------------------------
   const Logout = async() => {
@@ -179,7 +171,6 @@ const DashboardLayout = () => {
           toast.success(response?.data?.message);
         }
         if (response.status === 403) {
-          console.log("first");
           console.log(response?.data);
           toast.error(response?.data?.errors);
         }
@@ -394,7 +385,9 @@ const DashboardLayout = () => {
                 justifyContent: "center ",
               }}
             >
-              Update Password
+             {loading ? "Loading..." : "Update Password" 
+
+             }  
             </Button>
           </form>
         </Box>

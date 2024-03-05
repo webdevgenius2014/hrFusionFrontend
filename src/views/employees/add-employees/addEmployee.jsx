@@ -17,8 +17,6 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
-  // api integration --------------------------------
-
   // add employee --------------------------------
   const addEmployees = (data) => {
     setLoading(true);
@@ -38,12 +36,10 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
           handleClose();
         }
         if (res.status === 403) {
-          // console.log(res.data.errors)
           setServerError(()=>res?.data?.errors)
           setLoading(false);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
         navigate("/");
@@ -70,7 +66,6 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const allDocTypeFn = async () => {
     try {
       const result = await allDocList();
-      console.log(result)
       setGetDocType(result);
     } catch (error) {
       console.log("getAllDepartmentsFn", error);
@@ -99,11 +94,12 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       console.log("getAllDepartmentsFn", error);
     }
   };
-  
+  const Resetfn=()=>{ setServerError(null)}
   useEffect(() => {
     getAllDepartmentsFn();
     getAllRole();
     allDocTypeFn();
+    Resetfn()
   }, []);
 
   // end api integration --------------------------------
@@ -116,14 +112,12 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
     desByDepFn({department_id:id});
         
   };
-  // console.log("dep", addDepartment_id);
   const handleChangeDesig = (id) => {
     setAddDesignation_id(() => id);
   };
   const handleChangeRole = (id) => {
     setAddRole(() => id);
   };
-  // console.log("desig", addDesignation_id);
 
   return (
     <>

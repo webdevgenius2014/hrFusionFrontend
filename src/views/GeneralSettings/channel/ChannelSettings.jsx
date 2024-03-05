@@ -11,7 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { toast } from "react-toastify";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { DeleteDilagBox } from "../../../components/modal/DeleteModal";
+import { DltndConf } from "../../../components/modal/Dlt-Conf-Modal";
 import { CustDataGrid } from "../../../components/dataGrid/CustDataGrid";
 import { DatagridHeader } from "../../../components/dataGrid/DatagridHeader";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
@@ -20,22 +20,14 @@ import { ChannelForm } from "./ChannelForm";
 export const ChannelSettings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [formLoader, setFormLoader] = useState(false);
-  const [getAddChannel, setGetAddChannel] = useState([]);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const [editopen, setEditOpen] = useState(false);
-  const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
-
-  const [deleteopen, setDeleteOpen] = useState(false);
-  const handleDeleteOpen = () => setDeleteOpen(true);
-  const handleDeleteClose = () => setDeleteOpen(false);
+  // api states
+  const [getAddChannel, setGetAddChannel] = useState([]);
+  const [editChnlData, setEditChnlData] = useState();
+  const [deleteChannel, setDeleteChannel] = useState();
 
   // get api channel
   const getAllChannel = () => {
@@ -59,7 +51,6 @@ export const ChannelSettings = () => {
         console.log("getdep error", err);
       });
   };
-
   // add api --------------------------------
   const addChannel = (data) => {
     setLoading(true);
@@ -72,7 +63,6 @@ export const ChannelSettings = () => {
           getAllChannel();
         }
         if (res.status === 403) {
-          console.log(res.data);
           setServerError(res?.data?.errors);
           setLoading(false);
         }
@@ -87,17 +77,9 @@ export const ChannelSettings = () => {
         console.log("add Channel error: " + err);
       });
   };
-
   // edit api --------------------------------
-  const [editChnlData, setEditChnlData] = useState();
-  const editValue = (channelData) => {
-    // console.log(channelData);
-    setEditChnlData(() => channelData);
-    handleEditOpen();
-  };
   const handleEdit = (data) => {
     let payload = { ...data, id: editChnlData?.id };
-    console.log(payload);
     setLoading(true);
     GeneralServices.editChannel(payload)
       .then((res) => {
@@ -121,14 +103,7 @@ export const ChannelSettings = () => {
         console.log("editDepartment error: " + err);
       });
   };
-
-  // delete  ---------------------------
-  const [deleteChannel, setDeleteChannel] = useState();
-  const handleDeleteClick = (id) => {
-    setDeleteChannel(id);
-    handleDeleteOpen();
-  };
-
+// delete appi ------------------------------
   const handleDelete = (e) => {
     let id = { id: deleteChannel };
     setLoading(true);
@@ -158,7 +133,21 @@ export const ChannelSettings = () => {
         setLoading(false);
       });
   };
+ // get edit click values 
+  const editValue = (channelData) => {
+    setEditChnlData(() => channelData);
+    handleEditOpen();
+  };
+   // delete click  ---------------------------
+   const handleDeleteClick = (id) => {
+    setDeleteChannel(id);
+    handleDeleteOpen();
+  };
  
+  useEffect(() => {
+    getAllChannel();
+  }, []);
+
   const columns = [
     {
       field: "id",
@@ -207,12 +196,17 @@ export const ChannelSettings = () => {
     },
   ];
 
-  useEffect(() => {
-    getAllChannel();
-  }, [page]);
-  useEffect(() => {
-    getAllChannel();
-  }, []);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [editopen, setEditOpen] = useState(false);
+  const handleEditOpen = () => setEditOpen(true);
+  const handleEditClose = () => setEditOpen(false);
+
+  const [deleteopen, setDeleteOpen] = useState(false);
+  const handleDeleteOpen = () => setDeleteOpen(true);
+  const handleDeleteClose = () => setDeleteOpen(false);
 
   return (
     <Container style={{ padding: 0 }}>
@@ -281,12 +275,12 @@ export const ChannelSettings = () => {
         loading={formLoader}
         columns={columns}
       />
-      <DeleteDilagBox
+      <DltndConf
         title="Delete Channel"
-        handleDeleteClose={handleDeleteClose}
+        handleClose={handleDeleteClose}
         handleDelete={handleDelete}
         loading={loading}
-        deleteopen={deleteopen}
+        open={deleteopen}
       />
     </Container>
   );

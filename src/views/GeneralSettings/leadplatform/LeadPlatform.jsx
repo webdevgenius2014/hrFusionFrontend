@@ -5,81 +5,84 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import CommonModal from "../../../components/modal/commonModal";
-import {AddButton , Buttons} from  '../../../components/Buttons/AllButtons';
+import { AddButton, Buttons } from "../../../components/Buttons/AllButtons";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { toast } from "react-toastify";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import { DeleteDilagBox } from "../../../components/modal/DeleteModal";
+import { DltndConf } from "../../../components/modal/Dlt-Conf-Modal";
 import { CustDataGrid } from "../../../components/dataGrid/CustDataGrid";
 import { DatagridHeader } from "../../../components/dataGrid/DatagridHeader";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import GeneralServices from "../../../services/GeneralServices";
-import  {LeadPlatformForm} from './LeadPlatformForm'
+import { LeadPlatformForm } from "./LeadPlatformForm";
 export const LeadPlatform = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
+
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
-
   const [serverError, setServerError] = useState();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
-  const [editopen, setEditOpen] = useState(false);
-  const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
+  // api state
+  const [getAllLeads, setGetAllLeads] = useState([]);
+  const [editLeadData, setEditLeadData] = useState();
 
-  const [deleteopen, setDeleteOpen] = useState(false);
-  const handleDeleteOpen = () => setDeleteOpen(true);
-  const handleDeleteClose = () => setDeleteOpen(false);
-
-
-  // api integration
-  // get api channel 
-  const [getAllLeads,setGetAllLeads] = useState([]);
+  // get api channel
   const getAllLeadsFun = () => {
     setFormLoader(true);
     GeneralServices.getAllPlatforms()
       .then((res) => {
-        // console.log(res?.data)
-        if (res.status=== 200 && res?.data?.success === true) {
+        if (res.status === 200 && res?.data?.success === true) {
           setFormLoader(false);
-          setGetAllLeads(res?.data?.data)
-        } 
-          if(res.status=== 200 && res?.data?.success === false) {
-            setFormLoader(false);
-          }
-          if(res.status === 401){
-            dispatch(superAdminLogout());
-            navigate("/");
-          }
-          if(res.status === 404){
-            setFormLoader(false);
-            setLoading(false);
-
-          }
-        
+          setGetAllLeads(res?.data?.data);
+        }
+        if (res.status === 200 && res?.data?.success === false) {
+          setFormLoader(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          navigate("/");
+        }
+        if (res.status === 404) {
+          setFormLoader(false);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         setFormLoader(false);
         console.log("getdep error", err);
       });
   };
-
-  // edit api --------------------------------
-  const [editLeadData, setEditLeadData] = useState();
-  const editValue = (LeadPlatform) => {
-    // console.log(channelData);
-    setEditLeadData(() => LeadPlatform);
-    handleEditOpen();
+  // add api --------------------------------
+  const addLeadPlatform = (data) => {
+    setLoading(true);
+    GeneralServices.addPlatform(data)
+      .then((res) => {
+        if (res.status === 200) {
+          setLoading(false);
+          handleClose();
+          toast.success(res?.data?.message);
+          getAllLeadsFun();
+        }
+        if (res.status === 403) {
+          setServerError(res?.data?.errors);
+          setLoading(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.log("add Channel error: " + err);
+      });
   };
+  // edit api --------------------------------
   const handleEdit = (data) => {
     let payload = { ...data, id: editLeadData?.id };
-    console.log(payload);
     setLoading(true);
     GeneralServices.editPlatform(payload)
       .then((res) => {
@@ -103,35 +106,7 @@ export const LeadPlatform = () => {
         console.log("editDepartment error: " + err);
       });
   };
-
-   // add api --------------------------------
-   const addLeadPlatform = (data) => {
-    setLoading(true);
-    console.log(data)
-    GeneralServices.addPlatform(data)
-      .then((res) => {
-        if (res.status === 200) {
-          setLoading(false);
-          handleClose();
-          toast.success(res?.data?.message);
-          getAllLeadsFun();
-        }
-        if (res.status === 403) {
-          setServerError(res?.data?.errors);
-          setLoading(false);
-        }
-        if (res.status === 401) {
-          // con9sole.log()
-          dispatch(superAdminLogout());
-          setLoading(false);
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        console.log("add Channel error: " + err);
-      });
-  };
-  // delete api
+  // delete api --------------------------------------
   const handleDelete = (e) => {
     let id = { id: deleteDep };
     setLoading(true);
@@ -142,12 +117,10 @@ export const LeadPlatform = () => {
           setLoading(false);
           handleDeleteClose();
           toast.success(res?.data?.message);
-          // getAllChannel();
         } else if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
-
           toast.error("please login again");
         }
         if (res.status === 403) {
@@ -161,13 +134,22 @@ export const LeadPlatform = () => {
         setLoading(false);
       });
   };
+  // edit click
+  const editValue = (LeadPlatform) => {
+    setEditLeadData(() => LeadPlatform);
+    handleEditOpen();
+  };
+  // delete click
   const [deleteDep, setDeleteDep] = useState();
   const handleDeleteClick = (id) => {
     setDeleteDep(id);
     handleDeleteOpen();
   };
 
-  useEffect(() => {getAllLeadsFun(); },[])
+  useEffect(() => {
+    getAllLeadsFun();
+  }, []);
+
   const columns = [
     {
       field: "id",
@@ -215,6 +197,18 @@ export const LeadPlatform = () => {
       flex: 1,
     },
   ];
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [editopen, setEditOpen] = useState(false);
+  const handleEditOpen = () => setEditOpen(true);
+  const handleEditClose = () => setEditOpen(false);
+
+  const [deleteopen, setDeleteOpen] = useState(false);
+  const handleDeleteOpen = () => setDeleteOpen(true);
+  const handleDeleteClose = () => setDeleteOpen(false);
   return (
     <Container style={{ padding: 0 }}>
       <Box>
@@ -242,12 +236,12 @@ export const LeadPlatform = () => {
               maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
             }}
           >
-          <LeadPlatformForm
-          loading={loading}
-          apiFun={addLeadPlatform}
-          error={serverError}
-          btnName="Save"
-        />
+            <LeadPlatformForm
+              loading={loading}
+              apiFun={addLeadPlatform}
+              error={serverError}
+              btnName="Save"
+            />
           </Box>
         </CommonModal>
         <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
@@ -265,29 +259,25 @@ export const LeadPlatform = () => {
               maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
             }}
           >
-          <LeadPlatformForm
-          loading={loading}
-          apiFun={handleEdit}
-          platform_name ={editLeadData?.platform_name}
-          error={serverError}
-          btnName="Save"
-        />
+            <LeadPlatformForm
+              loading={loading}
+              apiFun={handleEdit}
+              platform_name={editLeadData?.platform_name}
+              error={serverError}
+              btnName="Save"
+            />
           </Box>
         </CommonModal>
 
         {/*  display grid */}
       </Box>
-      <CustDataGrid
-        data={getAllLeads}
-        loading={formLoader}
-        columns={columns}
-      />
-      <DeleteDilagBox
+      <CustDataGrid data={getAllLeads} loading={formLoader} columns={columns} />
+      <DltndConf
         title="Delete Lead Platform"
-        handleDeleteClose={handleDeleteClose}
+        handleClose={handleDeleteClose}
         handleDelete={handleDelete}
         loading={loading}
-        deleteopen={deleteopen}
+        open={deleteopen}
       />
     </Container>
   );

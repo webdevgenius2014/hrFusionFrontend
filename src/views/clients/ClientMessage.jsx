@@ -20,23 +20,23 @@ import { TemplateView } from "../Templates/TemplateView";
 const ClientMessage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const { id } = useParams();
+  const clientId = id;
   
   const [clientData, setClientData] = useState();
   const [loading, setLoading] = useState(false);
   const [choice, setChoice] = useState("");
+  const [msgType,setMsgType]=useState('');
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const { id } = useParams();
-  const clientId = id;
+  // api states
+  const [templData, setTemplData] = useState([]);
+  const [tempData,setTempdata]=useState()
+ 
+  // search api
   const ClientSearch = (clientId) => {
     setLoading(true);
     ClientsServices.searchClient({ id: clientId })
       .then((res) => {
-        // console.log(res);
         if (res.status === 200) {
           setClientData(() => res?.data?.data?.data);
         } else {
@@ -48,7 +48,6 @@ const ClientMessage = () => {
           toast.error("client not found");
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -62,27 +61,20 @@ const ClientMessage = () => {
         console.log("SearchClients error", err);
       });
   };
-
   // get all template  ----------------------------------------------------------------
-  const [templData, setTemplData] = useState([]);
   const getAllTemplate = () => {
     setLoading(true);
     TemplateServices.getAllTemplates()
       .then((res) => {
         if (res.status === 200) {
-          // console.log(res?.data)
-          // setTotalPages(res?.data?.data?.last_page);
-          console.log(res?.data?.data);
           setTemplData(res?.data?.data);
           setLoading(false);
 
           if (res.data.success === false) {
             setLoading(false);
-            //   setNoRecord(res?.data?.message);
           }
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -99,9 +91,7 @@ const ClientMessage = () => {
     const payload = { id: clientId };
     ClientsServices.viewClient(payload)
       .then((res) => {
-        // console.log("get client", res?.data?.data?.data);
         if (res.status === 200) {
-          // console.log(res?.data?.data)
           setClientData(res?.data?.data);
           setLoading(false);
         } else {
@@ -112,7 +102,6 @@ const ClientMessage = () => {
           setLoading(false);
         }
         if (res.status === 404) {
-          console.log(res.data.message);
           setLoading(false);
         }
         setLoading(false);
@@ -130,26 +119,21 @@ const ClientMessage = () => {
       client_id:clientId,
       message_type:msgType,
     }
-    console.log("payload",payload)
     ClientsServices.sendMessageToClient(payload)
       .then((res) => {
         if (res.status === 200) {
           setLoading(false);
           handleClose();
           toast.success(res?.data?.message);
-          // getDepartmentfn();
         }
         if (res.status === 403) {
-          console.log(res?.data)
           toast.success(res?.data?.message);
           setLoading(false);
         }
         if (res.status === 404) {
-         
           setLoading(false);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
         navigate("/");
@@ -159,6 +143,18 @@ const ClientMessage = () => {
         console.log("addDepartment error: " + err);
       });
   };
+
+  // handle messages type template or custom template
+  const handleChange = (event) => {
+    setChoice(event.target.value);
+  };
+  
+  // get selected template data
+  const  handleTempData=(data) => {
+    handleOpen();
+    setTempdata(()=>data)
+}
+  
   useEffect(() => {
     viewClientFn();
     getAllTemplate();
@@ -168,20 +164,9 @@ const ClientMessage = () => {
     ClientSearch();
   }, []);
 
-  const handleChange = (event) => {
-    setChoice(event.target.value);
-  };
-  const [tempData,setTempdata]=useState()
-  const  handleTempData=(data) => {
-      handleOpen();
-      setTempdata(()=>data)
-  }
-  const [msgType,setMsgType]=useState('');
-
-  const handleType=(type) => {
-    console.log(type)
-    setMsgType(type)
-  }
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <Box>
       {clientData && <ClientView viewClient={clientData} />}
@@ -193,11 +178,10 @@ const ClientMessage = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={choice}
-              label="Age"
-              onChange={handleChange}
+              onChange={(e)=>setChoice(e.target.value)}
             >
-              <MenuItem onClick={()=>handleType('template')} value={"Template"}>Template</MenuItem>
-              <MenuItem onClick={()=>handleType("custom")}  value={"Custom"}>Custom</MenuItem>
+              <MenuItem onClick={()=>setMsgType('template')} value={"Template"}>Template</MenuItem>
+              <MenuItem onClick={()=>setMsgType("custom")}  value={"Custom"}>Custom</MenuItem>
             </Select>
           </FormControl>
         </Grid>

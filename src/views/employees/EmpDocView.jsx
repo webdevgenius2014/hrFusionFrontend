@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
-const EmpDocView = () => {
+const EmpDocView = (props) => {
   const docs = [
     {
-      uri:'public/dashboard/pc_desktop.png',
+      uri: `www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf`,
     }, // Remote file
     // { uri: require("./example-files/pdf.pdf") }, // Local File
   ];
@@ -17,11 +17,19 @@ const EmpDocView = () => {
   return (
     <>
     
-         <DocViewer sandbox="allow-scripts"
-        documents={docs}
-        activeDocument={activeDocument}
-        onDocumentChange={handleDocumentChange}
-      />     
+    <DocViewer
+    pluginRenderers={DocViewerRenderers}
+    documents={docs}
+    config={{
+      header: {
+        disableHeader: false,
+        disableFileName: false,
+        retainURLParams: false
+      }
+    }}
+    style={{ height: 500 }}
+  />
+           
     </>
   );
 };

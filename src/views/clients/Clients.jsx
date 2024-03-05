@@ -6,7 +6,7 @@ import CommonModal from "../../components/modal/commonModal";
 import BeatLoader from "react-spinners/ClipLoader";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
+import { AddButton, Buttons } from "../../components/Buttons/AllButtons";
 import SearchIcon from "@mui/icons-material/Search";
 import ClientsServices from "../../services/ClientsServices";
 import ClientsForm from "./ClientsForm";
@@ -15,8 +15,8 @@ import { CustomPagination } from "../../components/CustomPagination";
 import { Searching } from "../../components/Searching";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import  ClientProfile  from "./ClientProfile";
-import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import ClientProfile from "./ClientProfile";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
@@ -31,82 +31,21 @@ const Clients = () => {
   const [page, setPage] = useState(1);
   const [serverError, setServerError] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [searchFlag, setSearchFlag] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
+  const [csvFile, setCsvFile] = useState();
+  const [srchbtn, setSerchBtn] = useState(false);
+
+  // api states
+  const [getClients, setgetClients] = useState();
+  const [getAddChannel, setGetAddChannel] = useState([]);
+  const [getAllLeads, setGetAllLeads] = useState([]);
+  const [Client_id, setClientId] = useState();
+  const [clientData, setClientData] = useState();
+  const [profileData, setProfileData] = useState();
+  const [record, setRecord] = useState();
 
   // api integration -----------------------------------
-  // add Clients-------------------------------------
-  const handleAddClients = (data) => {
-    
-    let payload = { ...data, email: data?.useremail };
-    setLoading(true);
-
-    console.log("client api payload", payload);
-
-    ClientsServices.addClient(payload)
-      .then((res) => {
-        // console.log(res)
-        if (res.status === 200) {
-          setLoading(false);
-          getClientsfn();
-          toast.success(res.data.message);
-          handleClose();
-        }
-        if (res.status === 403) {
-          setServerError(res.data.errors);
-          setLoading(false);
-        }
-        if (res.status === 401) {
-          // con9sole.log()
-          dispatch(superAdminLogout());
-          setLoading(false);
-        navigate("/");
-        }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log("AddClients error: " + err);
-      });
-  };
-  // get  Clients --------------------------------
-  const [getClients, setgetClients] = useState();
-  const getClientsfn = () => {
-    setFormLoader(true);
-    ClientsServices.getClients(page)
-      .then((res) => {
-        // console.log("get client",res?.data?.data?.data)
-        if (res.status=== 200 && res?.data?.success=== true) {
-          setgetClients(res?.data?.data?.data);
-          setTotalPages(res?.data?.data?.last_page);
-          setFormLoader(false);
-        }
-         if (res.status=== 200 && res?.data?.success=== false) {
-          setFormLoader(false);
-          setRecord(res?.data?.message);
-          setgetClients([]);
-        }
-        if (res.status === 403) {
-          setFormLoader(false);
-        }
-        if (res.status === 401) {
-          // con9sole.log()
-          dispatch(superAdminLogout());
-          setFormLoader(false);
-        navigate("/");
-        }
-        if (res.status === 404) {
-            console.log(res.data.message);
-          setLoading(false);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log("getClients error", err);
-      });
-  };
   // get api channel
-  const [getAddChannel,setGetAddChannel]=useState([])
   const getAllChannel = () => {
     GeneralServices.getAllChannels()
       .then((res) => {
@@ -125,57 +64,94 @@ const Clients = () => {
       });
   };
   // get api leadplatform -----------------------
-  const [getAllLeads,setGetAllLeads] = useState([]);
   const getAllLeadsFun = () => {
     setFormLoader(true);
     GeneralServices.getAllPlatforms()
       .then((res) => {
-        console.log(res?.data?.data)
-        if (res.status=== 200 && res?.data?.success === true) {
+        if (res.status === 200 && res?.data?.success === true) {
           setFormLoader(false);
-          setGetAllLeads(res?.data?.data)
-        } 
-          if(res.status=== 200 && res?.data?.success === false) {
-            setFormLoader(false);
-          }
-          if(res.status === 401){
-            dispatch(superAdminLogout());
-            navigate("/");
-          }
-          if(res.status === 404){
-            setFormLoader(false);
-            setLoading(false);
-
-          }
-        
+          setGetAllLeads(res?.data?.data);
+        }
+        if (res.status === 200 && res?.data?.success === false) {
+          setFormLoader(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          navigate("/");
+        }
+        if (res.status === 404) {
+          setFormLoader(false);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         setFormLoader(false);
         console.log("getdep error", err);
       });
   };
-
-  useEffect(() => {
-    getClientsfn();
-    getAllChannel();
-    getAllLeadsFun();
-  }, [page]);
-
-  // edit Clients -------------------------------
-  const [Client_id, setClientId] = useState();
-  const [clientData, setClientData] = useState();
-  const [profileData, setProfileData] = useState();
-
-  const handleClientData = (id, clientData) => {
-    console.log(id, clientData);
-    setClientId(id);
-    setClientData(() => clientData);
-    handleEditOpen();
+  // get  Clients --------------------------------
+  const getClientsfn = () => {
+    setFormLoader(true);
+    ClientsServices.getClients(page)
+      .then((res) => {
+        if (res.status === 200 && res?.data?.success === true) {
+          setgetClients(res?.data?.data?.data);
+          setTotalPages(res?.data?.data?.last_page);
+          setFormLoader(false);
+        }
+        if (res.status === 200 && res?.data?.success === false) {
+          setFormLoader(false);
+          setRecord(res?.data?.message);
+          setgetClients([]);
+        }
+        if (res.status === 403) {
+          setFormLoader(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          setFormLoader(false);
+          navigate("/");
+        }
+        if (res.status === 404) {
+          setLoading(false);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log("getClients error", err);
+      });
   };
+  // add Clients-------------------------------------
+  const handleAddClients = (data) => {
+    let payload = { ...data, email: data?.useremail };
+    setLoading(true);
+    ClientsServices.addClient(payload)
+      .then((res) => {
+        if (res.status === 200) {
+          setLoading(false);
+          getClientsfn();
+          toast.success(res.data.message);
+          handleClose();
+        }
+        if (res.status === 403) {
+          setServerError(res.data.errors);
+          setLoading(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log("AddClients error: " + err);
+      });
+  };
+  // edit Clients -------------------------------
   const handleClientEdit = (data) => {
-    console.log(data);
     let payload = { ...data, email: data.useremail, id: Client_id };
-    console.log(payload);
     setLoading(true);
     ClientsServices?.editClient(payload)
       .then((res) => {
@@ -184,14 +160,11 @@ const Clients = () => {
           handleEditClose();
           getClientsfn();
           toast.success(res?.data?.message);
-        }
-       else if  (res.status === 401) {
-          // con9sole.log()
+        } else if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
-        navigate("/");
-        }
-       else if (res.status === 403) {
+          navigate("/");
+        } else if (res.status === 403) {
           setServerError(() => res.data.errors);
           setLoading(false);
         }
@@ -201,7 +174,11 @@ const Clients = () => {
         console.log("edit client error: " + err);
       });
   };
-
+  const handleClientData = (id, clientData) => {
+    setClientId(id);
+    setClientData(() => clientData);
+    handleEditOpen();
+  };
   // delete Clients -------------------------------
   const handleDeleteClick = (id) => {
     setClientId(id);
@@ -218,11 +195,11 @@ const Clients = () => {
           handleDeleteClose();
           toast.success("Client deleted successfully");
           getClientsfn();
-        } if (res.status === 401) {
-          // con9sole.log()
+        }
+        if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
-        navigate("/");
+          navigate("/");
         }
         if (res.status === 403) {
           setLoading(false);
@@ -235,15 +212,13 @@ const Clients = () => {
         setLoading(false);
       });
   };
-const  [record,setRecord]=useState();
   // Search api -------------------------
-  
-  const ClientSearch = (payload) => {
+  const clientSearch = (payload) => {
     setLoading(true);
-    ClientsServices.searchClient(payload,page)
+    ClientsServices.searchClient(payload, page)
       .then((res) => {
-        if (res.status === 200 ) {
-          console.log(res?.data?.data)
+        if (res.status === 200) {
+          console.log(res?.data?.data);
           setgetClients(() => res?.data?.data);
           handleSearchClose();
         } else {
@@ -254,20 +229,43 @@ const  [record,setRecord]=useState();
         if (res.status === 403) {
           setLoading(false);
         }
-        if(res.status === 404) {
+        if (res.status === 404) {
           setLoading(false);
-
         }
         if (res.status === 401) {
           // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
-        navigate("/");
+          navigate("/");
         }
         if (res.status === 404) {
-          setRecord(res?.data?.message)
+          setRecord(res?.data?.message);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
         setLoading(false);
-      }
+        console.log("SearchClients error", err);
+      });
+  };
+  // csv Upload api -------------------------
+  const csvUpload = () => {
+    setLoading(true);
+    ClientsServices.uploadClientCSV({csv:csvFile})
+      .then((res) => {
+        if (res?.data?.success === true) {
+          setLoading(false);
+          handleConfirmClose();
+          getClientsfn();
+          toast.success(res?.data?.message);
+        } else if (res.status === 401) {
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        } else if (res.status === 403) {
+          setServerError(() => res.data.errors);
+          setLoading(false);
+        }
       })
       .catch((err) => {
         setLoading(false);
@@ -275,16 +273,20 @@ const  [record,setRecord]=useState();
       });
   };
   //---- end api ------------------
- 
 
+  useEffect(() => {
+    getClientsfn();
+    getAllChannel();
+    getAllLeadsFun();
+  }, [getAllChannel, getAllLeadsFun, getClientsfn, page]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>{setServerError(null); setOpen(false);}
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
+  const handleEditClose = () => {setServerError(null);setEditOpen(false);}
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -294,9 +296,14 @@ const  [record,setRecord]=useState();
   const handleViewOpen = () => setViewOpen(true);
   const handleViewClose = () => setViewOpen(false);
 
+  const [confirm, setConfirm] = useState(false);
+  const handleConfirmOpne = () => setConfirm(true);
+  const handleConfirmClose = () =>{ setConfirm(false);setServerError(null);};
+
+  const [searchFlag, setSearchFlag] = useState(false);
   const handleSearchOpen = () => setSearchFlag(true);
-  const handleSearchClose = () => setSearchFlag(false);
-  const [srchbtn, setSerchBtn] = useState(false);
+  const handleSearchClose = () =>{ setSearchFlag(false);setServerError(null);};
+
   return (
     <>
       <Container style={{ padding: 0 }}>
@@ -307,7 +314,6 @@ const  [record,setRecord]=useState();
                 onClick={() => {
                   handleSearchOpen(true);
                   setSerchBtn(true);
-
                 }}
                 startIcon={<SearchIcon />}
                 variant="contained"
@@ -334,17 +340,17 @@ const  [record,setRecord]=useState();
             >
               Add
             </AddButton>
-            <CsvUploadBtn/>
-           
+            <CsvUploadBtn setCsvFile={setCsvFile}
+              handleConfirmOpne={handleConfirmOpne}
+            />
           </>
         </DatagridHeader>
         {searchFlag && searchFlag === true && (
-         
-              <Searching
-                fieldLable={["Client Name", "Project Name"]}
-                filedName={["name", "project_name"]}
-                apiFun={ClientSearch}
-              />
+          <Searching
+            fieldLable={["Client Name", "Project Name"]}
+            filedName={["name", "project_name"]}
+            apiFun={clientSearch}
+          />
         )}
         <Box>
           <CommonModal isOpen={open} isClose={handleClose}>
@@ -362,7 +368,7 @@ const  [record,setRecord]=useState();
                 width: 850,
                 display: "flex",
                 height: 440,
-               
+
                 overflow: "hidden",
                 overflowY: "scroll",
               }}
@@ -400,7 +406,7 @@ const  [record,setRecord]=useState();
                   />
                 );
               })
-            ) : loading === true ? (
+            ) : formLoader === true ? (
               <BeatLoader
                 color="#2d94cb"
                 cssOverride={{
@@ -418,13 +424,13 @@ const  [record,setRecord]=useState();
               <p>{record}</p>
             )}
           </Box>
-          {totalPages && totalPages>= 2  &&
-          <div
-            style={{ width: "100%", marginTop: "10px", background: "white" }}
-          >
-            <CustomPagination totalPages={totalPages} setPage={setPage} />
-          </div>
-          }
+          {totalPages && totalPages >= 2 && (
+            <div
+              style={{ width: "100%", marginTop: "10px", background: "white" }}
+            >
+              <CustomPagination totalPages={totalPages} setPage={setPage} />
+            </div>
+          )}
         </Box>
       </Container>
       <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
@@ -458,12 +464,14 @@ const  [record,setRecord]=useState();
         </Box>
       </CommonModal>
       {/* delete client */}
- <DeleteDilagBox title='Delete Client' 
-      handleDeleteClose={handleDeleteClose}
-      handleDelete={handleDelete}
-      loading={loading}
-      deleteopen={deleteopen} />
-       
+      <DltndConf
+        title="Delete Client"
+        handleClose={handleDeleteClose}
+        handleDelete={handleDelete}
+        loading={loading}
+        open={deleteopen}
+      />
+
       {/* viwe client */}
       <CommonModal isOpen={viewopen} noValidate isClose={handleViewClose}>
         <Typography
@@ -472,7 +480,7 @@ const  [record,setRecord]=useState();
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-        Client Profile
+          Client Profile
         </Typography>
         <Box
           sx={{
@@ -488,6 +496,17 @@ const  [record,setRecord]=useState();
           <ClientProfile data={profileData} />
         </Box>
       </CommonModal>
+
+      {/* confirm modal*/}
+      <DltndConf
+        title="Csv Upload"
+        btnName="Confirm"
+        handleClose={handleConfirmClose}
+        handleDelete={csvUpload}
+        message={`Are you sure want to upload  ${csvFile?.name}`}
+        loading={loading}
+        open={confirm}
+      />
     </>
   );
 };

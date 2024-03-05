@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { useParams } from "react-router-dom";
+import BeatLoader from "react-spinners/ClipLoader";
 import ClientsServices from "../../services/ClientsServices";
-import CardMedia from "@mui/material/CardMedia";
-import { ImagePath } from "../../helperFunctions/ImagePath";
-import { Link } from "react-router-dom";
 import dateFormat from "dateformat";
 import { ClientView } from "./ClientView";
 import { Box } from "@mui/system";
 
 const ClientProfile = () => {
-  const [viewClient, setViewClient] = useState();
-  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const clientId = id;
-
+  
+  const [viewClient, setViewClient] = useState();
+  const [loading, setLoading] = useState(false);
+  
+  // view client api
   const viewClientFn = () => {
     setLoading(true);
     const payload = { id: clientId };
     ClientsServices.viewClient(payload)
       .then((res) => {
-        console.log("get client", res?.data?.data?.data);
         if (res.status === 200) {
-          // console.log(res?.data?.data)
           setViewClient(res?.data?.data);
           setLoading(false);
         } else {
@@ -33,7 +31,6 @@ const ClientProfile = () => {
           setLoading(false);
         }
         if (res.status === 404) {
-          console.log(res.data.message);
           setLoading(false);
         }
         setLoading(false);
@@ -46,19 +43,34 @@ const ClientProfile = () => {
 
   useEffect(() => {
     viewClientFn();
-  }, []);
-  const team_members = viewClient?.projects?.team_members?.map((i,index) => {
-    return <span key={index}>{i?.name}</span>;
-  });
-  console.log(team_members)
+  },[]);
+  
+  // const team_members = viewClient?.projects?.team_members?.map((i, index) => {
+  //   return <span key={index}>{i?.name}</span>;
+  // });
   return (
     <>
+      {loading && (
+        <BeatLoader
+          color="#2d94cb"
+          cssOverride={{
+            position: "absolute",
+            display: "block",
+            top: "45%",
+            left: "55%",
+            transform: "translate(-50%, -50%)",
+          }}
+          loading
+          margin={4}
+          size={90}
+        />
+      )}
       {viewClient && (
         <>
-        <Box>
-          <ClientView  viewClient={viewClient}/>
-        </Box>
-         
+          <Box>
+            <ClientView viewClient={viewClient} />
+          </Box>
+
           {viewClient?.projects?.length > 0 && (
             <h2 style={{ marginTop: "20px" }}>Projects :-</h2>
           )}
@@ -116,9 +128,15 @@ const ClientProfile = () => {
                       <span style={{ fontWeight: 600 }}>Team Members</span>
                     </Grid>
                     <Grid item xs={6} sm={6} md={6} lg={4}>
-                      <span> { itr?.team_members?.map((i,index) => {
-                        return i?.name;
-                      })} {(itr?.team_members?.length - 1 > index) && <span> , </span>}</span>
+                      <span>
+                        {" "}
+                        {itr?.team_members?.map((i, index) => {
+                          return i?.name;
+                        })}{" "}
+                        {itr?.team_members?.length - 1 > index && (
+                          <span> , </span>
+                        )}
+                      </span>
                     </Grid>
                     <Grid item xs={6} sm={6} md={6} lg={2}>
                       <span style={{ fontWeight: 600 }}> Deadline</span>

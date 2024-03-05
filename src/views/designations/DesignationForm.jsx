@@ -7,10 +7,12 @@ import SubmitButton from "../../components/form-components/submitButton";
 import { FormSelect } from "../../components/form-components/FormSelect";
 
 const DesignationForm = (props) => {
+  // validations
   const validationSchema = Yup.object().shape({
     designation_name: Yup.string().required("Designation name is required"),
     department_name: Yup.string().required("Department name is required"),
   });
+
   const {
     control,
     setError,
@@ -25,9 +27,10 @@ const DesignationForm = (props) => {
     },
     resolver: yupResolver(validationSchema),
   });
+
   const newErrors = props?.error;
   useEffect(() => {
-    if (newErrors !== undefined)
+    if (newErrors)
       setError("designation_name", {
         type: "manual",
         message: newErrors?.message,
@@ -67,7 +70,6 @@ const DesignationForm = (props) => {
             required
           />
         )}
-
         <SubmitButton loading={props?.loading} btnName={props?.btnName} />
       </form>
     </>

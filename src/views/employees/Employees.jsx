@@ -6,7 +6,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import {DatagridHeader} from '../../components/dataGrid/DatagridHeader'
 import CommonModal from "../../components/modal/commonModal";
 import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
-import AddIcon from "@mui/icons-material/Add";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -18,12 +17,12 @@ import { useNavigate } from "react-router-dom";
 import EmployeServices from "../../services/EmployeServices";
 import { ToastContainer, toast } from "react-toastify";
 import {Searching} from "../../components/Searching";
-import DesignationServices from "../../services/DesignationServices";
 import { CustomPagination } from "../../components/CustomPagination";
-import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
-import {allDesignations,getAllDepartmentfn} from '../../helperApis/HelperApis'
+import {allDesignations,} from '../../helperApis/HelperApis'
+import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
 
 const Employees = () => {
   const dispatch = useDispatch();
@@ -36,6 +35,7 @@ const Employees = () => {
   const [searchFlag,setSearchFlag]=useState(false);
   const [addDesignation_id, setAddDesignation_id] = useState("");
   const [getDesig, setGetDesig] = useState([]);
+  const [csvFile, setCsvFile] = useState();
 
   const apiURL = `${process.env.REACT_APP_API_BASE_URL}/`; 
 
@@ -140,14 +140,12 @@ const Employees = () => {
       })
       .catch((err) => {
         setFormLoader(false);
-        // Log any errors that occur during the request
         console.log("getAllEmployees", err);
       });
   };
 
   const [employeeData, SetEmployeeData] = useState({});
   const handleEditClick = (data) => () => {
-    //ID - current Row ID
     SetEmployeeData(data);
     handleEditOpen();
   };
@@ -169,6 +167,10 @@ const Employees = () => {
 
   const handleSearchClose =() => setSearchFlag(false);
   const handleSearchOpen =() => setSearchFlag(true);
+
+  const [confirm, setConfirm] = useState(false);
+  const handleConfirmOpne = () => setConfirm(true);
+  const handleConfirmClose = () => setConfirm(false);
 
   const [srchbtn, setSerchBtn] = useState(false);
   const detailEmployee = (data) => {
@@ -270,7 +272,8 @@ const Employees = () => {
         name={'Employees'}
         handleOpen={handleOpen}
         >
-         <>
+        
+          <Box sx={{marginLeft:'10px'}}>
               {!srchbtn ? (
                 <Buttons
                 sx={{margin:0 ,height:'auto',padding:"0 16px 0 16px"}}
@@ -296,14 +299,20 @@ const Employees = () => {
                   Clear
                 </Buttons>
               )}
-
+              </Box>
+              <Box>
               <AddButton
               variant="contained"
               onClick={handleOpen}
             >
               Add Fields
             </AddButton>
-            </>
+              </Box>
+              <Box>
+              <CsvUploadBtn setCsvFile={setCsvFile} handleConfirmOpne={handleConfirmOpne} />
+              </Box>
+
+            
 
         </DatagridHeader>
         { searchFlag && searchFlag === true &&  
@@ -327,7 +336,7 @@ const Employees = () => {
             data={getEmployees}
             loading={formLoader}
             columns={columns}
-            totalPages={totalPages}
+            // totalPages={totalPages}
              setPage={setPage}
           />
         </Box>
@@ -339,16 +348,27 @@ const Employees = () => {
           data={employeeData}
         />
       </CommonModal>
-      <DeleteDilagBox title='Delete Employee' 
-      handleDeleteClose={handleDeleteClose}
+      <DltndConf title='Delete Employee' 
+      handleClose={handleDeleteClose}
       handleDelete={handleDelete}
       loading={loading}
-      deleteopen={deleteopen} />
+      open={deleteopen} />
       {  totalPages &&  totalPages>=2 && <div
         style={{ width: "100%", marginTop: "10px", background: "white" }}
       >
         <CustomPagination totalPages={totalPages} setPage={setPage} />
       </div>}
+
+      {/* confirm modal*/}
+      <DltndConf
+      title="Csv Upload"
+      btnName='Confirm'
+      handleClose={handleConfirmClose}
+      // handleDelete={handleDelete}
+      message={`Are you sure want to upload  ${csvFile?.name}`}
+      loading={loading}
+      open={confirm}
+    />
     </>
   );
 };

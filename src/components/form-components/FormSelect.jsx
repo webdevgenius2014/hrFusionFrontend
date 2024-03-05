@@ -24,6 +24,7 @@ export const FormSelect = ({
   fieldaname,
   setValue,
   getValue,
+  stylee,
   data,
   error,
   ...rest
@@ -52,7 +53,6 @@ export const FormSelect = ({
             id="demo-simple-select"
             defaultValue={def}
             label={label}
-            sx={{margin:'5px 0 0 7px'}}
             size="small"
             onChange={(e)=> {
               handleChange(e);

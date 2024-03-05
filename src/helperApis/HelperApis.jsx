@@ -35,7 +35,7 @@ export const desByDep = async (payload) => {
   console.log(payload);
   try {
     const res = await DesignationServices.designationsByDep(payload);
-        if (res.status === 200 && res?.data?.success === true) {
+    if (res.status === 200 && res?.data?.success === true) {
       // console.log(res.data.data)
       return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
@@ -51,7 +51,7 @@ export const allRoles = async () => {
     const res = await CommonServices.getRole();
     if (res.status === 200 && res?.data?.success === true) {
       // console.log(res.data.data)
-        return res?.data?.data;
+      return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
       return [];
     }
@@ -64,7 +64,7 @@ export const allClients = async () => {
     const res = await ClientsServices.getAllClients();
     if (res.status === 200 && res?.data?.success === true) {
       // console.log("client",res.data.data)
-        return res?.data?.data;
+      return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
       return [];
     }
@@ -77,7 +77,7 @@ export const allEmployees = async () => {
     const res = await EmployeServices.getAllEmployees();
     if (res.status === 200 && res?.data?.success === true) {
       // console.log("allEmployees",res.data.data)
-        return res?.data?.data;
+      return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
       return [];
     }
@@ -86,17 +86,15 @@ export const allEmployees = async () => {
   }
 };
 
-export const allLeads = async (url) => {
+export const HrTeamLeadMangarapi = async (url='team-leaders') => {
   try {
     let res;
-    if(url==='hr')
-     res = await CommonServices.getAllHRs();
-    else if( url === 'team-leaders')
-    res = await CommonServices.getAllTeamLeads();
-    else if( url === 'team-managers') 
-    res = await CommonServices.getAllTeamManagers();
-        return res;
-   
+    if (url === "hr") res = await CommonServices.getAllHRs();
+    else if (url === "team-leaders")
+      res = await CommonServices.getAllTeamLeads();
+    else if (url === "team-managers")
+      res = await CommonServices.getAllTeamManagers();
+    return res;
   } catch (err) {
     console.log("allEmployees", err);
   }
@@ -106,7 +104,7 @@ export const allDocList = async () => {
     const res = await GeneralServices.getAllDocumentTypes();
     if (res.status === 200 && res?.data?.success === true) {
       // console.log("all doc type",res.data.data)
-        return res?.data?.data;
+      return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
       return [];
     }

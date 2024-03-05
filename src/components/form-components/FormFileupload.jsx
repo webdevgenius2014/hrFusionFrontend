@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   Box,
   FormControl,
   InputLabel,
-  TextField,
   MenuItem,
   Select ,
   Grid,
 } from "@mui/material";
-import { FormSelect } from "./FormSelect";
 
 export const FileUploader = (props) => {
-  // const [files, setFiles] = useState(props?.fileData || []);
-  // console.log(files);
+  
   const handleFileChange = (event, index) => {
     const selectedFile = event.target.files[0];
     const newFiles = [...props?.files];
@@ -35,7 +32,7 @@ export const FileUploader = (props) => {
     <Box >
     <Grid item xs={12} sm={12} >
     <InputLabel>Upload Multiple Documents</InputLabel>
-    <Button  variant="contained" onClick={handleAddFileInput}>Add File</Button>
+    <Button  variant="contained" onClick={handleAddFileInput}>Add Fields</Button>
     </Grid>
 
     {props?.files.map((file, index) => (
@@ -77,6 +74,7 @@ export const FileUploader = (props) => {
           type="file"
           onChange={(event) => handleFileChange(event, index)}
         />
+        
     
         <Button
           variant="contained"

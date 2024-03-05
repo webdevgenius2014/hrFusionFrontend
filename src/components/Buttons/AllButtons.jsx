@@ -20,8 +20,9 @@ export const Buttons = (props) => {
   return (
     <Button
       variant="contained"
+      color={props?.color === undefined ? 'primary' : props?.color}
+      sx={{ mt: 3, mb: 2, px: 3, display: "flex", margin: "8px auto 8px auto",  }}
       onClick={props?.onClick}
-      sx={{ mt: 3, mb: 2, px: 3, display: "flex", margin: "8px auto 8px auto", background:'#5D87FF ' }}
     >
       {props?.children}
     </Button>

@@ -1,4 +1,4 @@
-import instance from "./ImageInterceptor";
+import instance from "./AppInterceptor";
 import ApiConfig from "../config/apiConfig";
 class GeneralServices {
   // channel -------------------------------------------------------------------

@@ -6,7 +6,6 @@ const BlankLayout = () => (
     <Box
       sx={{
         background: "url('/loginpage/bgLarge.png')",
-        backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: 'no-repeat',
         height: "100vh",

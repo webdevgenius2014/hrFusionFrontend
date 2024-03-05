@@ -3,74 +3,90 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
-import DepartmentForm from "./DepartmentForm";
+import HolidaysForm from "./HolidaysForm";
 import CommonModal from "../../components/modal/commonModal";
 import { AddButton } from "../../components/Buttons/AllButtons";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import { GridActionsCellItem } from "@mui/x-data-grid";
-import DepartmentServices from "../../services/DepartmentServices";
+import HolidayService from "../../services/HolidaysServices";
 import { toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
+import { useForm } from "react-hook-form";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomPagination } from "../../components/CustomPagination";
 import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { FormSelect } from "../../components/form-components/FormSelect";
 
-const Deartments = () => {
+function Holidays() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const selectOptions = [
+    { id: "year", name: "This Year" },
+    { id: "three", name: "Upcoming Three Holidays" },
+    { id: "all", name: "All" },
+  ];
 
   const [serverError, setServerError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [totalPages, setTotalPages] = useState();
+  const [totalPages, setTotalPages] = useState(null);
   const [page, setPage] = useState(1);
   const [formLoader, setFormLoader] = useState(false);
-
+  const [renderApi, setRenderApi] = useState("All");
+  const { control } = useForm();
   // api states
-  const [getdep, setGetdep] = useState([]);
-  const [dep_id, setDepId] = useState();
-  const [dep_name, setDepName] = useState();
-  const [deleteDep, setDeleteDep] = useState();
+  const [getHolidays, setGetHolidays] = useState([]);
+  const [editData, setEditData] = useState();
+  const [deleteHoliday, setDeleteHoliday] = useState();
 
   // api integration -----------------------------------
-  const getDepartmentfn = () => {
+  const getHolidaysList = () => {
     setFormLoader(true);
-    DepartmentServices.getDepartments(page)
-      .then((res) => {
-        if (res.status === 200 && res?.data?.success === true) {
-          setTotalPages(res?.data?.data?.last_page);
-          setGetdep(res?.data?.data?.data);
+    setGetHolidays([])
+    let setApi;
+    if (renderApi === "year") setApi=HolidayService.thisYearholidays(page)
+    else if (renderApi === "three") setApi=HolidayService.upcomingThreeHoliday(page)
+    else
+    setApi= HolidayService.getHolidays(page)
+    setApi.then((res) => {
+          if (res.status === 200 && res?.data?.success === true) {
+            setTotalPages(res?.data?.data?.last_page);
+            if(renderApi === "three")
+            setGetHolidays(res?.data?.data)
+            else
+            setGetHolidays(res?.data?.data?.data);
+            setFormLoader(false);
+          }
+        else if (res.status === 200 && res?.data?.success === false) {
+            setFormLoader(false);
+            setGetHolidays([]);
+          }
+         else if (res.status === 401) {
           setFormLoader(false);
-        }
-        if (res.status === 200 && res?.data?.success === false) {
+            dispatch(superAdminLogout());
+            setLoading(false);
+            navigate("/");
+          }
+        })
+        .catch((err) => {
           setFormLoader(false);
-          setGetdep([]);
-        }
-        if (res.status === 401) {
-          dispatch(superAdminLogout());
-          setLoading(false);
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        setFormLoader(false);
-        console.log("getdep error", err);
-      });
+          console.log("getHolidays error", err);
+        });
   };
-  // add department-------------------------------------
-  const addDepartment = (data) => {
+  // add holidays-------------------------------------
+  const addHolidays = (data) => {
     setLoading(true);
-    DepartmentServices.addDepartment(data)
+    HolidayService.addHoliday(data)
       .then((res) => {
         if (res.status === 200) {
           setLoading(false);
           handleClose();
           toast.success(res?.data?.message);
-          getDepartmentfn();
+          getHolidaysList();
         }
         if (res.status === 403) {
           setServerError(res?.data);
@@ -84,19 +100,19 @@ const Deartments = () => {
         }
       })
       .catch((err) => {
-        console.log("addDepartment error: " + err);
+        console.log("addHolidays error: " + err);
       });
   };
-  // edit department -------------------------------
+  // edit holidays -------------------------------
   const handleEdit = (data) => {
-    let payload = { ...data, id: dep_id };
+    let payload = { ...data, id: editData?.id };
     setLoading(true);
-    DepartmentServices.editDepartment(payload)
+    HolidayService.editHoliday(payload)
       .then((res) => {
         if (res.data.success === true) {
           setLoading(false);
           handleEditClose();
-          getDepartmentfn();
+          getHolidaysList();
           toast.success(res?.data?.message);
         }
         if (res.status === 403) {
@@ -110,21 +126,21 @@ const Deartments = () => {
         }
       })
       .catch((err) => {
-        console.log("editDepartment error: " + err);
+        console.log("edit holidays error: " + err);
       });
   };
-  // delete department -------------------------------
+  // delete holidays -------------------------------
   const handleDelete = (e) => {
-    let id = { id: deleteDep };
+    let id = { id: deleteHoliday };
     setLoading(true);
     e.preventDefault();
-    DepartmentServices.deleteDepartment(id)
+    HolidayService.deleteHoliday(id)
       .then((res) => {
         if (res.status === 200 || res.status === 404) {
           setLoading(false);
           handleDeleteClose();
           toast.success(res?.data?.message);
-          getDepartmentfn();
+          getHolidaysList();
         } else if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
@@ -134,32 +150,32 @@ const Deartments = () => {
         }
         if (res.status === 403) {
           setLoading(false);
-
-          toast.error(res.data.message);
+          toast.error(res?.data?.message);
         }
       })
       .catch((err) => {
-        console.log("delete department error: ", err);
+        console.log("delete holidays error: ", err);
         setLoading(false);
       });
   };
-  // change values on edit department
-  const handleChangedDepVal = (id, department) => {
-    setDepId(id);
-    setDepName(() => department);
+  // change values on edit holidays
+  const handleHoliData = (data) => {
+    setEditData(() => data);
     handleEditOpen();
   };
-  // delete click get id of department
+  // delete click get id of holidays
   const handleDeleteClick = (id) => {
-    setDeleteDep(id);
+    setDeleteHoliday(id);
     handleDeleteOpen();
+  };
+  // handle show data all data / upcoming 3 holidays / one year holidays
+  const handleShowData = (data) => {
+    setRenderApi(() => data);
   };
 
   useEffect(() => {
-    getDepartmentfn();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ page]);
-
+    getHolidaysList();
+  }, [renderApi]);
 
   const columns = [
     {
@@ -171,24 +187,17 @@ const Deartments = () => {
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
     {
-      field: "department_name",
-      headerName: "Departments",
+      field: "holiday_name",
+      headerName: "Holiday Name",
       headerClassName: "super-app-theme--header",
       flex: 1,
       options: { filter: true },
     },
     {
-      field: "designations_count",
-      headerName: "No. Designations",
+      field: "holiday_date",
+      headerName: "Holiday Date",
       headerClassName: "super-app-theme--header",
       flex: 1,
-      options: { filter: true },
-    },
-    {
-      field: "employees_count",
-      headerName: " No. Employess",
-      flex: 1,
-      headerClassName: "super-app-theme--header",
       options: { filter: true },
     },
     {
@@ -205,7 +214,7 @@ const Deartments = () => {
             label="Edit"
             className="textPrimary"
             onClickCapture={() => {
-              handleChangedDepVal(params?.id, params?.row.department_name);
+              handleHoliData(params?.row);
             }}
             color="inherit"
           />,
@@ -222,30 +231,53 @@ const Deartments = () => {
       flex: 1,
     },
   ];
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {setOpen(false);setServerError(null)};
+  const handleClose = () => {
+    setOpen(false);
+    setServerError(null);
+  };
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => {setEditOpen(false); setServerError(null) };
+  const handleEditClose = () => {
+    setEditOpen(false);
+    setServerError(null);
+  };
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
   const handleDeleteClose = () => setDeleteOpen(false);
-
   return (
     <>
       <Container style={{ padding: 0 }}>
         <Box>
-          <DatagridHeader name={"Department"}>
-            <AddButton
-              startIcon={<AddIcon />}
-              variant="contained"
-              onClick={handleOpen}
+          <DatagridHeader name={"Holidays"}>
+            <Box>
+              <AddButton
+                startIcon={<AddIcon />}
+                variant="contained"
+                onClick={handleOpen}
+              >
+                Add Fields
+              </AddButton>
+            </Box>
+            <Box
+              sx={{ margin: "7px 0 0 0px", minWidth: "150px", maxWid: "200px" }}
             >
-              Add Fields
-            </AddButton>
+              <FormSelect
+                name="name"
+                stylee={{ width: "150px", marginTop: "5px" }}
+                data={selectOptions}
+                pass_fun={handleShowData}
+                label="Select options"
+                control={control}
+                fieldaname="name"
+                def={"All"}
+                // error={errors && errors?.designation}
+              />
+            </Box>
           </DatagridHeader>
         </Box>
         <CommonModal isOpen={open} isClose={handleClose}>
@@ -255,7 +287,7 @@ const Deartments = () => {
             component="h2"
             sx={{ marginBottom: "20px", fontWeight: "600" }}
           >
-            Add Department
+            Add Holidays
           </Typography>
           <Box
             sx={{
@@ -263,8 +295,8 @@ const Deartments = () => {
               maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
             }}
           >
-            <DepartmentForm
-              apiFun={addDepartment}
+            <HolidaysForm
+              apiFun={addHolidays}
               loading={loading}
               error={serverError}
               btnName={"Save"}
@@ -273,7 +305,7 @@ const Deartments = () => {
         </CommonModal>
 
         <CustDataGrid
-          data={getdep}
+          data={getHolidays}
           loading={formLoader}
           columns={columns}
           totalPages={totalPages}
@@ -287,7 +319,7 @@ const Deartments = () => {
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Edit Department
+          Edit Holiday
         </Typography>
         <Box
           sx={{
@@ -295,8 +327,8 @@ const Deartments = () => {
             maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
           }}
         >
-          <DepartmentForm
-            dep_name={dep_name}
+          <HolidaysForm
+            data={editData}
             apiFun={handleEdit}
             loading={loading}
             error={serverError}
@@ -306,7 +338,7 @@ const Deartments = () => {
       </CommonModal>
 
       <DltndConf
-        title="Delete Depeartment"
+        title="Delete Holiday"
         handleClose={handleDeleteClose}
         handleDelete={handleDelete}
         loading={loading}
@@ -319,5 +351,6 @@ const Deartments = () => {
       )}
     </>
   );
-};
-export default Deartments;
+}
+
+export default Holidays;

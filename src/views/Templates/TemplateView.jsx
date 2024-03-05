@@ -4,7 +4,6 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import parser from "react-html-parser";
 import Button from "@mui/material/Button";
-import { flexbox } from "@mui/system";
 
 export const TemplateView = (props) => {
   return (
@@ -39,14 +38,14 @@ export const TemplateView = (props) => {
             <b>Message:- </b> <span>{parser(props?.data?.message)}</span>
           </Box>
           <Box sx={{ position: "absolute", bottom: "30px", left: "50%" }}>
-          {  props?.apiFun &&
-            <Button
-            variant="contained"
-            onClick={() => props?.apiFun({ template_id: props?.data?.id })}
-            >
-            Send
-            </Button>
-          } 
+            {props?.apiFun && (
+              <Button
+                variant="contained"
+                onClick={() => props?.apiFun({ template_id: props?.data?.id })}
+              >
+                Send
+              </Button>
+            )}
           </Box>
         </Box>
       </Box>

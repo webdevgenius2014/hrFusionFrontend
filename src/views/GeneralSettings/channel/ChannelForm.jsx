@@ -7,18 +7,6 @@ import SubmitButton from "../../../components/form-components/submitButton";
 
 export const ChannelForm = (props) => {
     const newErrors= props?.error;
-  useEffect(()=>{
-    if (newErrors) {
-      Object.keys(newErrors).forEach((field) => {
-        // console.log(field, newErrors[field]);
-        setError(field, {
-          type: "manual",
-          message: newErrors[field],
-        });  
-      });
-    }
-  },[newErrors])
-   
     const validationSchema = Yup.object().shape({
         channel_name: Yup.string().required("Channel name is required"),
       });
@@ -32,8 +20,18 @@ export const ChannelForm = (props) => {
       } = useForm ({ defaultValues: {
         channel_name: props?.channel_name,},
         resolver: yupResolver(validationSchema),
-       
       });
+
+      useEffect(()=>{
+        if (newErrors) {
+          Object.keys(newErrors).forEach((field) => {
+            setError(field, {
+              type: "manual",
+              message: newErrors[field],
+            });  
+          });
+        }
+      },[newErrors])
   return (
     <form noValidate onSubmit={handleSubmit(props?.apiFun)}>
     <FormInputText

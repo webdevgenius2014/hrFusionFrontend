@@ -131,6 +131,9 @@ const EditEmployee = (props) => {
   const handleChangeRole = (id) => {
     setAddRole(() => id);
   };
+  const resetError=() => {
+    setServerError(null)
+  }
   // console.log("desig", addDesignation_id);
   // form validation
   useEffect(() => {
@@ -138,7 +141,7 @@ const EditEmployee = (props) => {
     getAllRole();
     allDocTypeFn();
     desByDepFn({department_id:addDepartment_id});
-
+    resetError();
   }, []);
  
  

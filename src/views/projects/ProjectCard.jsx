@@ -8,21 +8,21 @@ import Button from "@mui/material/Button";
 import ProgressBar from "../../components/ProgressBar";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import {Grid , Box} from "@mui/material/";
-import { useNavigate } from 'react-router-dom';
+import { Grid, Box } from "@mui/material/";
+import { useNavigate } from "react-router-dom";
 
 export const ProjectCard = (props) => {
   const navigate = useNavigate();
+  const data = props?.data;
 
-  const data = props?.data
-  
   const [daysLeft, setDaysLeft] = React.useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
+  // open menu
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  // navigate to project view
   const handleNavigate = (id) => {
     navigate(`/Projects/${id}`);
   };
@@ -47,7 +47,7 @@ export const ProjectCard = (props) => {
         width: "100%",
         maxWidth: "300px",
         padding: "16px",
-        position: 'relative',
+        position: "relative",
         borderRadius: "10px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       }}
@@ -81,7 +81,7 @@ export const ProjectCard = (props) => {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={() => props?.handleEditProject(data?.id, data)}>
+            <MenuItem onClick={() => props?.handleEditProject(data)}>
               <EditIcon />
               Edit
             </MenuItem>
@@ -104,19 +104,17 @@ export const ProjectCard = (props) => {
           </Menu>
         </Box>
       </Box>
-      
-       
-        <Box style={{  position: "relative", bottom: 0 }}>
-          <ProgressBar />
-        </Box>
-       
-    
+
+      <Box style={{ position: "relative", bottom: 0 }}>
+        <ProgressBar />
+      </Box>
+
       <Grid
         container
-        spacing={{ xs:0 , md: 0 }}
+        spacing={{ xs: 0, md: 0 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
-         sx={{marginBottom:'10px', }} 
-        >
+        sx={{ marginBottom: "10px" }}
+      >
         <Grid item xs={2} sm={4} md={6}>
           <strong>Payment Status</strong>
         </Grid>
@@ -130,10 +128,7 @@ export const ProjectCard = (props) => {
           <span>{data?.status}</span>
         </Grid>
       </Grid>
-      <Box   sx={{display:'flex',justifyContent:'space-between'}}>
-     
-      
-    
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <span
           style={{
             background: "#8ab0cd",
@@ -141,25 +136,25 @@ export const ProjectCard = (props) => {
             fontSize: "11px",
             borderRadius: "4px",
             fontWeight: "700",
-            position: '',
-            textAlign: 'center',
+            position: "",
+            textAlign: "center",
             bottom: "10px",
             color: "white",
-            margin:'auto 0',
+            margin: "auto 0",
           }}
         >
           {daysLeft > 0 ? `${daysLeft} Days left` : "Project Ended"}
         </span>
         <span
-        style={{
-          padding: "5px",
-          borderRadius: "4px",
-          color: "white",
-          background: "#5d87ff",
-        }}
-      >
-        {data.language}
-      </span>
+          style={{
+            padding: "5px",
+            borderRadius: "4px",
+            color: "white",
+            background: "#5d87ff",
+          }}
+        >
+          {data.language}
+        </span>
       </Box>
     </Card>
   );

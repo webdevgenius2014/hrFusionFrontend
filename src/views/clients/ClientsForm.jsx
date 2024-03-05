@@ -12,7 +12,6 @@ import { FormInputEmail } from "../../components/form-components/formInputEmail"
 import { FormInputText } from "../../components/form-components/formInputText";
 import { FormImage } from "../../components/form-components/FormImage";
 import FormHelperText from "@mui/material/FormHelperText";
-// import { validImageType,maxImageSize } from "../../helperFunctions/imageValidation";
 import SubmitButton from "../../components/form-components/submitButton";
 
 
@@ -23,8 +22,8 @@ const ClientForm = (props) => {
   const [inputFields, setInputFields] = useState([]);
   const [inputFieldsData, setInputFieldsData] = useState([]);
   
+  // split key and values in arrays 
   const getSocialMedia=()=>{
-   
    let mediaFields=[];
    let mediaValues=[];
   data?.social_links?.map((i)=>{
@@ -35,9 +34,7 @@ const ClientForm = (props) => {
   setInputFieldsData(()=>mediaValues)
  }
 
-useEffect(()=>{
-  getSocialMedia();
-},[])
+
 // console.log(inputFields)
   const validationSchema = Yup.object().shape({
     name: Yup.string().required(" Name is required"),
@@ -75,38 +72,11 @@ useEffect(()=>{
     resolver: yupResolver(validationSchema),
     
   });
+
   const leadValFn = (data) => {
     setLeadVal(() => data);
   };
-  useEffect(() => {
-    if (serverErrors) {
-      Object.keys(serverErrors).forEach((field) => {
-        if (field !== "email")
-          setError(field, {
-            type: "manual",
-            message: serverErrors[field],
-          });
-        else
-          setError("useremail", {
-            type: "manual",
-            message: serverErrors[field],
-          });
-      });
-    }
-  }, [serverErrors]);
 
-  const leadPlatOption = [
-    { value: "Upwork" },
-    { value: "Fiver" },
-    { value: "LinkedIn" },
-    { value: "Other" },
-  ];
-  const commChnlOpt = [
-    { value: "Email" },
-    { value: "Whatsapp" },
-    { value: "SMS" },
-    { value: "Slack" },
-  ];
 
   const addInputField = () => {
     setInputFields([...inputFields, '']);  
@@ -130,9 +100,9 @@ useEffect(()=>{
     updatedInputFields.splice(index, 1);   
     setInputFieldsData(inputFieldsDataAry);  
   };
-  // console.log("setInputFields",inputFields, "setInputFieldsData",inputFieldsData)
-const combine =(data) => {
-  
+// conbine link and platform name as key and value pair
+// call api in this function 
+  const combine =(data) => {
   const socialMedia = inputFields?.map((key, index) => (  
     {[key]: inputFieldsData[index]}
     ));
@@ -163,9 +133,28 @@ const combine =(data) => {
    if(flag===false)
   props.apiFunc(data ,socialMedia)
     flag =null;
-  
- 
 }
+
+useEffect(() => {
+  if (serverErrors) {
+    Object.keys(serverErrors).forEach((field) => {
+      if (field !== "email")
+        setError(field, {
+          type: "manual",
+          message: serverErrors[field],
+        });
+      else
+        setError("useremail", {
+          type: "manual",
+          message: serverErrors[field],
+        });
+    });
+  }
+}, [serverErrors]);
+
+useEffect(()=>{
+  getSocialMedia();
+},[])
 
   return (
     <>
@@ -239,11 +228,11 @@ const combine =(data) => {
             <Grid item xs={12} sm={6}>
               <FormSelect
                 name="lead_from_platform"
-                data={props.getAllLeads}
+                data={props?.getAllLeads}
                 label="Lead From Platform"
                 control={control}
                 onchange={onchange}
-                leadValFn={leadValFn}
+                // leadValFn={leadValFn}
                 pass_fun={props?.handleLeadPlat}
                 fieldaname="platform_name"
                 getValue={getValues}

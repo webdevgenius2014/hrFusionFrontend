@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextareaAutosize as BaseTextareaAutosize } from '@mui/base/TextareaAutosize';
-import { styled, width } from '@mui/system';
+import { styled } from '@mui/system';
 import { Controller } from "react-hook-form";
 export const TextArea= ({name,f_type, control, label, required=false,focused=false ,error, ...rest}) => {   
     const blue = {

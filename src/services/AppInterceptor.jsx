@@ -12,7 +12,7 @@ const requestHandler = async request => {
     let token =sessionStorage.getItem("token");
     request.headers = {
         Accept: "application/json",
-        
+        'Content-Type': 'multipart/form-data',
             Authorization: "Bearer " + token,
     } 
     return request;
@@ -20,7 +20,6 @@ const requestHandler = async request => {
 const errorHandler = async error => {
     const originalConfig = error.config; 
     return error.response  
-    //throw error.response    
 }
 
 export default instance;

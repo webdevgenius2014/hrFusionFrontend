@@ -1,4 +1,4 @@
-import instance from "./ImageInterceptor";
+import instance from "./AppInterceptor";
 import ApiConfig from "../config/apiConfig";
 class ClientService {
   deleteClient(payload) {
@@ -28,6 +28,9 @@ class ClientService {
   }
   sendMessageToClient(payload) {
     return instance.post(ApiConfig.sendMessageToClient , payload);
+  }
+  uploadClientCSV(payload) {
+    return instance.post(ApiConfig.uploadClientCSV ,payload );
   }
 }
 

@@ -3,13 +3,7 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
 import {ImagePath}  from '../../helperFunctions/ImagePath'
 import { Box } from '@mui/system';
@@ -18,23 +12,24 @@ import { Box } from '@mui/system';
 export const ClientsCard = (props) => {
   const navigate = useNavigate();
     const [data]=React.useState(props?.data)
-
+ 
+    // navigate to client profile
   const handleNavigate = (id) => {
     navigate(`/clients/${id}`);
   };
+
+  // navigate to masseges
   const handleMessageNavigate = (id) => {
     navigate(`/Client-Message/${id}`);
   };
   return (
     <Card sx={{ minWidth: '230px',maxWidth:'273px', borderRadius:3}} >
-   
       <CardMedia
         sx={{ height: 100, width:100, borderRadius:'50%',textAlign:'center',margin:'auto',marginTop:'18px' , border: '1px solid #dee2e6'}}
         image={ImagePath(data.profile_image)}
         title="green iguana"
       />
       <CardContent>
-     
         <Typography  variant="h6" component="div" style={{textAlign:'center' ,fontWeight:600,fontSize:'18px'}}>
           {data.name}  
         </Typography>
@@ -53,9 +48,7 @@ export const ClientsCard = (props) => {
       textAlign:'center'}}>
       <label style={{fontSize:'18px',fontWeight:700}}>Deal</label>
       <h4 style={{margin:'2px',fontSize:'15px',fontWeight:400}}>Amount</h4>
-      </Box>
-       
-
+      </Box>    
         </CardActions>
         <Typography gutterBottom variant="h5" component="div" style={{textAlign:'center',gap:'5px',display:'flex' ,marginTop:'8px'}}>
         <Box onClick={()=>{handleNavigate(data?.id)}}>

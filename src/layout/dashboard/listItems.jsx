@@ -3,15 +3,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import AccountTreeIcon from "@mui/icons-material/AccountTree";
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import GroupsIcon from "@mui/icons-material/Groups";
-import CakeIcon from "@mui/icons-material/Cake";
 import { NavLink } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useLocation } from 'react-router-dom';
-import SettingsSuggestIcon from "@mui/icons-material/SettingsSuggest";
+import {useLocation } from 'react-router-dom';
 import { ClientAccordion } from "./ClientAccordion";
 
 export const MainListItems = () => {
@@ -40,6 +34,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText style={{color:location === 'dashboard' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Dashboard" />
       </ListItemButton>
+
       <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/departments">
         <ListItemIcon>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -61,6 +56,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText style={{color:location === 'departments' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Departments" />
       </ListItemButton>
+
       <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/designations"> 
         <ListItemIcon>
         <svg width="21" height="19" viewBox="0 0 21 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,6 +66,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText style={{color:location === 'designations' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Designations" />
       </ListItemButton>
+
       <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/employees">
         <ListItemIcon>
         <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +88,9 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText style={{color:location === 'employees' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Employees" />
       </ListItemButton>
+
       <ClientAccordion handleChange={handleChange} expanded={expanded} />
+
       <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/Employees-Birthday">
         <ListItemIcon>
         <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -109,6 +108,7 @@ export const MainListItems = () => {
         </ListItemIcon>
         <ListItemText style={{color:location === 'Employees-Birthday' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Employee Birthday" />
       </ListItemButton>
+
       <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/generalSettings">
         <ListItemIcon>
         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -126,15 +126,25 @@ export const MainListItems = () => {
         <ListItemText style={{color:location === 'generalSettings' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="General Settings" />
       </ListItemButton>
 
-      {/* <ListItemButton component={NavLink} to="/">
+      <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/holidays">
         <ListItemIcon>
-          <LoginIcon />
+        <svg width="25" height="25" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><defs></defs><title/><g data-name="Layer 2" id="Layer_2"><path style={{fill:location === 'holidays' ? '#5D87FF' : '#B1B1B1'}} d="M55.93,12H48a2,2,0,0,0-2,2v2a2,2,0,0,1-4,0V14a2,2,0,0,0-2-2H8.07A4.07,4.07,0,0,0,4,16.07v4.7a7.59,7.59,0,0,0,1.69,4.89A9.84,9.84,0,0,1,8,32a9.84,9.84,0,0,1-2.31,6.34A7.59,7.59,0,0,0,4,43.23v4.7A4.07,4.07,0,0,0,8.07,52H40a2,2,0,0,0,2-2V48a2,2,0,0,1,4,0v2a2,2,0,0,0,2,2h7.93A4.07,4.07,0,0,0,60,47.93v-4.7a7.59,7.59,0,0,0-1.69-4.89,9.88,9.88,0,0,1,0-12.68A7.59,7.59,0,0,0,60,20.77v-4.7A4.07,4.07,0,0,0,55.93,12ZM14,21h3a1,1,0,0,1,0,2H14a1,1,0,0,1,0-2Zm0,5h1a1,1,0,0,1,0,2H14a1,1,0,0,1,0-2Zm21.18,8.92L26.06,34a.08.08,0,0,0-.09.08,14.67,14.67,0,0,1-.86,4.7l-.14.39a.62.62,0,0,0,.22.72l2.51,1.8a.58.58,0,0,1-.46,1L24,42.15l-3.24.6a.58.58,0,0,1-.46-1l2.51-1.8a.62.62,0,0,0,.22-.72l-.14-.39a14.67,14.67,0,0,1-.86-4.7.08.08,0,0,0-.09-.08l-9.12.91a.57.57,0,0,1-.31-1.08L22,29.08v-4.2a5.76,5.76,0,0,1,.84-3,1.31,1.31,0,0,1,2.25,0,5.76,5.76,0,0,1,.84,3v4.2l9.52,4.76a.57.57,0,0,1-.31,1.08ZM46,40a2,2,0,0,1-4,0V36a2,2,0,0,1,4,0Zm0-12a2,2,0,0,1-4,0V24a2,2,0,0,1,4,0Z"/></g></svg>        
         </ListItemIcon>
-        <ListItemText
-          onClick={onSubmit}
-          primary="Logout"
-        />
-  </ListItemButton>  */}
+        <ListItemText style={{color:location === 'holidays' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Holidays" />
+      </ListItemButton>
+
+      <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/events">
+        <ListItemIcon>
+        <svg width="25" height="25" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g data-name="Glyph"><path d="M32 24a14 14 0 1 0 14 14 14 14 0 0 0-14-14Zm8 15a2 2 0 0 1-2 2h-3v3a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-3h-3a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h3v-3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v3h3a2 2 0 0 1 2 2Z" fill={location === 'events' ? '#5D87FF' : '#B1B1B1'} class="fill-000000"></path><path d="M54 6h-3v-.5a3.5 3.5 0 0 0-7 0V6h-8.5v-.5a3.5 3.5 0 0 0-7 0V6H20v-.5a3.5 3.5 0 0 0-7 0V6h-3a5 5 0 0 0-5 5v46a5 5 0 0 0 5 5h44a5 5 0 0 0 5-5V11a5 5 0 0 0-5-5Zm-8-.5a1.5 1.5 0 0 1 3 0v4a1.5 1.5 0 0 1-3 0Zm-15.5 0a1.5 1.5 0 0 1 3 0v4a1.5 1.5 0 0 1-3 0ZM15 5.5a1.5 1.5 0 0 1 3 0v4a1.5 1.5 0 0 1-3 0Zm33 49.09V50a3 3 0 0 1 3-3h4.59ZM57 44a1 1 0 0 1-1 1h-5a5 5 0 0 0-5 5v5a1 1 0 0 1-1 1l-35-.06a3 3 0 0 1-3-3V20h50Z" fill={location === 'events' ? '#5D87FF' : '#B1B1B1'} class="fill-000000"></path></g></svg>
+        </ListItemIcon>
+        <ListItemText style={{color:location === 'events' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Events" />
+      </ListItemButton>
+      <ListItemButton component={NavLink} onClick={()=>{handleChange('false')}} to="/leaves">
+        <ListItemIcon>
+        <svg width="25px" height="25px" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.6666 8L17.75 10.5L15.6666 8Z" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M15.6666 13L17.75 10.5L15.6666 13Z" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.5 10.5L10 10.5" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round"></path> <line x1="4" y1="3.5" x2="13" y2="3.5" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round"></line> <line x1="4" y1="17.5" x2="13" y2="17.5" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round"></line> <path d="M13 3.5V7.5" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round"></path> <path d="M13 13.5V17.5" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round"></path> <path d="M4 3.5L4 17.5" stroke={location === 'leaves' ? '#5D87FF' : '#B1B1B1'} stroke-width="2" stroke-linecap="round"></path> </g></svg>        </ListItemIcon>
+        <ListItemText style={{color:location === 'leaves' ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary="Leaves" />
+      </ListItemButton>
+     
     </>
   );
 };

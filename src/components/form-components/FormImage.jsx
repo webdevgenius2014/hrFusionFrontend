@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
-import {TextField ,InputLabel, FormControl ,Box } from "@mui/material";
+import {InputLabel, FormControl ,Box } from "@mui/material";
 import FormHelperText from "@mui/material/FormHelperText";
 
 
@@ -20,7 +20,7 @@ export const FormImage = ({
   ...rest
 }) => {
     let temp;
-  if(d_value != undefined){
+  if(d_value !== undefined){
   const image = `${process.env.REACT_APP_API_BASE_URL}/${d_value}`;
      temp =image }
   const [selectedFile, setSelectedFile] = React.useState(temp);

@@ -4,9 +4,8 @@ import Container from "@mui/material/Container";
 import { CustomPagination } from "../../components/CustomPagination";
 import BeatLoader from "react-spinners/ClipLoader";
 import CommonModal from "../../components/modal/commonModal";
-import {AddButton , Buttons} from  '../../components/Buttons/AllButtons';
+import { AddButton, Buttons } from "../../components/Buttons/AllButtons";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
-import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import ProjectForm from "./ProjectForm";
 import SearchIcon from "@mui/icons-material/Search";
@@ -18,36 +17,43 @@ import ClientsServices from "../../services/ClientsServices";
 import "react-toastify/dist/ReactToastify.css";
 import { ProjectCard } from "./ProjectCard";
 import { Searching } from "../../components/Searching";
-import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
-import CommonServices from '../../services/CommonServices'
-import {allLeads,allClients,allEmployees } from "../../helperApis/HelperApis";
+import CommonServices from "../../services/CommonServices";
+import {
+  HrTeamLeadMangarapi,
+  allClients,
+  allEmployees,
+} from "../../helperApis/HelperApis";
 const Projects = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState();
-  const [page, setPage] = useState('1');
-  const [searchFlag, setSearchFlag] = useState(false);
+  const [page, setPage] = useState("1");
   const [noRecord, setNoRecord] = useState();
 
-  // api integration -----------------------------------
-  // all clients =------------------------------------------
+  // api states
   const [getClients, setgetClients] = useState([]);
+  const [getProjects, setGetProj] = useState([]);
+  const [getEmployees, setGetEmployees] = useState([]);
+  const [getTeamlead, setGetTeamlead] = useState([]);
+  const [projectData, setProjectData] = useState();
+  const [deleteProject, setDeleteProj] = useState();
+
+  // all clients =------------------------------------------
   const getAllClients = async () => {
     try {
       const result = await allClients();
-      // console.log(result);
       setgetClients(result);
     } catch (error) {
       console.log("getAllDepartmentsFn", error);
     }
   };
-  // all employess ------------
   // get all employees ----------------------------
-  const [getEmployees, setGetEmployees] = useState([]);
   const getAllEmployees = async () => {
     try {
       const result = await allEmployees();
@@ -55,6 +61,44 @@ const Projects = () => {
     } catch (error) {
       console.log("getAllDepartmentsFn", error);
     }
+  };
+  // all teamLeads -------------------------------
+  const getAllLeads = async () => {
+    try {
+      const result = await HrTeamLeadMangarapi();
+      setGetTeamlead(result?.data?.data);
+    } catch (error) {
+      console.log("getAllDepartmentsFn", error);
+    }
+  };
+  // get all Project --------------------------------
+  const getProjectsFn = () => {
+    setLoading(true);
+    ProjectServices.getProjects(page)
+      .then((res) => {
+        if (res.status === 200 && res?.data?.success === true) {
+          setTotalPages(() => res?.data?.data?.last_page);
+          setGetProj(res?.data?.data?.data);
+          setLoading(false);
+        }
+        if (res?.status === 200 && res?.data?.success === false) {
+          setLoading(false);
+          setGetProj([]);
+          setNoRecord(res?.data?.message);
+        }
+        if (res.status === 404) {
+          setNoRecord(res?.data?.message);
+          setLoading(false);
+        }
+        if (res.status === 401) {
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.log("getProjects error", err);
+      });
   };
   // add Projects-------------------------------------
   const addProjects = (data) => {
@@ -71,7 +115,7 @@ const Projects = () => {
           setServerError(res?.data);
           setLoading(false);
         }
-        if(res.status === 401){
+        if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -81,76 +125,9 @@ const Projects = () => {
         console.log("addProjects error: " + err);
       });
   };
-
-  //---- end add Project  --------------------------------------------------------
-  // get all Project --------------------------------
-  const [getProjects, setGetProj] = useState([]);
-  const getProjectsFn = () => {
-    setLoading(true);
-    ProjectServices.getProjects(page)
-      .then((res) => {
-        // console.log(res.data.data.data)
-        if (res.status === 200  && res?.data?.success=== true) {
-          setTotalPages(() => res?.data?.data?.last_page);
-          setGetProj(res?.data?.data?.data);
-          setLoading(false); 
-        } 
-        if (res?.status=== 200 && res?.data?.success=== false) {
-          setLoading(false);
-          setGetProj([]);
-          setNoRecord(res?.data?.message);
-        }
-        if (res.status === 404) {
-          setNoRecord(res?.data?.message);
-          setLoading(false);
-        }
-        if(res.status === 401){
-          dispatch(superAdminLogout());
-          setLoading(false);
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        console.log("getProjects error", err);
-      });
-  };
-  useEffect(() => {
-    getProjectsFn();
-    getAllClients();
-    getAllLeads();
-    getAllEmployees();
-  }, []);
-  useEffect(() => {
-    getProjectsFn();
-  }, [page]);
-
-  // end get  all Projrect -------------------------------
-  // all teamleads -------------------------------
-  const [getTeamlead, setGetTeamlead] = useState([]);
-  const getAllLeads = async () => {
-    try {
-      const result = await allLeads();
-      setGetTeamlead(result);
-    } catch (error) {
-      console.log("getAllDepartmentsFn", error);
-    }
-  };
-
   // edit Project -------------------------------
-  const [proj_id, setprojId] = useState();
-  const [projectData, setProjectData] = useState();
-
-  const handleEditProject = (id, projectData) => {
-    // console.log(id, projectData);
-    setprojId(id);
-    setProjectData(() => projectData);
-    handleEditOpen();
-  };
-
   const handleEdit = (data) => {
-    console.log(data);
-    let payload = { ...data, id: proj_id };
-    console.log(payload);
+    let payload = { ...data, id: projectData?.id };
     setLoading(true);
     ProjectServices.editProjects(payload)
       .then((res) => {
@@ -164,7 +141,7 @@ const Projects = () => {
           setServerError(res.data);
           setLoading(false);
         }
-        if(res.status === 401){
+        if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -174,14 +151,7 @@ const Projects = () => {
         console.log("editProject error: " + err);
       });
   };
-
-  // end edit project -------------------------------
   // delete project -------------------------------
-  const [deleteProject, setDeleteProj] = useState();
-  const handleDeleteClick = (id) => {
-    setDeleteProj(id);
-    handleDeleteOpen();
-  };
   const handleDelete = (e) => {
     let id = { id: deleteProject };
     setLoading(true);
@@ -204,7 +174,7 @@ const Projects = () => {
 
           toast.error(res.data.message);
         }
-        if(res.status === 401){
+        if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -215,22 +185,17 @@ const Projects = () => {
         setLoading(false);
       });
   };
-
-  // end deleteProjectartment ------------
   // search project ---------------------
-  const [searchPage,setSearchPage]=useState()
   const searchProject = (payload) => {
     setLoading(true);
     ProjectServices.searchProjects(payload)
       .then((res) => {
-        console.log(res)
-        if (res.status === 200 && res?.data?.success=== true)  {
+        if (res.status === 200 && res?.data?.success === true) {
           setGetProj(res?.data?.data);
-          setSearchPage(() => res?.data?.data?.last_page);
-          console.log(res?.data)
+          console.log(res?.data);
           setLoading(false);
-        } 
-        if (res?.status=== 200 && res?.data?.success=== false) {
+        }
+        if (res?.status === 200 && res?.data?.success === false) {
           loading(false);
           // setGetProj([]);
           setNoRecord(res?.data?.message);
@@ -239,7 +204,7 @@ const Projects = () => {
           setNoRecord(res.data.message);
           setLoading(false);
         }
-        if(res.status === 401){
+        if (res.status === 401) {
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -249,8 +214,29 @@ const Projects = () => {
         console.log("searchProjects error", err);
       });
   };
-
   //---- end api ------------------
+  // edit click
+  const handleEditProject = (projectData) => {
+    console.log("project ", projectData);
+    setProjectData(() => projectData);
+    handleEditOpen();
+  };
+  // delete click
+  const handleDeleteClick = (id) => {
+    setDeleteProj(id);
+    handleDeleteOpen();
+  };
+
+  useEffect(() => {
+    getProjectsFn();
+    getAllClients();
+    getAllLeads();
+    getAllEmployees();
+  }, []);
+
+  useEffect(() => {
+    getProjectsFn();
+  }, [page]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -264,6 +250,7 @@ const Projects = () => {
   const handleDeleteOpen = () => setDeleteOpen(true);
   const handleDeleteClose = () => setDeleteOpen(false);
 
+  const [searchFlag, setSearchFlag] = useState(false);
   const handleSearchOpen = () => setSearchFlag(true);
   const handleSearchClose = () => setSearchFlag(false);
 
@@ -271,9 +258,7 @@ const Projects = () => {
 
   return (
     <>
-      
       {/*  display header and search  */}
-
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader
@@ -306,12 +291,7 @@ const Projects = () => {
                 </Buttons>
               )}
 
-              <AddButton
-              
-                onClick={handleOpen}
-              >
-                Add
-              </AddButton>
+              <AddButton onClick={handleOpen}>Add</AddButton>
             </>
           </DatagridHeader>
           {searchFlag && searchFlag === true && (
@@ -330,7 +310,6 @@ const Projects = () => {
           display: "flex",
           flexWrap: "wrap",
           gap: "10px",
-          
         }}
       >
         {getProjects && getProjects?.length > 0 ? (
@@ -426,16 +405,16 @@ const Projects = () => {
       </CommonModal>
       {/* delete  component */}
 
-      <DeleteDilagBox
+      <DltndConf
         title="Delete Project"
-        handleDeleteClose={handleDeleteClose}
+        handleClose={handleDeleteClose}
         handleDelete={handleDelete}
         loading={loading}
-        deleteopen={deleteopen}
+        open={deleteopen}
       />
       {/* pagination */}
 
-      {totalPages && totalPages>=2 && (
+      {totalPages && totalPages >= 2 && (
         <div style={{ width: "100%", marginTop: "10px", background: "white" }}>
           <CustomPagination totalPages={totalPages} setPage={setPage} />
         </div>

@@ -3,9 +3,7 @@ import Grid from "@mui/material/Grid";
 import CardMedia from "@mui/material/CardMedia";
 import { Link } from "react-router-dom";
 import { ImagePath } from "../../helperFunctions/ImagePath";
-import { useParams } from "react-router-dom";
-import ClientsServices from "../../services/ClientsServices";
-import dateFormat from "dateformat";
+
 
 export const ClientView = ({viewClient}) => {
   return (

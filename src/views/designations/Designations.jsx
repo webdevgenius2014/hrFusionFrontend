@@ -13,29 +13,32 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import DesignationServices from "../../services/DesignationServices";
-import DepartmentServices from "../../services/DepartmentServices";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { CustomPagination } from "../../components/CustomPagination";
-import { DeleteDilagBox } from "../../components/modal/DeleteModal";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { getAllDepartmentfn } from "../../helperApis/HelperApis";
-
 import "react-toastify/dist/ReactToastify.css";
+
 const Designations = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
+  
+  // api states
   const [getdep, setGetdep] = useState([]);
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  // api integration ----------------------------------------------------
-  // get designations --------------------------------
   const [getDesig, setGetDesig] = useState([]);
+  const [depart_id, setDepart_id] = useState("");
+  const [editData, setEditData] = useState({});
+  const [deleteDesignations, setDeleteDesignations] = useState({});
+
+  // get designations --------------------------------
   const getDesignationsfn = () => {
     setFormLoader(true);
     DesignationServices.getDesignations(page)
@@ -44,7 +47,6 @@ const Designations = () => {
           setTotalPages(res?.data?.data?.last_page);
           setGetDesig(res?.data?.data.data);
           setFormLoader(false);
-          // EmployeServices.getEmployee();
         }
         if (res.status === 200 && res?.data?.success === false) {
           setFormLoader(false);
@@ -52,7 +54,6 @@ const Designations = () => {
           setGetDesig([]);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -63,59 +64,37 @@ const Designations = () => {
         setFormLoader(false);
       });
   };
+  // get all departments 
   const getAllDepartmentsFn = async () => {
     try {
       const result = await getAllDepartmentfn();
-      // console.log(result);
       setGetdep(result);
     } catch (error) {
       console.log("getAllDepartmentsFn", error);
     }
   };
-  useEffect(() => {
-    getDesignationsfn();
-    getAllDepartmentsFn();
-  }, []);
-
-  useEffect(() => {
-    getDesignationsfn();
-  }, [page]);
-  // end getdescription -------------------------
-  // change department ------------------------
-  const [depart_id, setDepart_id] = useState("");
-  const handleChangeDep = (id) => {
-    setDepart_id(() => id);
-    // console.log(id)
-  };
-  //-------------------------------------------
   // add designations ------------------------
   const handleAddDesignation = (data) => {
     setLoading(true);
-    console.log("data", data);
-
     const payload = {
       designation_name: data.designation_name,
       department_id: depart_id,
     };
     DesignationServices.addDesignation(payload)
       .then((res) => {
-        console.log(res);
         if (res.data.success === true) {
           getDesignationsfn();
-          // DesignationServices.getDesignations();
-          toast.success(res.data.message);
+          toast.success(res?.data?.message);
           setLoading(false);
           handleClose();
-        } else if (res.data.success === false) {
-          console.log(res.data.message);
+        } else if (res?.data?.success === false) {
           setLoading(false);
-          setServerError(res.data);
+          setServerError(res?.data);
         }
         if (res.status === 403) {
           setLoading(false);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -126,32 +105,16 @@ const Designations = () => {
       });
     setServerError("");
   };
-  // end add designations ------------------------
   // edit designations ------------------------
-  const [showDepartment, setShowDepartment] = useState("");
-  const [showDesignation, setshowDesignation] = useState("");
-  const [designation_id, setDesignation_id] = useState("");
-  const [dep_id, setDep_id] = useState("");
-
-  const handleEditClick = (id, desig, dep, dep_id) => () => {
-    setDesignation_id(() => id);
-    setshowDesignation(() => desig);
-    setShowDepartment(() => dep);
-    setDep_id(() => dep_id);
-    handleEditOpen();
-  };
   const handleEditDasignation = (data) => {
     setLoading(true);
-    // console.log(depart_id, showDepartment);
     let payload = {
-      id: designation_id,
+      id: editData?.id,
       designation_name: data.designation_name,
-      department_id: depart_id || dep_id,
+      department_id: depart_id || editData?.dep_id,
     };
-    // console.log("payload", payload);
     DesignationServices.editDesignation(payload)
       .then((res) => {
-        // console.log("editDesignation", res);
         if (res.data.success === true) {
           getDesignationsfn();
           toast.success(res.data.message);
@@ -164,7 +127,6 @@ const Designations = () => {
           setLoading(false);
         }
         if (res.status === 401) {
-          // con9sole.log()
           dispatch(superAdminLogout());
           setLoading(false);
           navigate("/");
@@ -174,15 +136,7 @@ const Designations = () => {
         console.log("edit designation err", error);
       });
   };
-
-  // end edit designations ------------------------
-
   // delete designations  ------------------------
-  const [deleteDesignations, setDeleteDesignations] = useState({});
-  const handleDeleteClick = (id) => {
-    setDeleteDesignations({ id: id });
-    handleDeleteOpen();
-  };
   const handleDelete = () => {
     setLoading(true);
     DesignationServices.deleteDesignation(deleteDesignations)
@@ -211,17 +165,37 @@ const Designations = () => {
         console.log("delete  designation error: ", err);
       });
   };
-  // end delete designations ------------------------
+  // change department  ------------------------
+  const handleChangeDep = (id) => {
+    setDepart_id(() => id);
+  };
+  // get data on edit click
+  const handleEditClick = (data) => () => {
+    setEditData(()=>data)
+    handleEditOpen();
+  };
+  // get delete designation id 
+  const handleDeleteClick = (id) => {
+    setDeleteDesignations({ id: id });
+    handleDeleteOpen();
+  };
 
-  // end api integration -----------------------------------------------
+  useEffect(() => {
+    getDesignationsfn();
+    getAllDepartmentsFn();
+  }, []);
+
+  useEffect(() => {
+    getDesignationsfn();
+  }, [page]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {setOpen(false); setServerError(null)};
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
+  const handleEditClose = () => {setEditOpen(false); setServerError(null)}
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -236,7 +210,6 @@ const Designations = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
-    // { field: 'id', headerName: 'ID', width: 100, options: { filter: true } },
     {
       field: "designation_name",
       headerName: "Designation",
@@ -265,20 +238,19 @@ const Designations = () => {
       type: "actions",
       getActions: (params) => {
         let currentId = params?.id;
-        let dep = params?.row?.department_name;
-        let dep_id = params?.row?.department.id;
-        // console.log(dep_id)
+        let data ={
+          dep : params?.row?.department_name,
+          dep_id : params?.row?.department.id,
+          id :  params?.id,
+          desig : params?.row?.designation_name
+        }
+
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(
-              params?.id,
-              params?.row?.designation_name,
-              dep,
-              dep_id
-            )}
+            onClick={handleEditClick(data )}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -352,8 +324,8 @@ const Designations = () => {
           }}
         >
           <DesignationForm
-            showDesignation={showDesignation}
-            showDepartment={showDepartment}
+            showDesignation={editData?.desig}
+            showDepartment={editData?.dep}
             getdep={getdep}
             handleChangeDep={handleChangeDep}
             loading={loading}
@@ -363,12 +335,12 @@ const Designations = () => {
           />
         </Box>
       </CommonModal>
-      <DeleteDilagBox
+      <DltndConf
         title="Delete Designation"
-        handleDeleteClose={handleDeleteClose}
+        handleClose={handleDeleteClose}
         handleDelete={handleDelete}
         loading={loading}
-        deleteopen={deleteopen}
+        open={deleteopen}
       />
       {totalPages && totalPages >= 2 && (
         <div style={{ width: "100%", marginTop: "10px", background: "white" }}>

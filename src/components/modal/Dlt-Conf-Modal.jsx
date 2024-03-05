@@ -4,18 +4,21 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-export const DeleteDilagBox = (props) => {
+export const DltndConf = (props) => {
+  const title = props.title;
+  const message = props.message ? props.message : "Are you sure want to delete?" 
+  const btnName = props.btnName ? props.btnName :'Delete'; 
   return (
-    <CommonModal isOpen={props?.deleteopen} isClose={props?.handleDeleteClose}>
+    <CommonModal isOpen={props?.open} isClose={props?.handleClose}>
     <Typography
       id="modal-modal-title"
       variant="h6"
       component="h2"
       sx={{ marginBottom: "20px", fontWeight: "600" }}
     >
-      {props?.title}
+      {title}
     </Typography>
-    <p>Are you sure want to delete?</p>
+    <p>{message}</p>
     <Box
       sx={{
         width: 500,
@@ -29,13 +32,13 @@ export const DeleteDilagBox = (props) => {
         onClick={props?.handleDelete}
       >
 
-        {props?.loading ? <>Loading..</> : <>Delete</>}
+        {props?.loading ? <>Loading..</> : <>{btnName}</>}
       </Button>
       <Button
         type="submit"
         variant="contained"
         sx={{ marginTop: "13px" }}
-        onClick={props?.handleDeleteClose}
+        onClick={props?.handleClose}
       >
         Cancel
       </Button>

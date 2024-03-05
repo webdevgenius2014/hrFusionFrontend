@@ -14,7 +14,7 @@ export const LeadPlatformForm = (props) => {
         setError(field, {
           type: "manual",
           message: newErrors[field],
-        });  
+        });
       });
     }
   }, [newErrors]);
