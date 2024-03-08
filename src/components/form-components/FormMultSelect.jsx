@@ -44,7 +44,8 @@ export const FormMultiSelect = ({
         style={{width: '100%',height:'40px'}}
         value={apiData}
         error={!!error}
-        sx={{margin:'5px'}}
+        // sx={{marginTop:'5px'}}
+        sx={{marginY:"6px"}}
         helperText={error && `${error.message}`}
         onChange={handleChange}
         input={<OutlinedInput  label={label}/>}

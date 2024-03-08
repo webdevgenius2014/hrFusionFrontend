@@ -19,7 +19,7 @@ export const FormInputText= ({name,f_type, control, label, required=false,focuse
                     onChange={onChange} 
                     fullWidth={true}
                     size="small" 
-                    // sx={{margin:'5px'}}
+                    sx={{marginTop:'0px',padding:'0px'}}
                     error={!!error}                                       
                     helperText={error && `${error.message}`} 
                     margin="normal" 

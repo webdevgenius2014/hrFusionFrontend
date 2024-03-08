@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { Grid, Box } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -60,6 +61,7 @@ const ProjectView = () => {
       headerClassName: "super-app-theme--header",
       flex: 1,
       options: { filter: true },
+      
     },
     {
       field: "payment_status",
@@ -74,6 +76,11 @@ const ProjectView = () => {
       flex: 1,
       headerClassName: "super-app-theme--header",
       options: { filter: true },
+      renderCell: (params) => (
+        <strong style={{display:'flex'}}> 
+         {dateFormat(params?.row?.created_at, "dd/mmm/yyyy  hh:mm:ss ") }
+        </strong>
+      ),
     },
   ];
   return (

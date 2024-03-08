@@ -12,7 +12,7 @@ class HolidayService {
   }
 
   getHolidays(page) {
-    return instance.get(`${ApiConfig.getHolidays}?page=${page}`);
+    return instance.get(`${ApiConfig.getHolidays}`);
   }
   upComingHolidays() {
     return instance.get(ApiConfig.get_upcoming_holidays);

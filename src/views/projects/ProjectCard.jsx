@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import Card from "@mui/material/Card";
 import EditIcon from "@mui/icons-material/Edit";
@@ -14,8 +15,8 @@ import { useNavigate } from "react-router-dom";
 export const ProjectCard = (props) => {
   const navigate = useNavigate();
   const data = props?.data;
-
   const [daysLeft, setDaysLeft] = React.useState();
+    
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   // open menu
@@ -131,7 +132,7 @@ export const ProjectCard = (props) => {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <span
           style={{
-            background: "#8ab0cd",
+            background: daysLeft >= 15 ? "#03C03C" : (daysLeft <= 15 && daysLeft >= 7) ? "#E4D00A " : "#FF0000",
             padding: "4px",
             fontSize: "11px",
             borderRadius: "4px",
@@ -143,7 +144,7 @@ export const ProjectCard = (props) => {
             margin: "auto 0",
           }}
         >
-          {daysLeft > 0 ? `${daysLeft} Days left` : "Project Ended"}
+          {daysLeft > 0 ? `${daysLeft} Days left` : "Time Over"}
         </span>
         <span
           style={{

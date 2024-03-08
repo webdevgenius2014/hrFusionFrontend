@@ -26,6 +26,7 @@ export const FormSelect = ({
   getValue,
   stylee,
   data,
+  setShowDesig,
   error,
   ...rest
 }) => {
@@ -53,10 +54,13 @@ export const FormSelect = ({
             id="demo-simple-select"
             defaultValue={def}
             label={label}
+            sx={{marginTop:"6px"}}
             size="small"
             onChange={(e)=> {
               handleChange(e);
               onChange(e);
+              if(setShowDesig) {setShowDesig("select designation");
+            }
             }}
             error={!!error}
             helperText={error && `${error.message}`}
@@ -66,7 +70,7 @@ export const FormSelect = ({
             {data && data.length > 0 ?(
               data.map((item, index) => (
                 <MenuItem
-                  key={item[index]}
+                  key={index}
                   onClick={() =>{if(pass_fun){ pass_fun(item?.id , index)}}}
                   value={item[fieldaname]}
                 >
@@ -75,10 +79,11 @@ export const FormSelect = ({
               ))): (<MenuItem disabled={true} value={' '} >No Record</MenuItem>)
             }
           </Select>
-          <FormHelperText style={{ color: error?.message ? ' #f79277' : '' }}><span>{error?.message}</span></FormHelperText>
+          {error && <FormHelperText style={{ color: error?.message ? ' #f79277' : '' }}><span>{error?.message}</span></FormHelperText>
+        }
           </FormControl>
           </>
-      )}
-    />
-  );
-};
+          )}
+          />
+          );
+        };

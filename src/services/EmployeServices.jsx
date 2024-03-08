@@ -22,6 +22,18 @@ class EmployeService {
   getAllEmployees(page) {
     return instance.get(ApiConfig.getAllEmployees);
   }
-  
+
+  // feedback api 
+  listFeedback() {
+    return instance.get(ApiConfig.listFeedback);
+  }
+  viewFeedback(payload) {
+    return instance.post(ApiConfig.viewFeedback, payload);
+  }
+  addFeedback(payload) {
+    return instance.post(ApiConfig.addFeedback, payload);
+  }
+ 
 }
+// eslint-disable-next-line import/no-anonymous-default-export
 export default new EmployeService();

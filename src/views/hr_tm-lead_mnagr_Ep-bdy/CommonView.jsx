@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import CommonServices from "../../services/CommonServices";
-import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
-import { useNavigate } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import { GridActionsCellItem } from "@mui/x-data-grid";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { ImagePath } from "../../helperFunctions/ImagePath";
 import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
 import { useDispatch } from "react-redux";
-import { superAdminLogout } from "../../redux/SuperAdminSlice";
-import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from "react";
+import {useLocation } from "react-router-dom";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import CommonServices from "../../services/CommonServices";
+import { ImagePath } from "../../helperFunctions/ImagePath";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { HrTeamLeadMangarapi } from "../../helperApis/HelperApis";
+import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 
 function HrTeamLeadMangar() {
   const url = useLocation();

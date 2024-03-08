@@ -19,7 +19,7 @@ const TemplateForm = (props) => {
   const newErrors = props?.error;
   const keyWords = ["%CLIENT_NAME%", "%CLIENT_EMAIL%", "%CLIENT_PHONE%"];
 
-  const [html, setHtml] = useState(data?.message || "");
+  const [html, setHtml] = useState(data?.message || []);
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("Tilte is required"),
     subject: Yup.string().required("Subject is required"),
@@ -52,6 +52,7 @@ const TemplateForm = (props) => {
         type: "manual",
         message: newErrors?.message,
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [newErrors]);
 
   const config = {
@@ -117,7 +118,9 @@ const TemplateForm = (props) => {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit((values) => props.apiFun(values, html))}
+              onSubmit={handleSubmit((values) =>{ 
+                console.log(html)
+                if(html?.length >= 5) props.apiFun(values, html)})}
               sx={{ mt: 1 }}
             >
               <Grid container sx={{ pr: 1 }}>
@@ -152,8 +155,8 @@ const TemplateForm = (props) => {
                 <Grid xs={12} sm={9} md={9} lg={9} sx={{ paddingLeft: "5px" }}>
                   <JoditEditor
                     ref={editor}
-                    value={props?.data?.message || ""}
-                    tabIndex={1} // tabIndex of textarea
+                    value={props?.data?.message || ''}
+                    tabIndex={1} 
                     // config={{minHeight: 300,
                     //   minWidth: null,}}
                     onChange={(newContent) => {

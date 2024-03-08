@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
-import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
-import DepartmentForm from "./DepartmentForm";
-import CommonModal from "../../components/modal/commonModal";
-import { AddButton } from "../../components/Buttons/AllButtons";
-import Typography from "@mui/material/Typography";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { GridActionsCellItem } from "@mui/x-data-grid";
-import DepartmentServices from "../../services/DepartmentServices";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import DepartmentForm from "./DepartmentForm";
 import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
-import { CustomPagination } from "../../components/CustomPagination";
-import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import Container from "@mui/material/Container";
+import EditIcon from "@mui/icons-material/Edit";
+import Typography from "@mui/material/Typography";
+import React, { useEffect, useState } from "react";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import CommonModal from "../../components/modal/commonModal";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { AddButton } from "../../components/Buttons/AllButtons";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
+import DepartmentServices from "../../services/DepartmentServices";
+import { CustomPagination } from "../../components/CustomPagination";
+import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 
 const Deartments = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Deartments = () => {
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [formLoader, setFormLoader] = useState(false);
-
+  const [count,setCount] = useState(null)
   // api states
   const [getdep, setGetdep] = useState([]);
   const [dep_id, setDepId] = useState();
@@ -52,7 +52,7 @@ const Deartments = () => {
         }
         if (res.status === 401) {
           dispatch(superAdminLogout());
-          setLoading(false);
+          setFormLoader(false);
           navigate("/");
         }
       })
@@ -169,6 +169,12 @@ const Deartments = () => {
       flex: 1,
       headerClassName: "super-app-theme--header",
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
+      // renderCell: (params) => (
+      //   <strong style={{display:'flex'}}> 
+      //    {setCount((pre)=>pre+1)}
+      //    {count}
+      //   </strong>
+      // ),
     },
     {
       field: "department_name",
@@ -277,6 +283,7 @@ const Deartments = () => {
           loading={formLoader}
           columns={columns}
           totalPages={totalPages}
+          setPage={setPage}
         />
         {/* checkboxSelection  upline */}
       </Container>

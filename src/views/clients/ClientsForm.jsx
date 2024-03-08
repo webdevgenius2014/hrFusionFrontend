@@ -158,16 +158,15 @@ useEffect(()=>{
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <Box
-        
-          component="form"
-          noValidate
-          onSubmit={handleSubmit((data)=>{combine(data); })}
-          sx={{ mt: 1 ,mr:2}}
-        >
-          <Grid container justifyContent="space-between"  >
-            <Grid  xs={12} sm={6} >
+     <Box sx={{ flexGrow: 1, }}>
+    <Box
+    component="form"
+    noValidate
+    onSubmit={handleSubmit((data)=>{combine(data); })}
+        sx={{ mt: 1,mx:1 }}
+      >
+        <Grid container spacing={1}>
+            <Grid  xs={12} sm={6} sx={{mt:1,pl:1}} >
               <FormInputText
                 autoComplete="given-name"
                 name="name"
@@ -195,20 +194,7 @@ useEffect(()=>{
                 defaultValue={data?.email || ""}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <FormInputText
-                required
-                fullWidth
-                id="phone"
-                label="Phone Number"
-                name="phone"
-                size="small"
-                type="number"
-                error={errors && errors?.phone}
-                control={control}
-                defaultValue={data?.phone || ""}
-              />
-            </Grid>
+          
             <Grid item xs={12} sm={6}>
               <FormMultiSelect
                 name="communication_channel"
@@ -225,6 +211,7 @@ useEffect(()=>{
                 required
               />
             </Grid>
+            
             <Grid item xs={12} sm={6}>
               <FormSelect
                 name="lead_from_platform"
@@ -256,6 +243,20 @@ useEffect(()=>{
               )}
             </Grid>
             <Grid item xs={12} sm={6}>
+            <FormInputText
+              required
+              fullWidth
+              id="phone"
+              label="Phone Number"
+              name="phone"
+              size="small"
+              type="number"
+              error={errors && errors?.phone}
+              control={control}
+              defaultValue={data?.phone || ""}
+            />
+          </Grid>
+            <Grid item xs={12} sm={6}>
               <FormImage
                 required
                 fullWidth
@@ -267,7 +268,6 @@ useEffect(()=>{
                 setValue={setValue}
                 setError={setError}
                 getValues={getValues}
-
                 error={errors && errors.profile_image}
                 control={control}
                 d_value={data?.profile_image}

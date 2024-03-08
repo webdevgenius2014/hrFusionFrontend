@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
-import CommonModal from "../../components/modal/commonModal";
-import BeatLoader from "react-spinners/ClipLoader";
-import Typography from "@mui/material/Typography";
-import AddIcon from "@mui/icons-material/Add";
-import { AddButton, Buttons } from "../../components/Buttons/AllButtons";
-import SearchIcon from "@mui/icons-material/Search";
-import ClientsServices from "../../services/ClientsServices";
-import ClientsForm from "./ClientsForm";
-import { ClientsCard } from "./ClientsCard";
-import { CustomPagination } from "../../components/CustomPagination";
-import { Searching } from "../../components/Searching";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import ClientProfile from "./ClientProfile";
-import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
-import { useNavigate } from "react-router-dom";
+import ClientsForm from "./ClientsForm";
 import { useDispatch } from "react-redux";
-import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import ClientProfile from "./ClientProfile";
+import { ClientsCard } from "./ClientsCard";
+import AddIcon from "@mui/icons-material/Add";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import React, { useEffect, useState } from "react";
+import BeatLoader from "react-spinners/ClipLoader";
+import SearchIcon from "@mui/icons-material/Search";
+import { Searching } from "../../components/Searching";
 import GeneralServices from "../../services/GeneralServices";
+import CommonModal from "../../components/modal/commonModal";
+import ClientsServices from "../../services/ClientsServices";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
+import { CustomPagination } from "../../components/CustomPagination";
+import { AddButton, Buttons } from "../../components/Buttons/AllButtons";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 
 const Clients = () => {
   const navigate = useNavigate();
@@ -191,10 +191,10 @@ const Clients = () => {
     ClientsServices.deleteClient(id)
       .then((res) => {
         if (res.status === 200 || res.status === 404) {
-          setLoading(false);
           handleDeleteClose();
-          toast.success("Client deleted successfully");
           getClientsfn();
+          setLoading(false);
+          toast.success("Client deleted successfully");
         }
         if (res.status === 401) {
           dispatch(superAdminLogout());
@@ -278,7 +278,8 @@ const Clients = () => {
     getClientsfn();
     getAllChannel();
     getAllLeadsFun();
-  }, [getAllChannel, getAllLeadsFun, getClientsfn, page]);
+    // eslint-disable-next-line 
+  }, [page]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);

@@ -7,7 +7,6 @@ const ApiConfig = {
   getBirthday: `${apiURL}sixMonthUpcoming-birthday`,
 
   // Dashboard ----------------------------------------------------------------
-
   dashboard: `${apiURL}dashboard`,
 
   // department all --------------------------------
@@ -80,6 +79,13 @@ const ApiConfig = {
   getAllPlatforms: `${apiURL}getAllPlatforms`,
   deletePlatform: `${apiURL}deletePlatform`,
 
+  // get getAllPlatforms() {
+  //   return this._getAllPlatforms;
+  // },
+  // set getAllPlatforms(value) {
+  //   this._getAllPlatforms = value;
+  // },
+
   // send email -----------------------------
   sendMessageToClient: `${apiURL}sendMessageToClient`,
 
@@ -113,6 +119,12 @@ const ApiConfig = {
   getLeaveByStatus : `${apiURL}getLeaveByStatus`,
   editLeave : `${apiURL}editLeave`,
   addLeave : `${apiURL}addLeave`,
+  searchLeave : `${apiURL}searchLeaves`,
+
+  // employees feedback
+  addFeedback : `${apiURL}addFeedback`,
+  viewFeedback : `${apiURL}viewFeedback`,
+  listFeedback : `${apiURL}listFeedback`,
 };
 
 export default ApiConfig;

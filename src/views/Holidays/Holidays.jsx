@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from "react";
-import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
-import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
-import HolidaysForm from "./HolidaysForm";
-import CommonModal from "../../components/modal/commonModal";
-import { AddButton } from "../../components/Buttons/AllButtons";
-import Typography from "@mui/material/Typography";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import { GridActionsCellItem } from "@mui/x-data-grid";
-import HolidayService from "../../services/HolidaysServices";
 import { toast } from "react-toastify";
-import AddIcon from "@mui/icons-material/Add";
-import { useForm } from "react-hook-form";
-import "react-toastify/dist/ReactToastify.css";
-import { CustomPagination } from "../../components/CustomPagination";
-import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import HolidaysForm from "./HolidaysForm";
+import { useForm } from "react-hook-form";
+import ToolTip from "../../components/ToolTip";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import EditIcon from "@mui/icons-material/Edit";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import React, { useEffect, useState } from "react";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import HolidayService from "../../services/HolidaysServices";
+import CommonModal from "../../components/modal/commonModal";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { AddButton } from "../../components/Buttons/AllButtons";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
+import { CustomPagination } from "../../components/CustomPagination";
+import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import { FormSelect } from "../../components/form-components/FormSelect";
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 
 function Holidays() {
   const navigate = useNavigate();
@@ -175,6 +176,7 @@ function Holidays() {
 
   useEffect(() => {
     getHolidaysList();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [renderApi]);
 
   const columns = [
@@ -263,8 +265,10 @@ function Holidays() {
                 Add Fields
               </AddButton>
             </Box>
+            <ToolTip title="Search Holidays By"
+            >
             <Box
-              sx={{ margin: "7px 0 0 0px", minWidth: "150px", maxWid: "200px" }}
+              sx={{ minWidth: "150px", maxWid: "200px" }}
             >
               <FormSelect
                 name="name"
@@ -278,6 +282,7 @@ function Holidays() {
                 // error={errors && errors?.designation}
               />
             </Box>
+            </ToolTip>
           </DatagridHeader>
         </Box>
         <CommonModal isOpen={open} isClose={handleClose}>

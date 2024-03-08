@@ -114,12 +114,12 @@ const ProjectForm = (props) => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, }}>
         <Box
           component="form"
           noValidate
           onSubmit={handleSubmit(props.apiFun)}
-          sx={{ mt: 1 }}
+          sx={{ mt: 1,mx:1 }}
         >
           <Grid container spacing={1}>
             <Grid item xs={12} sm={6}>
@@ -148,7 +148,7 @@ const ProjectForm = (props) => {
                 defaultValue={data?.cost || ""}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} sx={{marginTop:"5px"}}>
               <FormInputText
                 required
                 fullWidth
@@ -161,26 +161,7 @@ const ProjectForm = (props) => {
                 defaultValue={data?.language || ""}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ marginTop: "8px" }}>
-                <FormDate
-                  required
-                  fullWidth
-                  focused
-                  // format="yyyy-MM-dd"
-                  type="date"
-                  id="deadline"
-                  label="Deadline "
-                  name="deadline"
-                  size="small"
-                  setValue={setValue}
-                  error={errors && errors?.deadline}
-                  control={control}
-                  d_value={data?.deadline}
-                  value={data?.deadline || ""}
-                />
-              </Box>
-            </Grid>
+           
 
             <Grid item xs={12} sm={6}>
               <FormMultiSelect
@@ -260,6 +241,25 @@ const ProjectForm = (props) => {
                 required
               />
             </Grid>
+            <Grid item xs={12} sm={6}>
+             
+            <FormDate
+              required
+              fullWidth
+              focused
+              // format="yyyy-MM-dd"
+              type="date"
+              id="deadline"
+              label="Deadline "
+              name="deadline"
+              size="small"
+              setValue={setValue}
+              error={errors && errors?.deadline}
+              control={control}
+              d_value={data?.deadline}
+              value={data?.deadline || ""}
+            />
+        </Grid>
             <Grid item xs={12} sm={12}>
               <FormInputText
                 required

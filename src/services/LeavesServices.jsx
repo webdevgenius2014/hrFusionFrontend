@@ -14,7 +14,10 @@ class LeavesServices {
     return instance.get(ApiConfig.getLeaves);
   }
   getLeaveByStatus(payload) {
-    return instance.get(ApiConfig.getLeaveByStatusz, payload);
+    return instance.post(ApiConfig.getLeaveByStatus, payload);
+  }
+  searchLeave(payload) {
+    return instance.post(ApiConfig.searchLeave, payload);
   }
 }
 // eslint-disable-next-line import/no-anonymous-default-export

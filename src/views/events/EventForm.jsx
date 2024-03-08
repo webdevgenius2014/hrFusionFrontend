@@ -50,7 +50,8 @@ const EventForm = (props) => {
           });
     })
   }
-  }, [newErrors, setError]);
+  // eslint-disable-next-line 
+  }, [newErrors]);
   const handleStartDate = (newDateTime) => {
     setStartDateTime(newDateTime);
   };
@@ -73,10 +74,6 @@ const [eDateError,setEDateError]=useState()
     })
   };
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-
-  const handleOpen = useCallback(() => {
-    setIsDatePickerOpen(true);
-  }, []);
 
   const handleClose = useCallback(() => {
     setIsDatePickerOpen(false);
@@ -127,6 +124,7 @@ const [eDateError,setEDateError]=useState()
               label="Event End"
               onOpen={isDatePickerOpen} onClose={handleClose}
               
+              // eslint-disable-next-line no-mixed-operators
               defaultValue={dayjs(end && end !== undefined || end !== null ? end : start)}
               onChange={handleEndDate}
               slotProps={{

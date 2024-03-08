@@ -60,6 +60,9 @@ const Events = Loadable(
 const Leaves = Loadable(
   lazy(() => import("../views/Leaves/Leaves"))
 );
+const EmpFeedback = Loadable(
+  lazy(() => import("../views/EmployeeFeedback/EmpFeedback"))
+);
 
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -187,6 +190,10 @@ const privateRoutes = [
       {
         path: "/leaves",
         element: <Leaves />,
+      },
+      {
+        path: "/employeeFeedback",
+        element: <EmpFeedback />,
       },
     ],
   },

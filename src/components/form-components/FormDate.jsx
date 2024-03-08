@@ -1,21 +1,20 @@
-import { Controller } from "react-hook-form";
-// import DatePicker from "react-datepicker";
-import dateFormat from "dateformat";
-import "react-datepicker/dist/react-datepicker.css";
-import "./Date.css";
-import TextField from '@mui/material/TextField';
-import * as React from "react";
 import dayjs from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import * as React from "react";
+import dateFormat from "dateformat";
+import { Controller } from "react-hook-form";
+import TextField from '@mui/material/TextField';
+import "react-datepicker/dist/react-datepicker.css";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 export const FormDate = ({
   name,
   f_type,
   d_value,
   setValue,
+  onChange,
   control,
   label,
   required = false,
@@ -24,7 +23,7 @@ export const FormDate = ({
   ...rest
 }) => {
   const handleDateChange = (date) => {
-    setValue(name, dateFormat(date, "yyyy-mm-dd"), {
+   setValue &&  setValue(name, dateFormat(date, "yyyy-mm-dd"), {
       shouldDirty: true,
     });
   };
@@ -54,7 +53,8 @@ export const FormDate = ({
               >
                 <DatePicker
                   label={label}
-                  onChange={(date) => handleDateChange(date)}
+                  sx={{marginY:"0px"}}
+                  onChange={(date) =>{ handleDateChange(date); onChange && onChange(date) }}
                   size="small"
                   defaultValue={defaultDate ||undefined}
                   renderInput={(params) => <TextField size="small" {...params} />}

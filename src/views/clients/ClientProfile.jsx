@@ -43,6 +43,7 @@ const ClientProfile = () => {
 
   useEffect(() => {
     viewClientFn();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
   
   // const team_members = viewClient?.projects?.team_members?.map((i, index) => {
@@ -129,13 +130,16 @@ const ClientProfile = () => {
                     </Grid>
                     <Grid item xs={6} sm={6} md={6} lg={4}>
                       <span>
-                        {" "}
+                        
                         {itr?.team_members?.map((i, index) => {
-                          return i?.name;
-                        })}{" "}
-                        {itr?.team_members?.length - 1 > index && (
-                          <span> , </span>
-                        )}
+                          return <>
+                          {i?.name}
+                          {index < itr?.team_members?.length - 1  && (
+                            <span> ,</span>
+                           )}
+                           </>
+                        })}
+                        
                       </span>
                     </Grid>
                     <Grid item xs={6} sm={6} md={6} lg={2}>

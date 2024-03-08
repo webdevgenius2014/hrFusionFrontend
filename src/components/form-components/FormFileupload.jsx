@@ -30,9 +30,9 @@ export const FileUploader = (props) => {
   props?.setValue('documents',props?.files)
   return (
     <Box >
-    <Grid item xs={12} sm={12} >
+    <Grid item xs={12} sm={12}  >
     <InputLabel>Upload Multiple Documents</InputLabel>
-    <Button  variant="contained" onClick={handleAddFileInput}>Add Fields</Button>
+    <Button sx={{marginBottom :'10px'}} variant="contained" onClick={handleAddFileInput}>Add Fields</Button>
     </Grid>
 
     {props?.files.map((file, index) => (

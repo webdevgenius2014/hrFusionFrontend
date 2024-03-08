@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { Box } from "@mui/system";
 
 const EmployeeView = () => {
   const navigate = useNavigate();
@@ -37,11 +38,12 @@ const EmployeeView = () => {
 
   useEffect(() => {
     viewEmployee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <>
       {viewEmployees && (
-        <div>
+        <Box>
           <Grid
             container
             spacing={2}
@@ -55,13 +57,13 @@ const EmployeeView = () => {
                   borderRadius: "50%",
                   textAlign: "center",
                   margin: "auto",
-
                   border: "1px solid #dee2e6",
                 }}
                 image={`${apiURL}${viewEmployees?.user_meta?.profile_image} `}
                 title="green iguana"
               />
             </Grid>
+
             <Grid
               item
               xs={8}
@@ -73,8 +75,16 @@ const EmployeeView = () => {
             >
               <Grid item xs={12}>
                 <h2 style={{ margin: "auto" }}>{viewEmployees?.name}</h2>
-                <span>{viewEmployees?.email}</span>
+                <span
+                  style={{ color: "#0000EE" }}
+                  onClick={() =>
+                    (window.location = "mailto:yourmail@domain.com")
+                  }
+                >
+                  {viewEmployees?.email}
+                </span>
               </Grid>
+
               <Grid container spacing={0} sx={{ paddingTop: "10px" }}>
                 <Grid item xs={4}>
                   <span style={{ fontWeight: 600 }}>
@@ -101,19 +111,19 @@ const EmployeeView = () => {
             <Grid item xs={12}>
               <Grid container spacing={1}>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}>User Role</span>
+                  <span style={{ fontWeight: 600 }}>User Role :</span>
                 </Grid>
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_role?.role}</span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}>Employee Id</span>
+                  <span style={{ fontWeight: 600 }}>Employee Id :</span>
                 </Grid>
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_meta?.employee_id}</span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}> Department:</span>
+                  <span style={{ fontWeight: 600 }}> Department :</span>
                 </Grid>
                 <Grid item xs={4}>
                   <span>
@@ -121,42 +131,54 @@ const EmployeeView = () => {
                   </span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}> Designation</span>
+                  <span style={{ fontWeight: 600 }}> Designation : </span>
                 </Grid>
                 <Grid item xs={4}>
                   <span>
-                    {" "}
                     {viewEmployees?.user_meta?.designation?.designation_name}
                   </span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}> Date of Birth </span>
+                  <span style={{ fontWeight: 600 }}> Date of Birth :</span>
                 </Grid>
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_meta?.dob} </span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}>Joining Date</span>
+                  <span style={{ fontWeight: 600 }}>Joining Date :</span>
                 </Grid>
                 <Grid item xs={4}>
                   <span> {viewEmployees?.user_meta?.joining_date}</span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}> Uername</span>
+                  <span style={{ fontWeight: 600 }}> Uername :</span>
                 </Grid>
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_meta?.username} </span>
                 </Grid>
                 <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}> Documents</span>
+                  <span style={{ fontWeight: 600 }}> Documents :</span>
                 </Grid>
                 <Grid item xs={4}>
-                  <span>{viewEmployees?.user_meta?.documents?.map((itr,index)=>{ return <> <>{itr.filename}</> {index < viewEmployees?.user_meta?.documents?.length -1 &&<span>,</span>}</> })} </span>
+                  <span>
+                    {viewEmployees?.user_meta?.documents?.map((itr, index) => {
+                      return (
+                        <>
+                          {" "}
+                          <>{itr.filename}</>{" "}
+                          {index <
+                            viewEmployees?.user_meta?.documents?.length - 1 && (
+                            <span>,</span>
+                          )}
+                        </>
+                      );
+                    })}{" "}
+                  </span>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </div>
+        </Box>
       )}
     </>
   );

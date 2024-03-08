@@ -16,7 +16,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector(superAdminData);
-  const [useName,setUserName]=useState(userData?.payload?.SuperAdmin?.name)
+  const [useName]=useState(userData?.payload?.SuperAdmin?.name)
   // get Dashboard ------------------------------------------------
   const [dashboardData, setDashboardData] = useState();
   // dashboard api
@@ -60,6 +60,7 @@ const Dashboard = () => {
   useEffect(() => {
     dashboarData();
     getCurrentTime();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // redux

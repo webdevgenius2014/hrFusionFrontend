@@ -19,6 +19,7 @@ const EmployeesForm = (props) => {
   let showRole = props?.showRole;
   // console.log("emp edit", data);
   const [files, setFiles] = useState(props?.data?.documents || []);
+  const [showDesig, setShowDesig] = useState(props?.showDesig);
   console.log(files,"files")
   const [viewDoc, setViewDoc] = useState(false);
   const openDocView = () => {
@@ -52,7 +53,6 @@ const EmployeesForm = (props) => {
       profile_image: data?.profile_image,
       documents: data?.documents,
       editForm: props?.editForm || false,
-      documents: data?.documents,
     },
   });
 
@@ -72,22 +72,23 @@ const EmployeesForm = (props) => {
           });
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props?.serverError]);
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, pr: 2 }}>
+      <Box sx={{ flexGrow: 1,}}>
         <Box
           component="form"
           noValidate
           onSubmit={handleSubmit((data) => {
             props.apiFunc(data);
-            console.log(data);
           })}
-          sx={{ mt: 1 }}
+          sx={{ mt: 1,mx:1 }}
         >
           <Grid container spacing={1}>
             <Grid item xs={12} sm={6} lg={6}>
+            
               <FormInputText
                 autoComplete="given-name"
                 name="first_name"
@@ -114,7 +115,7 @@ const EmployeesForm = (props) => {
                 defaultValue={data?.last_name}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} >
               <FormInputEmail
                 fullWidth
                 id="username"
@@ -188,6 +189,7 @@ const EmployeesForm = (props) => {
               <FormInputText
                 required
                 fullWidth
+               
                 id="phone"
                 label="Phone Number"
                 name="phone"
@@ -237,7 +239,7 @@ const EmployeesForm = (props) => {
             {data && (
               <>
                 <Grid item xs={12} sm={6}>
-                  <div style={{ marginTop: "3px" }}>
+                  <Box sx={{ marginTop: "7px" }}>
                     <FormInputText
                       fullWidth
                       id="Leaving Reason"
@@ -248,7 +250,7 @@ const EmployeesForm = (props) => {
                       control={control}
                       // defaultValue={data?.employee_id }
                     />
-                  </div>
+                  </Box>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
@@ -278,6 +280,7 @@ const EmployeesForm = (props) => {
                   data={props?.getdep}
                   label="Select Department Name"
                   control={control}
+                  setShowDesig={setShowDesig}
                   onchange={onchange}
                   fieldaname="department_name"
                   pass_fun={props?.handleChangeDep}
@@ -311,7 +314,7 @@ const EmployeesForm = (props) => {
                   label="Select Designation"
                   control={control}
                   fieldaname="designation_name"
-                  def={props?.showDesig}
+                  def={showDesig}
                   error={errors && errors?.designation}
                   required
                 />
@@ -324,7 +327,7 @@ const EmployeesForm = (props) => {
                   control={control}
                   value={"No Designation"}
                   fieldaname="designation_name"
-                  def={props?.showDesig}
+                  def={showDesig}
                   error={errors && errors?.designation}
                   required
                 />

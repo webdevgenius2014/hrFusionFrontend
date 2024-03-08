@@ -100,7 +100,7 @@ input[type=file]::file-selector-button:hover {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -111,7 +111,7 @@ input[type=file]::file-selector-button:hover {
 
 ::-webkit-scrollbar-thumb {
   background-clip: padding-box;
-  -webkit-border-radius: 10px;
+  -webkit-border-radius: 8px;
   border-radius: 10px;
   background: #6d6d6d; 
 }

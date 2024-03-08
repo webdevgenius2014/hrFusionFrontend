@@ -21,8 +21,8 @@ export default function CsvUploadBtn({setCsvFile,handleConfirmOpne}) {
     };
   }
   return (
-    <Box class='file file--upload' >
-    <label for='input-file'>
+    <Box className='file file--upload' >
+    <label htmlFor='input-file'>
     <Button
     startIcon={<FileUploadIcon />}
     variant="contained"

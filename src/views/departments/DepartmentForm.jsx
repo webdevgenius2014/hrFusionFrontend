@@ -30,7 +30,8 @@ const DeartmentsForm = (props) => {
         message: newErrors?.message,
       });
     }
-  }, [newErrors, setError]);
+    // eslint-disable-next-line 
+  }, [newErrors]);
 
   return (
     <>
@@ -42,6 +43,7 @@ const DeartmentsForm = (props) => {
           label="Department"
           name="department_name"
           size="small"
+          focused
           defaultValue={props?.dep_name}
           error={errors && errors?.department_name}
           control={control}

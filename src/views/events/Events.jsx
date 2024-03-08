@@ -1,20 +1,20 @@
 import moment from "moment";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { useRef, useState } from "react";
-import { useEffect } from "react";
-import { useCallback } from "react";
-import CommonModal from "../../components/modal/commonModal";
-import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
-import { toast } from "react-toastify";
-import { Box, Typography } from "@mui/material/";
 import EventForm from "./EventForm";
-import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material/";
+import { useRef, useState,useEffect } from "react";
 import EventServices from "../../services/EventServices";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import CommonModal from "../../components/modal/commonModal";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import { superAdminLogout } from "../../redux/SuperAdminSlice";
+import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
+import {DatagridHeader} from '../../components/dataGrid/DatagridHeader' 
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 
 const MyCalendar = (props) => {
   const navigate = useNavigate();
@@ -149,6 +149,7 @@ const MyCalendar = (props) => {
 
   useEffect(() => {
     getEvents();
+    // eslint-disable-next-line 
   }, []);
 
   const onSelectEvent = useCallback((calEvent) => {
@@ -203,6 +204,7 @@ const MyCalendar = (props) => {
   return (
     <>
       <Box>
+      <DatagridHeader  name={'Events'}/>
         <DnDCalendar
           localizer={localizer}
           events={getEventsList}
