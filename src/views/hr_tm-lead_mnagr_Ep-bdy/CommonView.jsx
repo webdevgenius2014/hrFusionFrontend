@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import {useLocation } from "react-router-dom";
 import { GridActionsCellItem } from "@mui/x-data-grid";
 import CommonServices from "../../services/CommonServices";
-import { ImagePath } from "../../helperFunctions/ImagePath";
+import { ImagePath } from "../../helperFunctions/HelperFunction";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { HrTeamLeadMangarapi } from "../../helperApis/HelperApis";

@@ -18,7 +18,7 @@ const DeartmentsForm = (props) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      department_name: props?.showDepartment,
+      department_name: props?.dep_name,
     },
     resolver: yupResolver(validationSchema),
   });

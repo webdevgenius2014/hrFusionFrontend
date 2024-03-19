@@ -100,7 +100,7 @@ input[type=file]::file-selector-button:hover {
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {

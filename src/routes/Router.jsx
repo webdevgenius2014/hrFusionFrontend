@@ -63,6 +63,12 @@ const Leaves = Loadable(
 const EmpFeedback = Loadable(
   lazy(() => import("../views/EmployeeFeedback/EmpFeedback"))
 );
+const Task = Loadable(
+  lazy(() => import("../views/Task/Task"))
+);
+const Concern = Loadable(
+  lazy(() => import("../views/Concern/Concern"))
+);
 
 
 const PrivateRoute = ({ element, ...rest }) => {
@@ -194,6 +200,18 @@ const privateRoutes = [
       {
         path: "/employeeFeedback",
         element: <EmpFeedback />,
+      },
+      {
+        path: "/employeesFeedback/:id",
+        element: <EmployeeView />,
+      },
+      {
+        path: "/task",
+        element: <Task />,
+      },
+      {
+        path: "/concern",
+        element: <Concern />,
       },
     ],
   },

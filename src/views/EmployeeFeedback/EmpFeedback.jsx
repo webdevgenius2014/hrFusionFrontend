@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
-import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import CommonModal from "../../components/modal/commonModal";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import { AddButton } from "../../components/Buttons/AllButtons";
@@ -105,9 +103,16 @@ function EmpFeedback() {
          setEmpData(data);
         // console.log("data",data)
       }
-      const empFeedView =(data)=>{
-        console.log(data)
-      }
+     
+
+      const detailEmployee = (data) => {
+        let id = data?.id;
+        // console.log(id)
+        navigate(`/employeesFeedback/${id}`);
+
+        // setVewData(()=>data)
+      };
+
     const columns = [
         {
           field: "id",
@@ -118,16 +123,16 @@ function EmpFeedback() {
           renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
         },
         {
-          field: "user_Data",
-          headerName: "Employee id",
+          field: "Data",
+          headerName: "Employee Name",
           headerClassName: "super-app-theme--header",
           flex: 1,
           options: { filter: true },
-          valueGetter: (params) => params.row?.user_data?.name,
+        valueGetter: (params) =>  `${params?.row?.user_meta?.first_name} ${params?.row?.user_meta?.last_name}`,
         },
         {
           field: "feedback",
-          headerName: "Employee Feedback",
+          headerName: " Feedback",
           headerClassName: "super-app-theme--header",
           flex: 1,
           options: { filter: true },
@@ -145,30 +150,32 @@ function EmpFeedback() {
               icon={<VisibilityIcon />}
               label="View"
               color="inherit"
-              onClick={() => empFeedView(params?.row)}
+              onClick={() => detailEmployee(params?.row)}
             />,
-              <GridActionsCellItem
-                icon={<EditIcon />}
-                label="Edit"
-                className="textPrimary"
-                // onClickCapture={() => {
-                //   handleChangedDepVal(params?.id, params?.row.department_name);
-                // }}
-                color="inherit"
-              />,
-              <GridActionsCellItem
-                icon={<DeleteIcon />}
-                label="Delete"
-                // onClick={() => {
-                //   handleDeleteClick(params?.id);
-                // }}
-                color="inherit"
-              />,
+              // <GridActionsCellItem
+              //   icon={<EditIcon />}
+              //   label="Edit"
+              //   className="textPrimary"
+              //   // onClickCapture={() => {
+              //   //   handleChangedDepVal(params?.id, params?.row.department_name);
+              //   // }}
+              //   color="inherit"
+              // />,
+              // <GridActionsCellItem
+              //   icon={<DeleteIcon />}
+              //   label="Delete"
+              //   // onClick={() => {
+              //   //   handleDeleteClick(params?.id);
+              //   // }}
+              //   color="inherit"
+              // />,
             ];
           },
           flex: 1,
         },
       ];
+
+    
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);

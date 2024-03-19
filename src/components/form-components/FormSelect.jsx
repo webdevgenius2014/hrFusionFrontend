@@ -16,9 +16,9 @@ export const FormSelect = ({
   name,
   control,
   label,
-  pass_fun,
   def,
-  leadValFn,
+  setId,
+  pass_fun,
   required = false,
   focused = false,
   fieldaname,
@@ -30,14 +30,6 @@ export const FormSelect = ({
   error,
   ...rest
 }) => {
-  const handleChange = (event) => {
-    if(leadValFn !== undefined){
-      console.log(event.target.value)
-     leadValFn(event.target.value)
-    }
-    // setValue(name,   event.target.value);
-
-  };
   return (
     <Controller
       control={control}
@@ -57,7 +49,6 @@ export const FormSelect = ({
             sx={{marginTop:"6px"}}
             size="small"
             onChange={(e)=> {
-              handleChange(e);
               onChange(e);
               if(setShowDesig) {setShowDesig("select designation");
             }
@@ -71,7 +62,7 @@ export const FormSelect = ({
               data.map((item, index) => (
                 <MenuItem
                   key={index}
-                  onClick={() =>{if(pass_fun){ pass_fun(item?.id , index)}}}
+                  onClick={() =>{ if(pass_fun){ pass_fun(item?.id)}}}
                   value={item[fieldaname]}
                 >
                   {item[fieldaname]}

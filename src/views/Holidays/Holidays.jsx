@@ -47,36 +47,33 @@ function Holidays() {
   // api integration -----------------------------------
   const getHolidaysList = () => {
     setFormLoader(true);
-    setGetHolidays([])
+    setGetHolidays([]);
     let setApi;
-    if (renderApi === "year") setApi=HolidayService.thisYearholidays(page)
-    else if (renderApi === "three") setApi=HolidayService.upcomingThreeHoliday(page)
-    else
-    setApi= HolidayService.getHolidays(page)
-    setApi.then((res) => {
-          if (res.status === 200 && res?.data?.success === true) {
-            setTotalPages(res?.data?.data?.last_page);
-            if(renderApi === "three")
-            setGetHolidays(res?.data?.data)
-            else
-            setGetHolidays(res?.data?.data?.data);
-            setFormLoader(false);
-          }
-        else if (res.status === 200 && res?.data?.success === false) {
-            setFormLoader(false);
-            setGetHolidays([]);
-          }
-         else if (res.status === 401) {
+    if (renderApi === "year") setApi = HolidayService.thisYearholidays(page);
+    else if (renderApi === "three")
+      setApi = HolidayService.upcomingThreeHoliday(page);
+    else setApi = HolidayService.getHolidays(page);
+    setApi
+      .then((res) => {
+        if (res.status === 200 && res?.data?.success === true) {
+          setTotalPages(res?.data?.data?.last_page);
+          if (renderApi === "three") setGetHolidays(res?.data?.data);
+          else setGetHolidays(res?.data?.data?.data);
           setFormLoader(false);
-            dispatch(superAdminLogout());
-            setLoading(false);
-            navigate("/");
-          }
-        })
-        .catch((err) => {
+        } else if (res.status === 200 && res?.data?.success === false) {
           setFormLoader(false);
-          console.log("getHolidays error", err);
-        });
+          setGetHolidays([]);
+        } else if (res.status === 401) {
+          setFormLoader(false);
+          dispatch(superAdminLogout());
+          setLoading(false);
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        setFormLoader(false);
+        console.log("getHolidays error", err);
+      });
   };
   // add holidays-------------------------------------
   const addHolidays = (data) => {
@@ -176,7 +173,7 @@ function Holidays() {
 
   useEffect(() => {
     getHolidaysList();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [renderApi]);
 
   const columns = [
@@ -265,49 +262,23 @@ function Holidays() {
                 Add Fields
               </AddButton>
             </Box>
-            <ToolTip title="Search Holidays By"
-            >
-            <Box
-              sx={{ minWidth: "150px", maxWid: "200px" }}
-            >
-              <FormSelect
-                name="name"
-                stylee={{ width: "150px", marginTop: "5px" }}
-                data={selectOptions}
-                pass_fun={handleShowData}
-                label="Select options"
-                control={control}
-                fieldaname="name"
-                def={"All"}
-                // error={errors && errors?.designation}
-              />
-            </Box>
+            <ToolTip title="Search Holidays By">
+              <Box sx={{ minWidth: "150px", maxWid: "200px" }}>
+                <FormSelect
+                  name="name"
+                  stylee={{ width: "150px", marginTop: "5px" }}
+                  data={selectOptions}
+                  pass_fun={handleShowData}
+                  label="Select options"
+                  control={control}
+                  fieldaname="name"
+                  def={"All"}
+                  // error={errors && errors?.designation}
+                />
+              </Box>
             </ToolTip>
           </DatagridHeader>
         </Box>
-        <CommonModal isOpen={open} isClose={handleClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Add Holidays
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <HolidaysForm
-              apiFun={addHolidays}
-              loading={loading}
-              error={serverError}
-              btnName={"Save"}
-            />
-          </Box>
-        </CommonModal>
 
         <CustDataGrid
           data={getHolidays}
@@ -317,14 +288,18 @@ function Holidays() {
         />
         {/* checkboxSelection  upline */}
       </Container>
-      <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
+      
+      <CommonModal
+        isOpen={open || editopen}
+        isClose={open ? handleClose : handleEditClose}
+      >
         <Typography
           id="modal-modal-title"
           variant="h6"
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Edit Holiday
+          {open ? "Add Holidays" : "Edit Holiday"}
         </Typography>
         <Box
           sx={{
@@ -333,11 +308,11 @@ function Holidays() {
           }}
         >
           <HolidaysForm
-            data={editData}
-            apiFun={handleEdit}
+            data={editopen ? editData : undefined}
+            apiFun={open ? addHolidays : handleEdit}
             loading={loading}
             error={serverError}
-            btnName={"Save Changes"}
+            btnName={open ? "Save" : "Save Changes"}
           />
         </Box>
       </CommonModal>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Grid, Box } from "@mui/material";
 import { useParams } from "react-router-dom";
 import dateFormat from "dateformat";
-import BeatLoader from "react-spinners/ClipLoader";
+import Loader  from '../../components/Loader'
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import ProjectServices from "../../services/ProjectServices";
 
@@ -86,28 +86,18 @@ const ProjectView = () => {
   return (
     <>
       {loading ? (
-        <BeatLoader
-          color="#2d94cb"
-          cssOverride={{
-            position: "absolute",
-            display: "block",
-            top: "45%",
-            left: "55%",
-            transform: "translate(-50%, -50%)",
-          }}
-          loading
-          margin={4}
-          size={90}
-        />
+        <Loader/>
       ) : (
-        <>
+        <>  
+        <Box sx={{background:'#E2EAF5' , padding:'10px 10px',borderRadius:'10px'}}>
+          Project Detail
+          </Box>
           <Grid container spacing={2} sx={{ paddingY: 2, background: "" }}>
             <Grid
               container
               spacing={0}
               sx={{
-                marginTop: "10px",
-                boxShadow: 2,
+                
                 padding: 2,
                 background: "white",
               }}
@@ -185,7 +175,9 @@ const ProjectView = () => {
               </Grid>
             </Grid>
           </Grid>
-          <h2 style={{ marginTop: "20px" }}>Projects History:-</h2>
+          <Box sx={{background:'#E2EAF5' , padding:'10px 10px',borderRadius:'10px', marginTop:'10px'}}>
+          Projects History
+          </Box>
           <CustDataGrid
             data={viewProject?.project_history || []}
             loading={false}

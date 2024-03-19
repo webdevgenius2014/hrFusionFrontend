@@ -53,7 +53,7 @@ export const FormDate = ({
               >
                 <DatePicker
                   label={label}
-                  sx={{marginY:"0px"}}
+                  // sx={{margin:"0px",padding:"0px"}}
                   onChange={(date) =>{ handleDateChange(date); onChange && onChange(date) }}
                   size="small"
                   defaultValue={defaultDate ||undefined}

@@ -87,7 +87,7 @@ const EmployeesForm = (props) => {
           sx={{ mt: 1,mx:1 }}
         >
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={6} lg={6}>
+            <Grid item xs={12} sm={4} lg={4}>
             
               <FormInputText
                 autoComplete="given-name"
@@ -102,7 +102,7 @@ const EmployeesForm = (props) => {
                 defaultValue={data?.first_name}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormInputText
                 required
                 fullWidth
@@ -115,7 +115,7 @@ const EmployeesForm = (props) => {
                 defaultValue={data?.last_name}
               />
             </Grid>
-            <Grid item xs={12} sm={6} >
+            <Grid item xs={12} sm={4} >
               <FormInputEmail
                 fullWidth
                 id="username"
@@ -129,7 +129,7 @@ const EmployeesForm = (props) => {
                 defaultValue={data?.email}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormInputText
                 name="username"
                 control={control}
@@ -144,7 +144,7 @@ const EmployeesForm = (props) => {
             </Grid>
             {!props?.data && (
               <>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <FormInputPassword
                     name="password"
                     control={control}
@@ -157,7 +157,7 @@ const EmployeesForm = (props) => {
                     // defaultValue={''}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <FormInputPassword
                     name="confirm_password"
                     control={control}
@@ -172,7 +172,7 @@ const EmployeesForm = (props) => {
                 </Grid>
               </>
             )}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormInputText
                 required
                 fullWidth
@@ -185,11 +185,10 @@ const EmployeesForm = (props) => {
                 defaultValue={data?.employee_id}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormInputText
                 required
                 fullWidth
-               
                 id="phone"
                 label="Phone Number"
                 name="phone"
@@ -200,7 +199,24 @@ const EmployeesForm = (props) => {
                 defaultValue={data?.phone}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
+            {props?.getdep && props?.getdep?.length > 0 && (
+              <FormSelect
+                required
+                name="department"
+                data={props?.getdep}
+                label="Select Department Name"
+                control={control}
+                setShowDesig={setShowDesig}
+                onchange={onchange}
+                fieldaname="department_name"
+                pass_fun={props?.handleChangeDep}
+                error={errors && errors?.department}
+                def={data?.department?.department_name}
+              />
+            )}
+          </Grid>
+            <Grid item xs={12} sm={4}>
               <FormDate
                 required
                 fullWidth
@@ -218,7 +234,7 @@ const EmployeesForm = (props) => {
                 value={data?.joining_date}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormDate
                 required
                 fullWidth
@@ -238,7 +254,7 @@ const EmployeesForm = (props) => {
             </Grid>
             {data && (
               <>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <Box sx={{ marginTop: "7px" }}>
                     <FormInputText
                       fullWidth
@@ -252,8 +268,7 @@ const EmployeesForm = (props) => {
                     />
                   </Box>
                 </Grid>
-
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4} style={{margin:0,padding:0}}>
                   <FormDate
                     fullWidth
                     focused
@@ -272,24 +287,8 @@ const EmployeesForm = (props) => {
                 </Grid>
               </>
             )}
-            <Grid item xs={12} sm={6}>
-              {props?.getdep && props?.getdep?.length > 0 && (
-                <FormSelect
-                  required
-                  name="department"
-                  data={props?.getdep}
-                  label="Select Department Name"
-                  control={control}
-                  setShowDesig={setShowDesig}
-                  onchange={onchange}
-                  fieldaname="department_name"
-                  pass_fun={props?.handleChangeDep}
-                  error={errors && errors?.department}
-                  def={data?.department?.department_name}
-                />
-              )}
-            </Grid>
-            <Grid item xs={12} sm={6}>
+           
+            <Grid item xs={12} sm={4}>
               {props?.getRole && props?.getRole?.length > 0 && (
                 <FormSelect
                   required
@@ -305,7 +304,7 @@ const EmployeesForm = (props) => {
               )}
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               {props?.getDesig && props?.getDesig?.length > 0 ? (
                 <FormSelect
                   name="designation"
@@ -333,7 +332,7 @@ const EmployeesForm = (props) => {
                 />
               )}
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <FormImage
                 required
                 fullWidth
@@ -368,22 +367,26 @@ const EmployeesForm = (props) => {
           <Grid container justifyContent="flex-end">
             <Grid item></Grid>
           </Grid>
+           <Grid  container >
+           {
+            files  && files?.map((file, i) =>{ 
+              return <Box key={i}>
+              <span onClick={openDocView}>
+              {file?.filename}
+              </span>
+              <CommonModal isOpen={viewDoc} isClose={closeDocView}>
+              <EmpDocView doc={file}/>
+              </CommonModal>
+              </Box> 
+            })
+          }    
+           </Grid>   
+         
           <SubmitButton loading={props.loading} btnName={props.btnName} />
         </Box>
       </Box>
       
-      {
-        files && files?.map((file, i) =>{ 
-          return <Box key={i}>
-          <span onClick={openDocView}>
-          {file?.filename}
-          </span>
-          <CommonModal isOpen={viewDoc} isClose={closeDocView}>
-          <EmpDocView doc={{uri:file?.file}}/>
-          </CommonModal>
-          </Box> 
-        })
-      }       
+        
     </>
   );
 };

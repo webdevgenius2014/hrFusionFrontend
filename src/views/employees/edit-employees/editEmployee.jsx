@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,11 +10,16 @@ import {toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import {getAllDepartmentfn , allRoles,desByDep,allDocList} from '../../../helperApis/HelperApis'
-
+import {useSelector  } from "react-redux";
+import {superAdminData} from "../../../redux/SuperAdminSlice";
 
 const EditEmployee = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // user Role 
+  const userData = useSelector(superAdminData);
+  const userRole = React.useMemo(() => userData?.payload?.SuperAdmin?.role?.role, [userData]);
 
   const [loading, setLoading] = useState(false)
   const [serverError , setServerError] = useState('')
@@ -94,7 +100,7 @@ const EditEmployee = (props) => {
       console.log(result);
       setRole(result);
     } catch (error) {
-      console.log("getAllDepartmentsFn", error);
+      console.log("all roles", error);
     }
   };
 // console.log(data)
@@ -131,17 +137,15 @@ const EditEmployee = (props) => {
   const handleChangeRole = (id) => {
     setAddRole(() => id);
   };
-  const resetError=() => {
-    setServerError(null)
-  }
   // console.log("desig", addDesignation_id);
   // form validation
   useEffect(() => {
+    if(userRole !== 'Team Leader'){
     getAllDepartmentsFn();
     getAllRole();
     allDocTypeFn();
     desByDepFn({department_id:addDepartment_id});
-    resetError();
+   }
   }, []);
  
  

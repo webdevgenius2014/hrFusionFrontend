@@ -17,18 +17,18 @@ export const CustDataGrid = (props) => {
       columns={props?.columns}
       loading={props?.loading}
       autoHeight
-      pagination
+      pagination  
       disableSelectionOnClick
       disableRowSelectionOnClick
-      slots={{ toolbar: GridToolbar, pagination: NewPagination }}
+      sortingMode="server"
+      filterMode="server"
+      // paginationMode="server"
+      slots={{ toolbar: GridToolbar }}
       slotProps={{
         toolbar: {
           showQuickFilter: true,
         },
       }}
-      sortingMode="server"
-      filterMode="server"
-      paginationMode="server"
       sx={{
         fontFamily: "inter",
         color: "#B1B1B1",

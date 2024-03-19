@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
-import BeatLoader from "react-spinners/ClipLoader";
+import Loader from "../../components/Loader";
 import SearchIcon from "@mui/icons-material/Search";
 import { Searching } from "../../components/Searching";
 import GeneralServices from "../../services/GeneralServices";
@@ -21,7 +21,9 @@ import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
 import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { CustomPagination } from "../../components/CustomPagination";
 import { AddButton, Buttons } from "../../components/Buttons/AllButtons";
+import { DemoCsv } from "../../helperFunctions/HelperFunction"; 
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
+import { ButtonBase } from "@material-ui/core";
 
 const Clients = () => {
   const navigate = useNavigate();
@@ -251,7 +253,7 @@ const Clients = () => {
   // csv Upload api -------------------------
   const csvUpload = () => {
     setLoading(true);
-    ClientsServices.uploadClientCSV({csv:csvFile})
+    ClientsServices.uploadClientCSV({ csv: csvFile })
       .then((res) => {
         if (res?.data?.success === true) {
           setLoading(false);
@@ -278,16 +280,22 @@ const Clients = () => {
     getClientsfn();
     getAllChannel();
     getAllLeadsFun();
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [page]);
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () =>{setServerError(null); setOpen(false);}
+  const handleClose = () => {
+    setServerError(null);
+    setOpen(false);
+  };
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => {setServerError(null);setEditOpen(false);}
+  const handleEditClose = () => {
+    setServerError(null);
+    setEditOpen(false);
+  };
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -299,14 +307,25 @@ const Clients = () => {
 
   const [confirm, setConfirm] = useState(false);
   const handleConfirmOpne = () => setConfirm(true);
-  const handleConfirmClose = () =>{ setConfirm(false);setServerError(null);};
+  const handleConfirmClose = () => {
+    setConfirm(false);
+    setServerError(null);
+  };
 
   const [searchFlag, setSearchFlag] = useState(false);
   const handleSearchOpen = () => setSearchFlag(true);
-  const handleSearchClose = () =>{ setSearchFlag(false);setServerError(null);};
+  const handleSearchClose = () => {
+    setSearchFlag(false);
+    setServerError(null);
+  };
+
+ 
+
 
   return (
     <>
+
+
       <Container style={{ padding: 0 }}>
         <DatagridHeader name={"Clients"}>
           <>
@@ -341,9 +360,17 @@ const Clients = () => {
             >
               Add
             </AddButton>
-            <CsvUploadBtn setCsvFile={setCsvFile}
+            
+            <CsvUploadBtn
+              setCsvFile={setCsvFile}
               handleConfirmOpne={handleConfirmOpne}
             />
+            <Buttons
+              variant="contained"
+              onClick={() => DemoCsv("download/ClientCsc.csv")}
+            >
+              Sample Csv
+            </Buttons>
           </>
         </DatagridHeader>
         {searchFlag && searchFlag === true && (
@@ -354,35 +381,6 @@ const Clients = () => {
           />
         )}
         <Box>
-          <CommonModal isOpen={open} isClose={handleClose}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ marginBottom: "20px", fontWeight: "600" }}
-            >
-              Add Client
-            </Typography>
-            <Box
-              sx={{
-                mb: 2,
-                width: 850,
-                display: "flex",
-                height: 440,
-
-                overflow: "hidden",
-                overflowY: "scroll",
-              }}
-            >
-              <ClientsForm
-                apiFunc={handleAddClients}
-                getAddChannel={getAddChannel}
-                getAllLeads={getAllLeads}
-                serverError={serverError}
-                btnName={"Save "}
-              />
-            </Box>
-          </CommonModal>
           <Box
             maxWidth="sm"
             style={{
@@ -408,19 +406,7 @@ const Clients = () => {
                 );
               })
             ) : formLoader === true ? (
-              <BeatLoader
-                color="#2d94cb"
-                cssOverride={{
-                  position: "absolute",
-                  display: "block",
-                  top: "45%",
-                  left: "55%",
-                  transform: "translate(-50%, -50%)",
-                }}
-                loading
-                margin={4}
-                size={90}
-              />
+              <Loader />
             ) : (
               <p>{record}</p>
             )}
@@ -434,19 +420,22 @@ const Clients = () => {
           )}
         </Box>
       </Container>
-      <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
+      <CommonModal
+        isOpen={open || editopen}
+        isClose={open ? handleClose : handleEditClose}
+      >
         <Typography
           id="modal-modal-title"
           variant="h6"
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Edit Client
+          {open ? "Add Client" : "Edit Client"}
         </Typography>
         <Box
           sx={{
             mb: 2,
-            width: 700,
+            width: 850,
             display: "flex",
             height: 440,
             flexDirection: "column",
@@ -455,58 +444,25 @@ const Clients = () => {
           }}
         >
           <ClientsForm
-            apiFunc={handleClientEdit}
+            apiFunc={open ? handleAddClients : handleClientEdit}
             getAddChannel={getAddChannel}
-            clientData={clientData}
+            clientData={editopen ? clientData : null}
             getAllLeads={getAllLeads}
             serverError={serverError}
-            btnName={"Save Changes"}
+            btnName={open ? "Save" : "Save Changes"}
           />
         </Box>
       </CommonModal>
-      {/* delete client */}
-      <DltndConf
-        title="Delete Client"
-        handleClose={handleDeleteClose}
-        handleDelete={handleDelete}
-        loading={loading}
-        open={deleteopen}
-      />
 
-      {/* viwe client */}
-      <CommonModal isOpen={viewopen} noValidate isClose={handleViewClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Client Profile
-        </Typography>
-        <Box
-          sx={{
-            mb: 2,
-            width: 800,
-            display: "flex",
-            height: 440,
-            flexDirection: "column",
-            // overflow: "hidden",
-            overflowY: "scroll",
-          }}
-        >
-          <ClientProfile data={profileData} />
-        </Box>
-      </CommonModal>
-
-      {/* confirm modal*/}
+      {/* delete client  uplod csv file*/}
       <DltndConf
-        title="Csv Upload"
-        btnName="Confirm"
-        handleClose={handleConfirmClose}
-        handleDelete={csvUpload}
-        message={`Are you sure want to upload  ${csvFile?.name}`}
+        title={deleteopen ? "Delete Client" : "Csv Upload"}
+        btnName={confirm ? "Confirm" : ""}
+        handleClose={deleteopen ? handleDeleteClose : handleConfirmClose}
+        handleDelete={deleteopen ? handleDelete : csvUpload}
+        message={confirm ? `Are you sure want to upload ${csvFile?.name}` : ""}
         loading={loading}
-        open={confirm}
+        open={deleteopen || confirm}
       />
     </>
   );

@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import moment from "moment";
 import EventForm from "./EventForm";
-import { useCallback } from "react";
+import { useCallback,useMemo } from "react";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material/";
-import { useRef, useState,useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import EventServices from "../../services/EventServices";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CommonModal from "../../components/modal/commonModal";
@@ -13,14 +14,19 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
-import {DatagridHeader} from '../../components/dataGrid/DatagridHeader' 
+import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import {useSelector  } from "react-redux";
+import {superAdminData} from "../../redux/SuperAdminSlice";
 
 const MyCalendar = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const localizer = momentLocalizer(moment);
   const DnDCalendar = withDragAndDrop(Calendar);
+  // user role
+  const userData = useSelector(superAdminData);
+  const userRole = useMemo(() => userData?.payload?.SuperAdmin?.role?.role, [userData]);
 
   const [loading, setLoading] = useState(false);
   const [getEventsList, setGetEventsList] = useState();
@@ -64,11 +70,10 @@ const MyCalendar = (props) => {
         console.log("getClients error", err);
       });
   };
-
   // add event api
   const handleAddEvent = (payload) => {
     setLoading(true);
-    setServerError(null)
+    setServerError(null);
     EventServices.addEvent(payload)
       .then((res) => {
         if (res.status === 200) {
@@ -149,27 +154,29 @@ const MyCalendar = (props) => {
 
   useEffect(() => {
     getEvents();
-    // eslint-disable-next-line 
   }, []);
 
   const onSelectEvent = useCallback((calEvent) => {
+    if(userRole === 'Admin'|| userRole === 'HR' || userRole === 'Team Leader'){
     setEventData(calEvent);
     window.clearTimeout(clickRef?.current);
-    clickRef.current = window.setTimeout(() => {
-    }, 250);
+    clickRef.current = window.setTimeout(() => {}, 250);
     handleEditOpen();
+    }
   }, []);
 
   const clickRef = useRef(null);
 
   const onSelectSlot = useCallback((slotInfo) => {
-    window.clearTimeout(clickRef?.current);
-    clickRef.current = window.setTimeout(() => {
-      // window.alert(slotInfo)
-      // console.log(slotInfo)
-      setEventData(() => slotInfo);
-      handleOpen();
-    }, 250);
+    if(userRole === 'Admin'|| userRole === 'HR' || userRole === 'Team Leader'){
+      window.clearTimeout(clickRef?.current);
+      clickRef.current = window.setTimeout(() => {
+        // window.alert(slotInfo)
+        // console.log(slotInfo)
+        setEventData(() => slotInfo);
+        handleOpen();
+      }, 250);
+    }
   }, []);
 
   useEffect(() => {
@@ -194,7 +201,7 @@ const MyCalendar = (props) => {
   const handleEditOpen = () => setEditOpen(true);
   const handleEditClose = () => {
     setEditOpen(false);
-    setServerError(null)
+    setServerError(null);
   };
 
   const [deleteopen, setDeleteOpen] = useState(false);
@@ -204,7 +211,7 @@ const MyCalendar = (props) => {
   return (
     <>
       <Box>
-      <DatagridHeader  name={'Events'}/>
+        <DatagridHeader name={"Events"} />
         <DnDCalendar
           localizer={localizer}
           events={getEventsList}
@@ -222,14 +229,17 @@ const MyCalendar = (props) => {
           // onDoubleClick={handleEventClick}
         />
 
-        <CommonModal isOpen={open} isClose={handleClose}>
+        <CommonModal
+          isOpen={open || editopen}
+          isClose={open ? handleClose : handleEditClose}
+        >
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
             sx={{ marginBottom: "20px", fontWeight: "600" }}
           >
-            Add Event
+            {open ? "Add Event" : "Edit Event"}
           </Typography>
           <Box
             sx={{
@@ -239,35 +249,11 @@ const MyCalendar = (props) => {
           >
             <EventForm
               error={serverError}
-              handleClose={handleClose}
-              apiFun={handleAddEvent}
+              handleClose={open ? handleClose : handleEditClose}
+              apiFun={open ? handleAddEvent : handleEventEdit}
               data={eventData}
-            />
-          </Box>
-        </CommonModal>
-
-        <CommonModal isOpen={editopen} isClose={handleEditClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Edit Event
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <EventForm
-              btnName="save Changes"
-              handleEditClose={handleEditClose}
-              data={eventData}
-              onClick={dleteOpen}
-              apiFun={handleEventEdit}
-              error={serverError}
+              btnName={editopen ? "Save Changes" : undefined}
+              onClick={editopen ? dleteOpen : undefined}
             />
           </Box>
         </CommonModal>

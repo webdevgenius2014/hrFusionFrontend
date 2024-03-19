@@ -5,24 +5,35 @@ import EmployeServices from "../../services/EmployeServices";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import dateFormat from "dateformat";
+import { useLocation } from "react-router-dom";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { Box } from "@mui/system";
 
 const EmployeeView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const url = useLocation();
+  let location = url.pathname?.split("/")[1];
+  console.log(location);
   const apiURL = `${process.env.REACT_APP_API_BASE_URL}/`;
-  const [viewEmployees, setViewEmployees] = useState();
+  const [viewEmployees, setViewEmployees] = useState({});
+  const [feedback, setFeedback] = useState();
 
   const { id } = useParams();
   const employee_id = id;
-  // console.log(props.data);
   const viewEmployee = () => {
     const payload = { id: employee_id };
-    EmployeServices.viewEmployee(payload)
+    let api;
+    if (location === "employeesFeedback")
+      api = EmployeServices.viewFeedback(payload);
+    else api = EmployeServices.viewEmployee(payload);
+    api
       .then((res) => {
         if (res.status === 200) {
           console.log(res?.data?.data);
+          // setFeedback(res?.data?.data)
           setViewEmployees(() => res?.data?.data);
         }
         if (res.status === 401) {
@@ -74,14 +85,21 @@ const EmployeeView = () => {
               }}
             >
               <Grid item xs={12}>
-                <h2 style={{ margin: "auto" }}>{viewEmployees?.name}</h2>
+                <h2 style={{ margin: "auto" }}>
+                  {location === "employeesFeedback"
+                    ? `${viewEmployees?.user_meta?.first_name} ${viewEmployees?.user_meta?.last_name}`
+                    : viewEmployees?.name}
+                </h2>
                 <span
                   style={{ color: "#0000EE" }}
                   onClick={() =>
                     (window.location = "mailto:yourmail@domain.com")
                   }
                 >
-                  {viewEmployees?.email}
+                  {location === "employeesFeedback"
+                    ? viewEmployees?.user_meta?.email +
+                      viewEmployees?.user_meta?.last_name
+                    : viewEmployees?.email}
                 </span>
               </Grid>
 
@@ -94,20 +112,17 @@ const EmployeeView = () => {
               </Grid>
             </Grid>
           </Grid>
-
-          <Grid
-            container
-            spacing={0}
-            sx={{ marginTop: "10px", boxShadow: 2, padding: 2 }}
+          <Box
+            sx={{
+              background: "#E2EAF5",
+              padding: "10px 10px",
+              borderRadius: "10px",
+              marginTop: "10px",
+            }}
           >
-            <Grid item xs={12}>
-              <span>
-                <h3 style={{ margin: "0" }}>
-                  <u>Details:-</u>
-                </h3>
-              </span>
-            </Grid>
-
+            Employee Detail
+          </Box>
+          <Grid container spacing={0} sx={{ padding: 2 }}>
             <Grid item xs={12}>
               <Grid container spacing={1}>
                 <Grid item xs={2}>
@@ -115,7 +130,7 @@ const EmployeeView = () => {
                 </Grid>
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_role?.role}</span>
-                </Grid>
+                </Grid> 
                 <Grid item xs={2}>
                   <span style={{ fontWeight: 600 }}>Employee Id :</span>
                 </Grid>
@@ -142,13 +157,21 @@ const EmployeeView = () => {
                   <span style={{ fontWeight: 600 }}> Date of Birth :</span>
                 </Grid>
                 <Grid item xs={4}>
-                  <span>{viewEmployees?.user_meta?.dob} </span>
+                  <span>
+                    {dateFormat(viewEmployees?.user_meta?.dob, "dd/mmm/yyyy")}{" "}
+                  </span>
                 </Grid>
                 <Grid item xs={2}>
                   <span style={{ fontWeight: 600 }}>Joining Date :</span>
                 </Grid>
                 <Grid item xs={4}>
-                  <span> {viewEmployees?.user_meta?.joining_date}</span>
+                  <span>
+                    {" "}
+                    {dateFormat(
+                      viewEmployees?.user_meta?.joining_date,
+                      "dd/mmm/yyyy"
+                    )}
+                  </span>
                 </Grid>
                 <Grid item xs={2}>
                   <span style={{ fontWeight: 600 }}> Uername :</span>
@@ -156,28 +179,40 @@ const EmployeeView = () => {
                 <Grid item xs={4}>
                   <span>{viewEmployees?.user_meta?.username} </span>
                 </Grid>
-                <Grid item xs={2}>
-                  <span style={{ fontWeight: 600 }}> Documents :</span>
-                </Grid>
-                <Grid item xs={4}>
-                  <span>
-                    {viewEmployees?.user_meta?.documents?.map((itr, index) => {
-                      return (
-                        <>
-                          {" "}
-                          <>{itr.filename}</>{" "}
-                          {index <
-                            viewEmployees?.user_meta?.documents?.length - 1 && (
-                            <span>,</span>
-                          )}
-                        </>
-                      );
-                    })}{" "}
-                  </span>
-                </Grid>
               </Grid>
             </Grid>
           </Grid>
+          {location === "employeesFeedback" && (
+            <>
+              <Box
+                sx={{
+                  background: "#E2EAF5",
+                  padding: "10px 10px",
+                  borderRadius: "10px",
+                  marginTop: "10px",
+                }}
+              >
+                Employee Feedback
+              </Box>
+            </>
+          )}
+          {location === "employeesFeedback" && (
+            <Grid
+              container
+              spacing={0}
+              sx={{ padding: 2 }}
+            >
+              <Grid item xs={12}>
+                <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <span style={{ fontWeight: 400 }}>
+                      {viewEmployees?.feedback}{" "}
+                    </span>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
         </Box>
       )}
     </>
@@ -185,3 +220,23 @@ const EmployeeView = () => {
 };
 
 export default EmployeeView;
+
+// <Grid item xs={2}>
+// <span style={{ fontWeight: 600 }}> Documents :</span>
+// </Grid>
+// <Grid item xs={4}>
+// <span>
+//   {viewEmployees?.user_meta?.documents?.map((itr, index) => {
+//     return (
+//       <>
+//         {" "}
+//         <>{itr.filename}</>{" "}
+//         {index <
+//           viewEmployees?.user_meta?.documents?.length - 1 && (
+//           <span>,</span>
+//         )}
+//       </>
+//     );
+//   })}{" "}
+// </span>
+// </Grid>

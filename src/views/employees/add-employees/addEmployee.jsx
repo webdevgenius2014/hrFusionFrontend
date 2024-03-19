@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -9,12 +10,18 @@ import EmployeesForm from '../EmployeeForm'
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import {getAllDepartmentfn , allRoles,desByDep,allDocList} from '../../../helperApis/HelperApis'
+import {useSelector  } from "react-redux";
+import {superAdminData} from "../../../redux/SuperAdminSlice";
 
 const AddEmployee = ({ getAllEmployees, handleClose }) => {
   const [serverError,setServerError]=useState();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+    // user Role 
+    const userData = useSelector(superAdminData);
+    const userRole = React.useMemo(() => userData?.payload?.SuperAdmin?.role?.role, [userData]);
 
   const [loading, setLoading] = useState(false);
   // add employee --------------------------------
@@ -94,12 +101,11 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
       console.log("getAllDepartmentsFn", error);
     }
   };
-  const Resetfn=()=>{ setServerError(null)}
   useEffect(() => {
+    if(userRole !== 'Team Leader'){
     getAllDepartmentsFn();
     getAllRole();
-    allDocTypeFn();
-    Resetfn()
+    allDocTypeFn();}
   }, []);
 
   // end api integration --------------------------------
@@ -143,8 +149,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
           // justifyContent="flex-end" # DO NOT USE THIS WITH 'scroll'
         }}
       >
-        <Box sx={{ flexGrow: 1 }}>
-          
+        <Box sx={{ flexGrow: 1 }}> 
           <EmployeesForm 
        getdep={getdep}
        getRole={getRole}

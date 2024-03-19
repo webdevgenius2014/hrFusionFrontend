@@ -16,7 +16,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import CommonModal from "../../components/modal/commonModal";
 import Menu from "@mui/material/Menu";
 import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
+import ToolTip from "../../components/ToolTip";
 import MenuItem from "@mui/material/MenuItem";
 import CssBaseline from "@mui/material/CssBaseline";
 import Sidenav from "./Sidenav";
@@ -225,7 +225,7 @@ const DashboardLayout = () => {
               </Badge>
             </IconButton>
             <Box sx={{ flexGrow: 0, ml: 1 }}>
-              <Tooltip title="Open settings">
+              <ToolTip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
                     alt="Remy Sharp"
@@ -235,7 +235,7 @@ const DashboardLayout = () => {
                     }}
                   />
                 </IconButton>
-              </Tooltip>
+              </ToolTip>
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"

@@ -16,6 +16,9 @@ class ProjectsServices {
   addProjects(payload) {
     return instance.post(ApiConfig.addProject, payload);
   }
+  projByEmployee(payload) {
+    return instance.post(ApiConfig.projByEmployee, payload);
+  }
   getProjects(page) {
     return instance.get(`${ApiConfig.getProjects}?page=${page}`);
   }

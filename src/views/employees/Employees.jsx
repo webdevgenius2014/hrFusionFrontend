@@ -22,11 +22,18 @@ import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { allDesignations } from "../../helperApis/HelperApis";
+import { DemoCsv } from "../../helperFunctions/HelperFunction";
+import {useSelector  } from "react-redux";
+import {superAdminData} from "../../redux/SuperAdminSlice";
 // import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
 
 const Employees = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // user Role 
+  const userData = useSelector(superAdminData);
+  const userRole = React.useMemo(() => userData?.payload?.SuperAdmin?.role?.role, [userData]);
 
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
@@ -78,7 +85,8 @@ const Employees = () => {
   };
   useEffect(() => {
     getAllEmployees();
-    getAllDesignationFn();
+    if(userRole !== 'Team Leader'){
+    getAllDesignationFn();}
     // eslint-disable-next-line
   }, []);
   useEffect(() => {
@@ -177,99 +185,121 @@ const Employees = () => {
     // setVewData(()=>data)
   };
 
+
+  let buttonsAdminHr;
   const columns = [
     {
-      field: "id",
-      headerName: "No.",
-      filterable: false,
-      width: 100,
-      headerClassName: "super-app-theme--header",
-      renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
+        field: "id",
+        headerName: "No.",
+        filterable: false,
+        width: 100,
+        headerClassName: "super-app-theme--header",
+        renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
     },
     {
-      field: "profile_image",
-      headerName: "Profile ",
-      headerClassName: "super-app-theme--header",
-      flex: 1,
-      options: { filter: true },
-      renderCell: (params) => (
-        <Avatar
-          alt="Profile Image"
-          src={apiURL + params?.row?.user_meta?.profile_image}
-          sx={{ width: 40, height: 40 }}
-        />
-      ),
+        field: "profile_image",
+        headerName: "Profile ",
+        headerClassName: "super-app-theme--header",
+        flex: 1,
+        options: { filter: true },
+        renderCell: (params) => (
+            <Avatar
+                alt="Profile Image"
+                src={apiURL + params?.row?.user_meta?.profile_image}
+                sx={{ width: 40, height: 40 }}
+            />
+        ),
     },
     {
-      field: "name",
-      headerName: "Name",
-      headerClassName: "super-app-theme--header",
-      flex: 1,
-      options: { filter: true },
+        field: "name",
+        headerName: "Name",
+        headerClassName: "super-app-theme--header",
+        flex: 1,
+        options: { filter: true },
     },
     {
-      field: "email",
-      headerName: "Email",
-      headerClassName: "super-app-theme--header",
-      flex: 1,
-      options: { filter: true },
+        field: "email",
+        headerName: "Email",
+        headerClassName: "super-app-theme--header",
+        flex: 1,
+        options: { filter: true },
     },
     {
-      field: "joindate",
-      headerName: "Joindate",
-      headerClassName: "super-app-theme--header",
-      flex: 1,
-      options: { filter: true },
-      valueGetter: (params) => params.row.user_meta?.joining_date,
+        field: "joindate",
+        headerName: "Joindate",
+        headerClassName: "super-app-theme--header",
+        flex: 1,
+        options: { filter: true },
+        valueGetter: (params) => params.row.user_meta?.joining_date,
     },
     {
-      field: "role",
-      headerName: "Role",
-      headerClassName: "super-app-theme--header",
-      flex: 1,
-      options: { filter: true },
-      valueGetter: (params) => params?.row?.user_role?.role,
+        field: "role",
+        headerName: "Role",
+        headerClassName: "super-app-theme--header",
+        flex: 1,
+        options: { filter: true },
+        valueGetter: (params) => params?.row?.user_role?.role,
     },
-    {
-      field: "action",
-      headerName: "Action",
-      headerClassName: "super-app-theme--header",
-      type: "actions",
-      getActions: (params) => {
-        return [
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={handleEditClick(params)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(params?.id)}
-            color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<VisibilityIcon />}
-            label="View"
-            color="inherit"
-            onClick={() => detailEmployee(params?.row)}
-          />,
-        ];
-      },
-      flex: 1,
-    },
-  ];
+];
+
+if (userRole === 'Admin' || userRole === 'HR') {
+    columns.push({
+        field: "action",
+        headerName: "Action",
+        headerClassName: "super-app-theme--header",
+        type: "actions",
+        getActions: (params) => {
+            return [
+                <GridActionsCellItem
+                    icon={<EditIcon />}
+                    label="Edit"
+                    className="textPrimary"
+                    onClick={handleEditClick(params)}
+                    color="inherit"
+                />,
+                <GridActionsCellItem
+                    icon={<DeleteIcon />}
+                    label="Delete"
+                    onClick={handleDeleteClick(params?.id)}
+                    color="inherit"
+                />,
+                <GridActionsCellItem
+                    icon={<VisibilityIcon />}
+                    label="View"
+                    color="inherit"
+                    onClick={() => detailEmployee(params?.row)}
+                />,
+            ];
+        },
+        flex: 1,
+    });
+
+    buttonsAdminHr = <Box sx={{display:'flex',marginLeft:'5px'}}>
+    <Box>
+    <AddButton variant="contained" onClick={handleOpen}>
+    Add 
+  </AddButton>
+    </Box>
+    <Box sx={{marginLeft:'5px'}}>
+    <Buttons variant="contained" onClick={()=>DemoCsv("download/EmployeeCsv.csv")}>
+    Demo Csv
+    </Buttons>
+    </Box>
+   {/* <Box>
+  <CsvUploadBtn setCsvFile={setCsvFile} handleConfirmOpne={handleConfirmOpne} />       
+        </Box> */}
+     </Box>
+}
+
 
   return (
     <>
       <ToastContainer />
 
       <Container style={{ padding: 0 }}>
-        <Box>
+        
           <DatagridHeader name={"Employees"} handleOpen={handleOpen}>
-            <Box sx={{ marginLeft: "10px" }}>
+            <Box sx={{display:'flex' }}>
               {!srchbtn ? (
                 <Buttons
                   sx={{ margin: 0, height: "auto", padding: "0 16px 0 16px" }}
@@ -294,15 +324,10 @@ const Employees = () => {
                   Clear
                 </Buttons>
               )}
-            </Box>
-            <Box>
-              <AddButton variant="contained" onClick={handleOpen}>
-                Add Fields
-              </AddButton>
-            </Box>
-            {/* <Box>
-              <CsvUploadBtn setCsvFile={setCsvFile} handleConfirmOpne={handleConfirmOpne} />
-                </Box> */}
+              <Box>
+             {buttonsAdminHr}             
+          </Box>
+            </Box>          
           </DatagridHeader>
 
           {searchFlag && searchFlag === true && (
@@ -314,52 +339,56 @@ const Employees = () => {
             />
           )}
 
-          <CommonModal isOpen={open} isClose={handleClose}>
-            <AddEmployee
-              handleClose={handleClose}
-              getAllEmployees={getAllEmployees}
-            />
-          </CommonModal>
-
           <CustDataGrid
             data={getEmployees}
             loading={formLoader}
             columns={columns}
             // totalPages={totalPages}
             setPage={setPage}
-          />
-        </Box>
+          />       
       </Container>
-      <CommonModal isOpen={editopen} isClose={handleEditClose}>
-        <EditEmployee
-          handleEditClose={handleEditClose}
-          getAllEmployees={getAllEmployees}
-          data={employeeData}
-        />
-      </CommonModal>
-      <DltndConf
-        title="Delete Employee"
-        handleClose={handleDeleteClose}
-        handleDelete={handleDelete}
-        loading={loading}
-        open={deleteopen}
-      />
+            { userRole !== 'Team Leader' && <>
+            <CommonModal isOpen={open} isClose={handleClose}>
+            <AddEmployee
+              handleClose={handleClose}
+              getAllEmployees={getAllEmployees}
+            />
+            </CommonModal>
+            <CommonModal isOpen={editopen} isClose={handleEditClose}>
+              <EditEmployee
+                handleEditClose={handleEditClose}
+                getAllEmployees={getAllEmployees}
+                data={employeeData}
+              />
+            </CommonModal>
+            <DltndConf
+              title="Delete Employee"
+              handleClose={handleDeleteClose}
+              handleDelete={handleDelete}
+              loading={loading}
+              open={deleteopen}
+            />
+            {/* confirm modal*/}
+            <DltndConf
+              title="Csv Upload"
+              btnName="Confirm"
+              handleClose={handleConfirmClose}
+              // handleDelete={handleDelete}
+              message={`Are you sure want to upload  ${csvFile?.name}`}
+              loading={loading}
+              open={confirm}
+            />
+            </>
+            }
+     
+
       {totalPages && totalPages >= 2 && (
         <div style={{ width: "100%", marginTop: "10px", background: "white" }}>
           <CustomPagination totalPages={totalPages} setPage={setPage} />
         </div>
       )}
 
-      {/* confirm modal*/}
-      <DltndConf
-        title="Csv Upload"
-        btnName="Confirm"
-        handleClose={handleConfirmClose}
-        // handleDelete={handleDelete}
-        message={`Are you sure want to upload  ${csvFile?.name}`}
-        loading={loading}
-        open={confirm}
-      />
+      
     </>
   );
 };

@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import AddIcon from "@mui/icons-material/Add";
 import CommonModal from "../../../components/modal/commonModal";
-import {AddButton , Buttons} from  '../../../components/Buttons/AllButtons';
+import { AddButton, Buttons } from "../../../components/Buttons/AllButtons";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -103,7 +103,7 @@ export const ChannelSettings = () => {
         console.log("editDepartment error: " + err);
       });
   };
-// delete appi ------------------------------
+  // delete appi ------------------------------
   const handleDelete = (e) => {
     let id = { id: deleteChannel };
     setLoading(true);
@@ -133,17 +133,17 @@ export const ChannelSettings = () => {
         setLoading(false);
       });
   };
- // get edit click values 
+  // get edit click values
   const editValue = (channelData) => {
     setEditChnlData(() => channelData);
     handleEditOpen();
   };
-   // delete click  ---------------------------
-   const handleDeleteClick = (id) => {
+  // delete click  ---------------------------
+  const handleDeleteClick = (id) => {
     setDeleteChannel(id);
     handleDeleteOpen();
   };
- 
+
   useEffect(() => {
     getAllChannel();
   }, []);
@@ -198,11 +198,11 @@ export const ChannelSettings = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {setOpen(false); setServerError(null) } ;
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
+  const handleEditClose = () => {setEditOpen(false); setServerError(null)} ;
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -220,14 +220,18 @@ export const ChannelSettings = () => {
             Add
           </AddButton>
         </DatagridHeader>
-        <CommonModal isOpen={open} isClose={handleClose}>
+
+        <CommonModal
+          isOpen={open || editopen}
+          isClose={open ? handleClose : handleEditClose}
+        >
           <Typography
             id="modal-modal-title"
             variant="h6"
             component="h2"
             sx={{ marginBottom: "20px", fontWeight: "600" }}
           >
-            Add Channel
+            {editopen ? "Edit Channel" : "Add Channel"}
           </Typography>
           <Box
             sx={{
@@ -237,33 +241,10 @@ export const ChannelSettings = () => {
           >
             <ChannelForm
               loading={loading}
-              apiFun={addChannel}
+              apiFun={editopen ? handleEdit : addChannel}
               error={serverError}
-              btnName="Save"
-            />
-          </Box>
-        </CommonModal>
-        <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Edit Channel
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <ChannelForm
-              loading={loading}
-              channel_name={editChnlData?.channel_name}
-              apiFun={handleEdit}
-              error={serverError}
-              btnName="Save Changes"
+              channel_name={editopen ? editChnlData?.channel_name : undefined}
+              btnName={editopen ? "Save Changes" : "Save"}
             />
           </Box>
         </CommonModal>

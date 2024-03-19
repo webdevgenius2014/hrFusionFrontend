@@ -29,7 +29,7 @@ const Deartments = () => {
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [formLoader, setFormLoader] = useState(false);
-  const [count,setCount] = useState(null)
+
   // api states
   const [getdep, setGetdep] = useState([]);
   const [dep_id, setDepId] = useState();
@@ -95,8 +95,8 @@ const Deartments = () => {
       .then((res) => {
         if (res.data.success === true) {
           setLoading(false);
-          handleEditClose();
           getDepartmentfn();
+          handleEditClose();
           toast.success(res?.data?.message);
         }
         if (res.status === 403) {
@@ -143,23 +143,25 @@ const Deartments = () => {
         setLoading(false);
       });
   };
-  // change values on edit department
-  const handleChangedDepVal = (id, department) => {
-    setDepId(id);
-    setDepName(() => department);
-    handleEditOpen();
-  };
+ 
   // delete click get id of department
   const handleDeleteClick = (id) => {
     setDeleteDep(id);
     handleDeleteOpen();
   };
 
-  useEffect(() => {
+  useEffect(() =>{
     getDepartmentfn();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ page]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
+
+   // change values on edit department
+   const handleChangedDepVal = (id, department) => {
+    setDepId(id);
+    setDepName(() => department);
+    handleEditOpen();
+  };  
 
   const columns = [
     {
@@ -170,7 +172,7 @@ const Deartments = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) => params.api.getAllRowIds().indexOf(params.id) + 1,
       // renderCell: (params) => (
-      //   <strong style={{display:'flex'}}> 
+      //   <strong style={{display:'flex'}}>
       //    {setCount((pre)=>pre+1)}
       //    {count}
       //   </strong>
@@ -229,12 +231,18 @@ const Deartments = () => {
     },
   ];
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {setOpen(false);setServerError(null)};
+  const handleOpen = () =>{ setOpen(true);};
+  const handleClose = () => {
+    setOpen(false);
+    setServerError(null);
+  };
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => {setEditOpen(false); setServerError(null) };
+  const handleEditClose = () => {
+    setEditOpen(false);
+    setServerError(null);
+  };
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -254,29 +262,6 @@ const Deartments = () => {
             </AddButton>
           </DatagridHeader>
         </Box>
-        <CommonModal isOpen={open} isClose={handleClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Add Department
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <DepartmentForm
-              apiFun={addDepartment}
-              loading={loading}
-              error={serverError}
-              btnName={"Save"}
-            />
-          </Box>
-        </CommonModal>
 
         <CustDataGrid
           data={getdep}
@@ -287,14 +272,15 @@ const Deartments = () => {
         />
         {/* checkboxSelection  upline */}
       </Container>
-      <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
+      
+      <CommonModal isOpen={open || editopen} isClose={()=> handleClose() ||handleEditClose()}>
         <Typography
           id="modal-modal-title"
           variant="h6"
           component="h2"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Edit Department
+          {open === true ? 'Add Department'  : 'Edit Department'}
         </Typography>
         <Box
           sx={{
@@ -302,13 +288,13 @@ const Deartments = () => {
             maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
           }}
         >
-          <DepartmentForm
-            dep_name={dep_name}
-            apiFun={handleEdit}
-            loading={loading}
-            error={serverError}
-            btnName={"Save Changes"}
-          />
+        <DepartmentForm
+        dep_name={editopen ? dep_name : null}
+        apiFun={open === true ? addDepartment :handleEdit}
+        loading={loading}
+        error={serverError}
+        btnName={open === true ?"Save":'Save Changes'}
+      />
         </Box>
       </CommonModal>
 

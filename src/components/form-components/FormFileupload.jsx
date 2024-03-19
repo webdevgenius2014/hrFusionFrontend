@@ -72,6 +72,7 @@ export const FileUploader = (props) => {
         </FormControl>
         <input
           type="file"
+          accept=".pdf,.doc,.docx,image/*"
           onChange={(event) => handleFileChange(event, index)}
         />
         

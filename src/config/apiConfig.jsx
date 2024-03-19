@@ -31,6 +31,8 @@ const ApiConfig = {
   searchEmployee: `${apiURL}searchEmployee`,
   viewEmployee: `${apiURL}viewEmployee`,
   getAllEmployees: `${apiURL}getAllEmployees`,
+  empByDesignation: `${apiURL}getTaskDesignationEmployees`,
+
 
   // designations acording to the department
   designationList: `${apiURL}designationList`,
@@ -53,6 +55,8 @@ const ApiConfig = {
   deleteProject: `${apiURL}deleteProject`,
   viewProject: `${apiURL}viewProject`,
   searchProject: `${apiURL}searchProject`,
+  projByEmployee: `${apiURL}getTaskEmployeeProjects`,
+  
 
   // Tamplate
   getTemplate: `${apiURL}getTemplate`,
@@ -78,13 +82,6 @@ const ApiConfig = {
   editPlatform: `${apiURL}editPlatform`,
   getAllPlatforms: `${apiURL}getAllPlatforms`,
   deletePlatform: `${apiURL}deletePlatform`,
-
-  // get getAllPlatforms() {
-  //   return this._getAllPlatforms;
-  // },
-  // set getAllPlatforms(value) {
-  //   this._getAllPlatforms = value;
-  // },
 
   // send email -----------------------------
   sendMessageToClient: `${apiURL}sendMessageToClient`,
@@ -125,6 +122,20 @@ const ApiConfig = {
   addFeedback : `${apiURL}addFeedback`,
   viewFeedback : `${apiURL}viewFeedback`,
   listFeedback : `${apiURL}listFeedback`,
+
+  // Concern 
+  addConcern : `${apiURL}addConcern`,
+  getConcerns : `${apiURL}getConcerns`,
+  updateConcernStatus : `${apiURL}updateConcernStatus`,
+
+  // task 
+  addTask : `${apiURL}addTask`,
+  editTask : `${apiURL}editTask`,
+  viewTask : `${apiURL}viewTask`,
+  deleteTask : `${apiURL}deleteTask`,
+  myTaskList : `${apiURL}myTaskList`,
+  getTaskList : `${apiURL}getTaskList`,
+  updateTaskStatus : `${apiURL}updateTaskStatus`,
 };
 
 export default ApiConfig;

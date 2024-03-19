@@ -4,12 +4,14 @@ import CommonServices from "../services/CommonServices";
 import ClientsServices from "../services/ClientsServices";
 import EmployeServices from "../services/EmployeServices";
 import GeneralServices from "../services/GeneralServices";
+import ProjectServices from '../services/ProjectServices';
+
 export const getAllDepartmentfn = async () => {
   try {
     const res = await DepartmentServices.getAllDepartments();
     if (res.status === 200 && res?.data?.success === true) {
       // console.log("get all department", res?.data.data);
-      return res.data.data;
+      return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
       return [];
     }
@@ -104,6 +106,34 @@ export const allDocList = async () => {
     const res = await GeneralServices.getAllDocumentTypes();
     if (res.status === 200 && res?.data?.success === true) {
       // console.log("all doc type",res.data.data)
+      return res?.data?.data;
+    } else if (res.status === 200 && res?.data?.success === false) {
+      return [];
+    }
+  } catch (err) {
+    console.log("getAllDocumentTypes", err);
+  }
+};
+// employees by designation
+export const handleEmpByDesig = async (payload) => {
+  try {
+    const res = await EmployeServices.empByDesignation(payload);
+    if (res.status === 200 && res?.data?.success === true) {
+      // console.log("employee by designation ",res.data.data)
+      return res?.data?.data;
+    } else if (res.status === 200 && res?.data?.success === false) {
+      return [];
+    }
+  } catch (err) {
+    console.log("employee by designatio", err);
+  }
+};
+
+export const projByEmployee = async (payload) => {
+  try {
+    const res = await ProjectServices.projByEmployee(payload);
+    if (res.status === 200 && res?.data?.success === true) {
+      // console.log("projByEmployee",res.data.data)
       return res?.data?.data;
     } else if (res.status === 200 && res?.data?.success === false) {
       return [];

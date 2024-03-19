@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useMemo } from "react";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import CardContent from "@mui/material/CardContent";
@@ -12,8 +12,15 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { TemplateView } from "./TemplateView";
 import parser from "react-html-parser";
+import {useSelector  } from "react-redux";
+import {superAdminData} from "../../redux/SuperAdminSlice";
 
 const TemplateCard = (props) => {
+
+    // user role 
+    const userData = useSelector(superAdminData);
+    const userRole = useMemo(() => userData?.payload?.SuperAdmin?.role?.role, [userData]);
+    
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 

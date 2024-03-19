@@ -71,9 +71,11 @@ const ClientProfile = () => {
           <Box>
             <ClientView viewClient={viewClient} />
           </Box>
-
+          
           {viewClient?.projects?.length > 0 && (
-            <h2 style={{ marginTop: "20px" }}>Projects :-</h2>
+            <Box sx={{background:'#E2EAF5' , padding:'10px 10px',borderRadius:'10px'}}>
+            Projects :-
+            </Box>
           )}
           {viewClient?.projects.map((itr, index) => {
             return (
@@ -82,8 +84,6 @@ const ClientProfile = () => {
                 container
                 spacing={0}
                 sx={{
-                  marginTop: "10px",
-                  boxShadow: 2,
                   padding: 2,
                   background: "white",
                 }}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import CommonModal from "../../components/modal/commonModal";
-import BeatLoader from "react-spinners/ClipLoader";
+import Loader from "../../components/Loader";
 import Typography from "@mui/material/Typography";
 import { AddButton } from "../../components/Buttons/AllButtons";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
@@ -16,9 +16,11 @@ import { CustomPagination } from "../../components/CustomPagination";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 
+
 const Templates = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
 
   const [page, setPage] = useState(1);
   const [noRecord, setNoRecord] = useState();
@@ -98,6 +100,8 @@ const Templates = () => {
         }
         if (res.status === 403) {
           setLoading(false);
+          setServerErr(res?.data?.errors);
+
         }
         if (res.status === 401) {
           dispatch(superAdminLogout());
@@ -120,7 +124,8 @@ const Templates = () => {
         if (res.status === 200 || res.status === 404) {
           setLoading(false);
           handleDeleteClose();
-          toast.success("Template deleted successfully");
+          console.log(res.data.message);
+          toast.success(res?.data?.message);
           getTemplate();
         } else if (res.status === 401) {
           navigate("/");
@@ -160,11 +165,11 @@ const Templates = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {setOpen(false);serverErr(null);};
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
+  const handleEditClose = () => {setEditOpen(false); serverErr(null);};
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -201,32 +206,22 @@ const Templates = () => {
                 );
               })
             ) : loading === true ? (
-              <BeatLoader
-                color="#2d94cb"
-                cssOverride={{
-                  position: "absolute",
-                  display: "block",
-
-                  top: "45%",
-                  left: "55%",
-                  transform: "translate(-50%, -50%)",
-                }}
-                loading={loading}
-                margin={4}
-                size={90}
-              />
+              <Loader />
             ) : (
               <span>{noRecord}</span>
             )}
           </Box>
-          <CommonModal isOpen={open} isClose={handleClose}>
+          <CommonModal
+            isOpen={open || editopen}
+            isClose={open ? handleClose : handleEditClose}
+          >
             <Typography
               id="modal-modal-title"
               variant="h6"
               component="h2"
               sx={{ marginBottom: "20px", fontWeight: "600" }}
             >
-              Add Template
+              {open ? "Add Template" : "Edit Template"}
             </Typography>
             <Box
               sx={{
@@ -234,42 +229,15 @@ const Templates = () => {
                 display: "flex",
                 flexDra: { xs: "wrap" },
                 minWidth: { xs: 900 },
-                height: 440,
+                maxHeight: 430,
                 overflow: "hidden",
                 overflowY: "scroll",
               }}
             >
               <TemplateForm
-                apiFun={addTemplate}
-                btnName={"Save "}
-                loading={loading}
-                error={serverErr}
-              />
-            </Box>
-          </CommonModal>
-          <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ marginBottom: "20px", fontWeight: "600" }}
-            >
-              Edit Template
-            </Typography>
-            <Box
-              sx={{
-                mb: 2,
-
-                display: "flex",
-                // height: 440,
-                // overflow: "hidden",
-                // overflowY: "scroll",
-              }}
-            >
-              <TemplateForm
-                apiFun={handleEdit}
-                data={editTempData}
-                btnName={"Save Changes "}
+                apiFun={open ? addTemplate : handleEdit}
+                data={editopen ? editTempData : undefined}
+                btnName={open ? "Save" : "Save Changes"}
                 loading={loading}
                 error={serverErr}
               />

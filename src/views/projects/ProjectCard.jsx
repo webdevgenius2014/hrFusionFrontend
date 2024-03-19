@@ -16,7 +16,7 @@ export const ProjectCard = (props) => {
   const navigate = useNavigate();
   const data = props?.data;
   const [daysLeft, setDaysLeft] = React.useState();
-    
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   // open menu
@@ -64,7 +64,7 @@ export const ProjectCard = (props) => {
         <h4 style={{ margin: "2px", color: "#333" }}>{data.project_name}</h4>
         <Box sx={{ textAlign: "right" }}>
           <Button
-            id="basic-button"
+            id="edit delete privew"
             aria-controls={open ? "basic-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
@@ -132,7 +132,12 @@ export const ProjectCard = (props) => {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <span
           style={{
-            background: daysLeft >= 15 ? "#03C03C" : (daysLeft <= 15 && daysLeft >= 7) ? "#E4D00A " : "#FF0000",
+            background:
+              daysLeft >= 15
+                ? "#03C03C"
+                : daysLeft <= 15 && daysLeft >= 7
+                ? "#E4D00A "
+                : "#FF0000",
             padding: "4px",
             fontSize: "11px",
             borderRadius: "4px",

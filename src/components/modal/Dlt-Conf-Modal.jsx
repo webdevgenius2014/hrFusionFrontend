@@ -14,15 +14,19 @@ export const DltndConf = (props) => {
       id="modal-modal-title"
       variant="h6"
       component="h2"
-      sx={{ marginBottom: "20px", fontWeight: "600" }}
+      sx={{ fontWeight: "600",textAlign:'center'  }}
     >
       {title}
     </Typography>
-    <p>{message}</p>
+    <Typography
+    id="modal-modal-title"
+    component="p"
+    sx={{textAlign:'center', marginBottom:'10px' }}>{message}</Typography>
     <Box
       sx={{
         width: 500,
         maxWidth: "100%",
+        textAlign:'center'
       }}
     >
       <Button

@@ -33,6 +33,9 @@ class EmployeService {
   addFeedback(payload) {
     return instance.post(ApiConfig.addFeedback, payload);
   }
+  empByDesignation(payload) {
+    return instance.post(ApiConfig.empByDesignation, payload);
+  }
  
 }
 // eslint-disable-next-line import/no-anonymous-default-export

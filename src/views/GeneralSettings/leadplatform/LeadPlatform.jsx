@@ -52,7 +52,7 @@ export const LeadPlatform = () => {
       })
       .catch((err) => {
         setFormLoader(false);
-        console.log("getdep error", err);
+        console.log("get error", err);
       });
   };
   // add api --------------------------------
@@ -77,7 +77,7 @@ export const LeadPlatform = () => {
         }
       })
       .catch((err) => {
-        console.log("add Channel error: " + err);
+        console.log("add  error: " + err);
       });
   };
   // edit api --------------------------------
@@ -103,7 +103,7 @@ export const LeadPlatform = () => {
         }
       })
       .catch((err) => {
-        console.log("editDepartment error: " + err);
+        console.log("editPlatform error: " + err);
       });
   };
   // delete api --------------------------------------
@@ -130,7 +130,7 @@ export const LeadPlatform = () => {
         }
       })
       .catch((err) => {
-        console.log("delete department error: ", err);
+        console.log("delete  error: ", err);
         setLoading(false);
       });
   };
@@ -200,11 +200,11 @@ export const LeadPlatform = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {setOpen(false); setServerError(null) }
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => setEditOpen(false);
+  const handleEditClose = () => {setEditOpen(false); setServerError(null) }
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);

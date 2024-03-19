@@ -279,26 +279,7 @@ const Designations = () => {
           Add Fields
         </AddButton>
           </DatagridHeader>
-          <CommonModal isOpen={open} isClose={handleClose}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Add Designation
-            </Typography>
-            <Box
-              sx={{
-                minWidth: { lg: 450, md: 350, sm: 150, xs: 70, xl: 600 },
-                maxWidth: { lg: 600, md: 500, sm: 400, xs: 200, xl: 800 },
-              }}
-            >
-              <DesignationForm
-                getdep={getdep}
-                handleChangeDep={handleChangeDep}
-                loading={loading}
-                apiFun={handleAddDesignation}
-                error={serverError}
-                btnName={"Save "}
-              />
-            </Box>
-          </CommonModal>
+         
           <CustDataGrid
             data={getDesig}
             loading={formLoader}
@@ -308,33 +289,29 @@ const Designations = () => {
           />
         </Box>
       </Container>
-      <CommonModal isOpen={editopen} isClose={handleEditClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Edit Designation
-        </Typography>
-        <Box
-          sx={{
-            minWidth: { lg: 450, md: 350, sm: 150, xs: 70, xl: 600 },
-            maxWidth: { lg: 600, md: 500, sm: 400, xs: 200, xl: 800 },
-          }}
-        >
-          <DesignationForm
-            showDesignation={editData?.desig}
-            showDepartment={editData?.dep}
-            getdep={getdep}
-            handleChangeDep={handleChangeDep}
-            loading={loading}
-            apiFun={handleEditDasignation}
-            error={serverError}
-            btnName={"Save Changes "}
-          />
-        </Box>
-      </CommonModal>
+      <CommonModal isOpen={open || editopen} isClose={editopen ? handleEditClose : handleClose}>
+  <Typography id="modal-modal-title" variant="h6" component="h2">
+    {editopen ? "Edit Designation" : "Add Designation"}
+  </Typography>
+  <Box
+    sx={{
+      minWidth: { lg: 450, md: 350, sm: 150, xs: 70, xl: 600 },
+      maxWidth: { lg: 600, md: 500, sm: 400, xs: 200, xl: 800 },
+    }}
+  >
+    <DesignationForm
+      showDesignation={editopen ? editData?.desig : null}
+      showDepartment={editopen ? editData?.dep : null}
+      getdep={getdep}
+      handleChangeDep={handleChangeDep}
+      loading={loading}
+      apiFun={editopen ? handleEditDasignation : handleAddDesignation}
+      error={serverError}
+      btnName={editopen ? "Save Changes" : "Save"}
+    />
+  </Box>
+</CommonModal>
+
       <DltndConf
         title="Delete Designation"
         handleClose={handleDeleteClose}

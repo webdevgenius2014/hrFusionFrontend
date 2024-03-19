@@ -1,17 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import Grid from "@mui/material/Grid";
+import { Grid, Box } from "@mui/material";
 import { FormSelect } from "../../components/form-components/FormSelect";
 import { FormMultiSelect } from "../../components/form-components/FormMultSelect";
-import Box from "@mui/material/Box";
 import { FormDate } from "../../components/form-components/FormDate";
 import { FormInputText } from "../../components/form-components/formInputText";
 import SubmitButton from "../../components/form-components/submitButton";
-import { DataGrid } from "@mui/x-data-grid";
 
 const ProjectForm = (props) => {
+  // console.log(props.employeesData)
   const serverErrors = props?.serverError;
   const [data] = useState(props?.projectData);
   const [team_membersView] = useState(
@@ -114,20 +114,20 @@ const ProjectForm = (props) => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, }}>
+      <Box sx={{ flexGrow: 1 }}>
         <Box
           component="form"
           noValidate
           onSubmit={handleSubmit(props.apiFun)}
-          sx={{ mt: 1,mx:1 }}
+          sx={{ mt: 1, mx: 1 }}
         >
           <Grid container spacing={1}>
             <Grid item xs={12} sm={6}>
               <FormInputText
+                label="Project Name"
                 required
                 fullWidth
                 id="project_name"
-                label="Project Name"
                 name="project_name"
                 size="small"
                 error={errors && errors?.project_name}
@@ -137,37 +137,36 @@ const ProjectForm = (props) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormInputText
+                name="cost"
                 required
                 fullWidth
+                type="number"
                 id="cost"
                 label="Cost "
-                name="cost"
                 size="small"
                 error={errors && errors?.cost}
                 control={control}
                 defaultValue={data?.cost || ""}
               />
             </Grid>
-            <Grid item xs={12} sm={6} sx={{marginTop:"5px"}}>
+            <Grid item xs={12} sm={6} sx={{ marginTop: "5px" }}>
               <FormInputText
+                name="language"
                 required
                 fullWidth
                 id="language"
                 label="Language "
-                name="language"
                 size="small"
                 error={errors && errors?.language}
                 control={control}
                 defaultValue={data?.language || ""}
               />
             </Grid>
-           
 
             <Grid item xs={12} sm={6}>
               <FormMultiSelect
-                name="team_members_names"
-                data={data?.team_members}
                 label="Team Members"
+                name="team_members_names"
                 options={props?.employeesData}
                 fieldaname="name"
                 pass_fun={handleEmployeesId}
@@ -225,7 +224,6 @@ const ProjectForm = (props) => {
                 required
               />
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <FormSelect
                 label="Client Name"
@@ -242,32 +240,31 @@ const ProjectForm = (props) => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-             
-            <FormDate
-              required
-              fullWidth
-              focused
-              // format="yyyy-MM-dd"
-              type="date"
-              id="deadline"
-              label="Deadline "
-              name="deadline"
-              size="small"
-              setValue={setValue}
-              error={errors && errors?.deadline}
-              control={control}
-              d_value={data?.deadline}
-              value={data?.deadline || ""}
-            />
-        </Grid>
+              <FormDate
+                label="Deadline "
+                required
+                fullWidth
+                focused
+                // format="yyyy-MM-dd"
+                type="date"
+                id="deadline"
+                name="deadline"
+                size="small"
+                setValue={setValue}
+                error={errors && errors?.deadline}
+                control={control}
+                d_value={data?.deadline}
+                value={data?.deadline || ""}
+              />
+            </Grid>
             <Grid item xs={12} sm={12}>
               <FormInputText
+                label="Description "
                 required
                 multiline
                 rows={3}
                 fullWidth
                 id="description"
-                label="Description "
                 name="description"
                 size="small"
                 error={errors && errors?.description}
@@ -276,7 +273,7 @@ const ProjectForm = (props) => {
               />
             </Grid>
           </Grid>
-          <SubmitButton loading={props.loading} btnName={props.btnName} />
+          <SubmitButton loading={props?.loading} btnName={props?.btnName} />
         </Box>
       </Box>
     </>

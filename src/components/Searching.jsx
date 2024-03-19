@@ -110,7 +110,7 @@ const handleChange = (event) => {
           <FormSelect 
             name="designation"
             data={props?.getDesig}
-            pass_fun={handleChangeDesig}
+            setData={handleChangeDesig}
             label='Select Designation'
             control={control}
             fieldaname='designation_name'

@@ -219,7 +219,6 @@ useEffect(()=>{
                 label="Lead From Platform"
                 control={control}
                 onchange={onchange}
-                // leadValFn={leadValFn}
                 pass_fun={props?.handleLeadPlat}
                 fieldaname="platform_name"
                 getValue={getValues}

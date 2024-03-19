@@ -27,7 +27,7 @@ const ResetPassword = (props) => {
     console.log(JSON.stringify(data, null, 2));
   };    
 return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{display:"flex",alignItems:"center",justifyContent:"center" }}>
         <Card
             sx={{
                 marginTop: 8,
