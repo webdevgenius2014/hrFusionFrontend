@@ -1,57 +1,69 @@
 import React from "react";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+// import Button from "@mui/material/Button";
 
-// function getModalStyle() {
-//     const top = 50
-//     const left = 50
+const CommonModal = ({ isOpen, children, isClose, title }) => {
+  const descriptionElementRef = React.useRef(null);
+  React.useEffect(() => {
+    if (isOpen) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
+    }
+  }, [isOpen]);
 
-//     return {
-//         top: `${top}%`,
-//         left: `${left}%`,
-//         transform: `translate(-${top}%, -${left}%)`,
-//         overflow: "scroll"
-//     };
-// }
-const CommonModal = ({ isOpen, children, isClose }) => {
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        borderRadius: '8px',
-        // overflowY: "scroll",
-        
-        p: 4,
-    };
-
-    const close_mod={
-        position: 'absolute',
-        top: '10px',
-        right: '10px',
-    };
-    return (
-        <>
-            <Modal
-                open={isOpen}
-                onClose={isClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    {children}
-                    <IconButton aria-label="delete" onClick={isClose} className="close_modal" sx={close_mod}>
-                        <CloseIcon />
-                    </IconButton>
-                </Box>
-
-            </Modal>
-        </>
-    )
-}
+  return (
+    <Dialog
+      open={isOpen}
+      onClose={isClose}
+      scroll={"paper"}
+      aria-labelledby="scroll-dialog-title"
+      aria-describedby="scroll-dialog-description"
+      sx={{
+        "& .MuiDialog-paperWidthSm": {
+          maxWidth: "700px" 
+        },
+        "& .MuiDialog-paperWidthMd": {
+          maxWidth: "1100px"
+        },
+        "& .MuiDialog-paperWidthLg": {
+          maxWidth: "1400px" 
+        },
+        "& .MuiDialog-paperWidthXl": {
+          maxWidth: "1600px" 
+        }
+      }}
+    >
+      <DialogTitle id="scroll-dialog-title">
+        {title}
+        <IconButton
+          aria-label="close"
+          onClick={isClose}
+          style={{ position: "absolute", right: "8px", top: "8px" }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers={"paper"}>
+        <DialogContentText id="scroll-dialog-description">
+          {children}
+        </DialogContentText>
+      </DialogContent>
+      {/* <DialogActions>
+          <Button onClick={isClose}>Cancel</Button>
+          <Button onClick={isClose}>Subscribe</Button>
+      </DialogActions> */}
+    </Dialog>
+  );
+};
 
 export default CommonModal;

@@ -204,53 +204,17 @@ function EmpFeedback() {
           </>
     </DatagridHeader>
     
-    <CommonModal isOpen={open} isClose={handleClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Add Feedback
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <EmpFeedForm
-            allEmployees={getEmployees}
-            handleChangeEmp={handleChangeEmp}
-            apiFun={addFeedback}
-            />
+    <CommonModal isOpen={open || editopen} 
+      isClose={open ? handleClose : handleEditClose} 
+      title={editopen ? "Edit Feedback" : "Add Feedback"}>
+ 
+    <EmpFeedForm
+      allEmployees={getEmployees}
+      handleChangeEmp={handleChangeEmp}
+      apiFun={editopen ? null : addFeedback}
+    />
+</CommonModal>
 
-          </Box>
-        </CommonModal>
-
-        <CommonModal isOpen={editopen} isClose={handleEditClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Add Feedback
-        </Typography>
-        <Box
-          sx={{
-            minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-            maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-          }}
-        >
-          <EmpFeedForm
-          allEmployees={getEmployees}
-          handleChangeEmp={handleChangeEmp}
-          apiFun={addFeedback}
-          />
-
-        </Box>
-      </CommonModal>
         <CustDataGrid
         data={getAllFeedback}
         loading={formLoader}

@@ -221,53 +221,19 @@ export const LeadPlatform = () => {
             Add
           </AddButton>
         </DatagridHeader>
-        <CommonModal isOpen={open} isClose={handleClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Add Lead Platform
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <LeadPlatformForm
-              loading={loading}
-              apiFun={addLeadPlatform}
-              error={serverError}
-              btnName="Save"
-            />
-          </Box>
-        </CommonModal>
-        <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Edit Lead Platform
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <LeadPlatformForm
-              loading={loading}
-              apiFun={handleEdit}
-              platform_name={editLeadData?.platform_name}
-              error={serverError}
-              btnName="Save"
-            />
-          </Box>
-        </CommonModal>
+        <CommonModal isOpen={open || editopen} 
+        isClose={open ? handleClose : handleEditClose}
+        title={open ? 'Add Lead Platform' : 'Edit Lead Platform'}
+        >
+          <LeadPlatformForm
+            loading={loading}
+            apiFun={open ? addLeadPlatform : handleEdit}
+            platform_name={open ? undefined : editLeadData?.platform_name}
+            error={serverError}
+            btnName="Save"
+          />
+      </CommonModal>
+      
 
         {/*  display grid */}
       </Box>

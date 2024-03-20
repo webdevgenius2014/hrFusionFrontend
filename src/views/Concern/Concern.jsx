@@ -367,54 +367,19 @@ function Concern() {
           setPage={setPage}
         />
 
-        <CommonModal isOpen={open} isClose={handleClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Add Concern
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <ConcernForm
-              apiFun={addConcern}
-              btnName="Save"
-              getRole={getRole}
-              loading={loading}
-            />
-          </Box>
-        </CommonModal>
-
-        <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            Edit Concern
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
-            <ConcernForm
-              apiFun={addConcern}
-              btnName="Save Changes"
-              getRole={getRole}
-              loading={loading}
-              selectedConcern={selectedConcern}
-            />
-          </Box>
-        </CommonModal>
+        <CommonModal isOpen={open || editopen} 
+        isClose={open ? handleClose : handleEditClose}
+        title={open ? 'Add Concern' : 'Edit Concern'}
+        >
+          <ConcernForm
+            apiFun={open ? addConcern : null}
+            btnName={open ? 'Save' : 'Save Changes'}
+            getRole={getRole}
+            loading={loading}
+            selectedConcern={open ? undefined : selectedConcern}
+          />
+      </CommonModal>
+      
       </Container>
       <DltndConf
       title="Concern Status"

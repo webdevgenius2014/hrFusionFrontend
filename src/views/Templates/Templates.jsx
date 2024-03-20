@@ -165,11 +165,11 @@ const Templates = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {setOpen(false);serverErr(null);};
+  const handleClose = () => {setOpen(false);setServerErr(null);};
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => {setEditOpen(false); serverErr(null);};
+  const handleEditClose = () => {setEditOpen(false); setServerErr(null);};
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -214,26 +214,8 @@ const Templates = () => {
           <CommonModal
             isOpen={open || editopen}
             isClose={open ? handleClose : handleEditClose}
+            title={open ? "Add Template" : "Edit Template"}
           >
-            <Typography
-              id="modal-modal-title"
-              variant="h6"
-              component="h2"
-              sx={{ marginBottom: "20px", fontWeight: "600" }}
-            >
-              {open ? "Add Template" : "Edit Template"}
-            </Typography>
-            <Box
-              sx={{
-                mb: 2,
-                display: "flex",
-                flexDra: { xs: "wrap" },
-                minWidth: { xs: 900 },
-                maxHeight: 430,
-                overflow: "hidden",
-                overflowY: "scroll",
-              }}
-            >
               <TemplateForm
                 apiFun={open ? addTemplate : handleEdit}
                 data={editopen ? editTempData : undefined}
@@ -241,7 +223,7 @@ const Templates = () => {
                 loading={loading}
                 error={serverErr}
               />
-            </Box>
+           
           </CommonModal>
 
           <DltndConf

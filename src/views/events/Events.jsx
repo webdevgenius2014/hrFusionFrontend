@@ -232,21 +232,8 @@ const MyCalendar = (props) => {
         <CommonModal
           isOpen={open || editopen}
           isClose={open ? handleClose : handleEditClose}
+          title= {open ? "Add Event" : "Edit Event"}
         >
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            {open ? "Add Event" : "Edit Event"}
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
             <EventForm
               error={serverError}
               handleClose={open ? handleClose : handleEditClose}
@@ -255,7 +242,6 @@ const MyCalendar = (props) => {
               btnName={editopen ? "Save Changes" : undefined}
               onClick={editopen ? dleteOpen : undefined}
             />
-          </Box>
         </CommonModal>
 
         <DltndConf

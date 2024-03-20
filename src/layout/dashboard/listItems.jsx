@@ -15,7 +15,7 @@ import {superAdminData} from "../../redux/SuperAdminSlice";
 
 import { Box } from "@mui/system";
 import { useMemo } from "react";
-export const MainListItems = () => {
+export  const MainListItems = () => {
   const url = useLocation();
   let location = url.pathname?.split("/")[1]; 
   
@@ -186,7 +186,8 @@ export const MainListItems = () => {
       filteredNavigationItems = navigationItems.filter(item => item.text === "Employees" ||
                                  item.text === "Projects" ||  item.text === "Task" ||
                                  item.text === "Events" ||item.text === "Employee Feedback" ||
-                                 item.text === "Dashboard" 
+                                 item.text === "Dashboard" || item.text === "Leaves"  
+                                 ||item.text === "Concern"  
                                  );
       break;
     case 'Team manager':
@@ -211,7 +212,7 @@ export const MainListItems = () => {
     {i.svg}
     </ListItemIcon>
     <ListItemText style={{color:`/${location}` === i.path ? '#5D87FF' : '#B1B1B1' , fontWeight:'500'}} primary={i.text}/>
-  </ListItemButton>  
+    </ListItemButton>  
     :
     <div style={{textDecoration:'none',color:'black',margin:'0px'}} to="/clients">
   <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>

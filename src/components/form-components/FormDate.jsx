@@ -22,13 +22,14 @@ export const FormDate = ({
   error,
   ...rest
 }) => {
+
   const handleDateChange = (date) => {
    setValue &&  setValue(name, dateFormat(date, "yyyy-mm-dd"), {
       shouldDirty: true,
     });
   };
   let defaultDate='';
-  if(d_value !== undefined){
+  if(d_value !== undefined ||d_value !== null || d_value !== ' '  ){
     defaultDate =dayjs(d_value)
   }else
   {

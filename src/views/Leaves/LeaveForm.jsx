@@ -11,7 +11,7 @@ import SubmitButton from "../../components/form-components/submitButton";
 
 const LeavesForm = (props) => {
   const newErrors = props?.error;
-  const [data] = useState(props?.projectData);
+  const [data] = useState(props?.data);
   const validationSchema = Yup.object().shape({
     subject: Yup.string().required("subject  is required"),
     message: Yup.string().required("message  is required"),
@@ -29,8 +29,11 @@ const LeavesForm = (props) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      subject: props?.showDepartment,
-      message: props?.showDepartment,
+      from_date:data?.from_date,
+      to_date:data?.to_date,
+      subject: data?.subject,
+      message: data?.message,
+      notify_to: data?.notify_to,
     },
     resolver: yupResolver(validationSchema),
   });
@@ -96,7 +99,7 @@ const LeavesForm = (props) => {
               label="Leave From "
               required
               fullWidth
-              focused
+              
               // format="yyyy-MM-dd"
               type="date"
               id="from_date"
@@ -105,8 +108,8 @@ const LeavesForm = (props) => {
               setValue={setValue}
               error={errors && errors?.from_date}
               control={control}
-              d_value={data?.deadline}
-              value={data?.deadline || ""}
+              d_value={data?.from_date}
+              value={data?.from_date}
             />
           </Grid>
           <Grid item xs={6} sm={6}>
@@ -114,7 +117,6 @@ const LeavesForm = (props) => {
               label="Leave To "
               required
               fullWidth
-              focused
               // format="yyyy-MM-dd"
               type="date"
               id="to_date"
@@ -123,8 +125,8 @@ const LeavesForm = (props) => {
               setValue={setValue}
               error={errors && errors?.to_date}
               control={control}
-              d_value={data?.deadline}
-              value={data?.deadline || ""}
+              d_value={data?.to_date}
+              value={data?.to_date}
             />
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -135,8 +137,8 @@ const LeavesForm = (props) => {
               id="subject"
               name="subject"
               size="small"
-              focused
-              defaultValue={props?.dep_name}
+              
+              defaultValue={props?.data?.subject}
               error={errors && errors?.subject}
               control={control}
               autoComplete="family-name"
@@ -150,10 +152,9 @@ const LeavesForm = (props) => {
                 id="message"
                 name="message"
                 size="small"
-                focused
                 multiline
                 rows={3}
-                defaultValue={props?.dep_name}
+                defaultValue={data?.message}
                 error={errors && errors?.message}
                 control={control}
                 autoComplete="family-name"

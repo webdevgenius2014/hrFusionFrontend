@@ -210,21 +210,8 @@ export const DocumentsSettings = () => {
         <CommonModal
           isOpen={open || editopen}
           isClose={open ? handleClose : handleEditClose}
+          title={editopen ? "Edit Document Name" : "Add Document"}
         >
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ marginBottom: "20px", fontWeight: "600" }}
-          >
-            {editopen ? "Edit Document Name" : "Add Document"}
-          </Typography>
-          <Box
-            sx={{
-              minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-              maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-            }}
-          >
             <DocumentForm
               loading={loading}
               apiFun={editopen ? handleEdit : addDocument}
@@ -234,7 +221,6 @@ export const DocumentsSettings = () => {
               }
               btnName={editopen ? "Save Changes" : "Save"}
             />
-          </Box>
         </CommonModal>
 
         {/*  display grid */}

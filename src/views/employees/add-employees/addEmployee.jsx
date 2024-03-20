@@ -127,30 +127,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
 
   return (
     <>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        // sx={{ marginBottom: "20px", fontWeight: "600" }}
-      >
-        Add Employee
-      </Typography>
-      <Box
-        sx={{
-          mb: 2,
-              minWidth: {lg:750,md:650,sm:450,xs:260,xl:900},
-              maxWidth: {lg:900,md:800,sm:650,xs:400,xl:1100},
-       
-          display: "flex",
-          height:470,
-          flexDirection: "column",
-          overflow: "hidden",
-          overflowY: "scroll",
-          // justifyContent="flex-end" # DO NOT USE THIS WITH 'scroll'
-        }}
-      >
-        <Box sx={{ flexGrow: 1 }}> 
-          <EmployeesForm 
+      <EmployeesForm 
        getdep={getdep}
        getRole={getRole}
        serverError={serverError}
@@ -162,9 +139,7 @@ const AddEmployee = ({ getAllEmployees, handleClose }) => {
        apiFunc={addEmployees}
        loading={loading}
        btnName={"Save"}
-       />
-        </Box>
-      </Box>
+       />   
     </>
   );
 };

@@ -346,20 +346,9 @@ function Task() {
         // totalPages={totalPages}
         // setPage={setPage}
       />
-      <CommonModal isOpen={open || editopen} isClose={open ? handleClose : handleEditClose}>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        sx={{ marginBottom: "20px", fontWeight: "600" }}
-      >
-        {open ? "Add Task" : "Edit Task"}
-      </Typography>
-      <Box
-        sx={{
-          minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-          maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-        }}
+      <CommonModal isOpen={open || editopen} 
+      isClose={open ? handleClose : handleEditClose}
+      title={open ? "Add Task" : "Edit Task"}
       >
         <TaskForm
           desigList={getDesig}
@@ -373,7 +362,6 @@ function Task() {
           showEmp={editopen ? showEmp :null}
           showData={editopen ? selectedTask : undefined}
         />
-      </Box>
     </CommonModal>
     
 

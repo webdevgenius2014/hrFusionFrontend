@@ -289,16 +289,9 @@ const Designations = () => {
           />
         </Box>
       </Container>
-      <CommonModal isOpen={open || editopen} isClose={editopen ? handleEditClose : handleClose}>
-  <Typography id="modal-modal-title" variant="h6" component="h2">
-    {editopen ? "Edit Designation" : "Add Designation"}
-  </Typography>
-  <Box
-    sx={{
-      minWidth: { lg: 450, md: 350, sm: 150, xs: 70, xl: 600 },
-      maxWidth: { lg: 600, md: 500, sm: 400, xs: 200, xl: 800 },
-    }}
-  >
+      <CommonModal isOpen={open || editopen} isClose={editopen ? handleEditClose : handleClose} 
+      title={editopen ? "Edit Designation" : "Add Designation"}>
+ 
     <DesignationForm
       showDesignation={editopen ? editData?.desig : null}
       showDepartment={editopen ? editData?.dep : null}
@@ -309,7 +302,6 @@ const Designations = () => {
       error={serverError}
       btnName={editopen ? "Save Changes" : "Save"}
     />
-  </Box>
 </CommonModal>
 
       <DltndConf

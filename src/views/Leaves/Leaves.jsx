@@ -21,21 +21,24 @@ import { AddButton } from "../../components/Buttons/AllButtons";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
+import EditIcon from "@mui/icons-material/Edit";
 import { FormSelect } from "../../components/form-components/FormSelect";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { allRoles } from "../../helperApis/HelperApis";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import { useSelector } from "react-redux";
+import { superAdminData } from "../../redux/SuperAdminSlice";
 
 function Leaves() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { control } = useForm();
 
-  const [age, setAge] = React.useState("");
+  // user Role
+  const userData = useSelector(superAdminData);
+  const userRole = React.useMemo(
+    () => userData?.payload?.SuperAdmin?.role?.role,
+    [userData]
+  );
 
   const selectOptions = [
     { id: 3, name: "All" },
@@ -49,9 +52,8 @@ function Leaves() {
 
   const [renderApi, setRenderApi] = useState(3);
   const [getLeaves, setGetLeaves] = useState([]);
-
+  const [selectedLeave, setSelectedLeave] = useState();
   const [leaveSatus, setLeaveSatus] = useState({ status: null, id: null });
-
   // all roles
   const [getRole, setRole] = useState([]);
   const getAllRole = async () => {
@@ -125,6 +127,32 @@ function Leaves() {
         console.log("addProjects error: " + err);
       });
   };
+    // edit Leave  -------------------------------
+    const EditLeave = (data) => {
+      let payload = { ...data, id: selectedLeave?.id }
+      setLoading(true);
+      LeaveServices.editLeave(payload)
+        .then((res) => {
+          if (res?.data?.success === true) {
+            setLoading(false);
+            getLeavesFn();
+            handleEditClose();
+            toast.success(res?.data?.message);
+          }
+          if (res.status === 403) {
+            setServerError(res?.data);
+            setLoading(false);
+          }
+          if (res.status === 401) {
+            dispatch(superAdminLogout());
+            setLoading(false);
+            navigate("/");
+          }
+        })
+        .catch((err) => {
+          console.log("editDepartment error: " + err);
+        });
+    };
   // updateLeaveStatus  accept or reject
   const updateLeaveStatus = () => {
     setLoading(true);
@@ -290,14 +318,16 @@ function Leaves() {
         );
       },
     },
-    {
+  ];
+  if (userRole === "Admin" || userRole === "HR") {
+    columns.push({
       field: "action",
       headerName: "Action",
       headerClassName: "super-app-theme--header",
       type: "actions",
       getActions: (params) => {
         const status = params?.row?.status;
-      
+
         // Show actions only when status is 1
         if (status === 1) {
           return [
@@ -403,9 +433,27 @@ function Leaves() {
         }
       },
       flex: 1,
-    },
-  ];
-
+    });
+  } else {
+    columns.push({
+      field: "action",
+      headerName: "Action",
+      headerClassName: "super-app-theme--header",
+      type: "actions",
+      getActions: (params) => {
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={()=>{setSelectedLeave(params?.row);handleEditOpen();}}
+            color="inherit"
+          />,
+        ];
+      },
+      flex: 1,
+    });
+  }
   return (
     <Box>
       <DatagridHeader name={"Leaves"}>
@@ -483,42 +531,17 @@ function Leaves() {
         loading={loading}
         open={confirm}
       />
-      <CommonModal isOpen={open} isClose={handleClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Add Task
-        </Typography>
-        <Box
-          sx={{
-            minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-            maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-          }}
-        >
-          <LeavesForm apiFun={addLeaves} getRole={getRole} />
-        </Box>
-      </CommonModal>
-      <CommonModal isOpen={editopen} noValidate isClose={handleEditClose}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          Edit Task
-        </Typography>
-        <Box
-          sx={{
-            minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-            maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-          }}
-        >
-          <LeavesForm apiFun={addLeaves} getRole={getRole} />{" "}
-        </Box>
-      </CommonModal>
+      <CommonModal isOpen={open || editopen} 
+      isClose={open ? handleClose : handleEditClose}
+      title={open ? 'Add Task' : 'Edit Task'}
+      >
+        <LeavesForm
+          apiFun={open ? addLeaves : EditLeave}
+          getRole={getRole}
+          data={open ? null : selectedLeave}
+        />
+    </CommonModal>
+    
     </Box>
   );
 }

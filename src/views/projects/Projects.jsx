@@ -336,25 +336,9 @@ const Projects = () => {
       </Box>
 
       {/*  add/edit modal */}
-      <CommonModal isOpen={open || editopen} isClose={open ? handleClose : handleEditClose}>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        sx={{ marginBottom: "20px", fontWeight: "600" }}
-      >
-        {open ? "Add Projects" : "Edit Projects"}
-      </Typography>
-      <Box
-        sx={{
-          mb: 2,
-          width: 800,
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
-          overflowY: "scroll",
-        }}
-      >
+      <CommonModal isOpen={open || editopen} isClose={open ? handleClose : handleEditClose}
+      title = {open ? "Add Projects" : "Edit Projects"}>
+    
         <ProjectForm
           apiFun={open ? addProjects : handleEdit}
           projectData={editopen ? projectData : undefined}
@@ -364,7 +348,7 @@ const Projects = () => {
           getTeamlead={getTeamlead}
           btnName={open ? "Save" : "Save Changes"}
         />
-      </Box>
+     
       </CommonModal>
     
       {/* delete  component */}

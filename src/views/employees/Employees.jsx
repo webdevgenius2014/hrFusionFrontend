@@ -25,7 +25,7 @@ import { allDesignations } from "../../helperApis/HelperApis";
 import { DemoCsv } from "../../helperFunctions/HelperFunction";
 import {useSelector  } from "react-redux";
 import {superAdminData} from "../../redux/SuperAdminSlice";
-// import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
+import CsvUploadBtn from "../../components/Buttons/CsvUploadBtn";
 
 const Employees = () => {
   const dispatch = useDispatch();
@@ -126,7 +126,6 @@ const Employees = () => {
         setLoading(false);
       });
   };
-  // end delete emolpyees --------------------------------
   // search employees -----------------------------
   const searchEmployee = (data) => {
     setFormLoader(true);
@@ -136,22 +135,43 @@ const Employees = () => {
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data.data);
-
           setTotalPages(res?.data?.data?.last_page);
           setGetEmployees(() => res?.data?.data);
           setFormLoader(false);
         } else {
           setFormLoader(false);
-          console.log("getemployee if", res);
           setGetEmployees([]);
         }
       })
       .catch((err) => {
         setFormLoader(false);
-        console.log("getAllEmployees", err);
+        console.log("serch Employees", err);
       });
   };
-
+ // csv Upload api -------------------------
+ const csvUpload = () => {
+  setLoading(true);
+  EmployeServices.uploadEmployeeCSV({ csv: csvFile })
+    .then((res) => {
+      if (res?.data?.success === true) {
+        setLoading(false);
+        handleConfirmClose();
+        getAllEmployees();
+        toast.success(res?.data?.message);
+      } else if (res.status === 401) {
+        dispatch(superAdminLogout());
+        setLoading(false);
+        navigate("/");
+      } else if (res.status === 403) {
+        toast.error('Unable to upload Employee Csv file')
+        setLoading(false);
+      }
+    })
+    .catch((err) => {
+      setLoading(false);
+      console.log("SearchClients error", err);
+    });
+};
   const [employeeData, SetEmployeeData] = useState({});
   const handleEditClick = (data) => () => {
     SetEmployeeData(data);
@@ -186,7 +206,7 @@ const Employees = () => {
   };
 
 
-  let buttonsAdminHr;
+
   const columns = [
     {
         field: "id",
@@ -272,23 +292,7 @@ if (userRole === 'Admin' || userRole === 'HR') {
             ];
         },
         flex: 1,
-    });
-
-    buttonsAdminHr = <Box sx={{display:'flex',marginLeft:'5px'}}>
-    <Box>
-    <AddButton variant="contained" onClick={handleOpen}>
-    Add 
-  </AddButton>
-    </Box>
-    <Box sx={{marginLeft:'5px'}}>
-    <Buttons variant="contained" onClick={()=>DemoCsv("download/EmployeeCsv.csv")}>
-    Demo Csv
-    </Buttons>
-    </Box>
-   {/* <Box>
-  <CsvUploadBtn setCsvFile={setCsvFile} handleConfirmOpne={handleConfirmOpne} />       
-        </Box> */}
-     </Box>
+    });  
 }
 
 
@@ -324,9 +328,27 @@ if (userRole === 'Admin' || userRole === 'HR') {
                   Clear
                 </Buttons>
               )}
+              {userRole === 'Admin' || userRole === 'HR' ?
               <Box>
-             {buttonsAdminHr}             
-          </Box>
+              {  <Box sx={{display:'flex',marginLeft:'5px'}}>
+              <Box>
+              <AddButton variant="contained" onClick={handleOpen}>
+              Add 
+            </AddButton>
+              </Box>
+              <Box sx={{marginLeft:'5px'}}>
+            <CsvUploadBtn setCsvFile={setCsvFile} handleConfirmOpne={handleConfirmOpne} />       
+                  </Box> 
+              <Box sx={{marginLeft:'5px'}}>
+              <Buttons variant="contained" onClick={()=>DemoCsv("download/EmployeeCsv.csv")}>
+              Demo Csv
+              </Buttons>
+              </Box>
+              
+               </Box>}             
+               </Box> : null
+              }
+              
             </Box>          
           </DatagridHeader>
 
@@ -348,13 +370,13 @@ if (userRole === 'Admin' || userRole === 'HR') {
           />       
       </Container>
             { userRole !== 'Team Leader' && <>
-            <CommonModal isOpen={open} isClose={handleClose}>
+            <CommonModal isOpen={open} isClose={handleClose} title = 'Add Employee '>
             <AddEmployee
               handleClose={handleClose}
               getAllEmployees={getAllEmployees}
             />
             </CommonModal>
-            <CommonModal isOpen={editopen} isClose={handleEditClose}>
+            <CommonModal isOpen={editopen} isClose={handleEditClose} title = 'Edit Employee '>
               <EditEmployee
                 handleEditClose={handleEditClose}
                 getAllEmployees={getAllEmployees}
@@ -362,22 +384,16 @@ if (userRole === 'Admin' || userRole === 'HR') {
               />
             </CommonModal>
             <DltndConf
-              title="Delete Employee"
-              handleClose={handleDeleteClose}
-              handleDelete={handleDelete}
+              open={deleteopen ? deleteopen : confirm}
+              title={deleteopen ? "Delete Employee" :"Csv Upload"}
+              handleClose={deleteopen ? handleDeleteClose : handleConfirmClose}
+              handleDelete={deleteopen ? handleDelete :csvUpload}
+              message={deleteopen ? null : `Are you sure want to upload  ${csvFile?.name}`}
+              btnName={deleteopen ? "Delete":"Confirm"}
               loading={loading}
-              open={deleteopen}
             />
             {/* confirm modal*/}
-            <DltndConf
-              title="Csv Upload"
-              btnName="Confirm"
-              handleClose={handleConfirmClose}
-              // handleDelete={handleDelete}
-              message={`Are you sure want to upload  ${csvFile?.name}`}
-              loading={loading}
-              open={confirm}
-            />
+            
             </>
             }
      

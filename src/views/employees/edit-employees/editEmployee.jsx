@@ -150,27 +150,7 @@ const EditEmployee = (props) => {
  
  
   return (
-    <>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        sx={{ fontWeight: "600" }}
-      >
-        Edit Employee
-      </Typography>
-      <Box
-        sx={{
-          mb: 2,
-          minWidth: {lg:750,md:425,sm:425,xs:300,xl:900},
-          maxWidth: {lg:900,md:768,sm:568,xs:425,xl:1100},
-          display: "flex",
-          flexDirection: "column",
-          height: 470,
-          overflow: "hidden",
-          overflowY: "scroll",
-        }}
-      >
+    <>  
         <CssBaseline />
        <EmployeesForm 
        data={data}
@@ -189,7 +169,6 @@ const EditEmployee = (props) => {
        loading={loading}
        editForm={true}
        />
-      </Box>
     </>
   );
 };

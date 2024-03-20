@@ -3,9 +3,13 @@ import React,{useEffect, useState} from 'react';
 
 const GoogleDocumentViewer = (props) => {
   const [file]=useState(()=>props?.doc?.file)
+  console.log("file",file)
   const [previewUrl, setPreviewUrl] = useState('');
   const previewFun = ( )=>{
-    if(file){
+    if(typeof file === "string"){
+      setPreviewUrl(`${process.env.REACT_APP_API_BASE_URL}/${file}`)
+    }
+    else{
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewUrl(reader.result);
@@ -15,7 +19,12 @@ const GoogleDocumentViewer = (props) => {
   }
 console.log(props?.doc?.file)
   const getFileType = (fileName) => {
-    const extension = fileName.split('.').pop().toLowerCase();
+    let extension;
+    if(typeof file === "string")
+    {extension = file.substring(file.lastIndexOf('.') + 1);}
+    else
+     extension = fileName.split('.').pop().toLowerCase();
+ console.log("extension",extension)
     if (extension === 'pdf') {
       return 'pdf';
     } else if (extension === 'doc' || extension === 'docx') {
@@ -33,13 +42,13 @@ console.log(props?.doc?.file)
     <h3>Preview:</h3>
     {previewUrl && (
       <div>
-        {getFileType(file.name) === 'pdf' && (
+        {getFileType(file?.name) === 'pdf' && (
           <embed src={previewUrl} type="application/pdf" width="100%" height="500px" />
         )}
-        {getFileType(file.name) === 'doc' && (
+        {getFileType(file?.name) === 'doc' && (
           <iframe src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(previewUrl)}`} width="100%" height="500px" title= 'doc' frameBorder="0" />
         )}
-        {getFileType(file.name) === 'image' && (
+        {getFileType(file?.name) === 'image' && (
           <img src={previewUrl} alt="Preview" style={{ maxWidth: '100%' }} />
         )}
       </div>

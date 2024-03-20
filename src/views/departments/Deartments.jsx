@@ -273,21 +273,8 @@ const Deartments = () => {
         {/* checkboxSelection  upline */}
       </Container>
       
-      <CommonModal isOpen={open || editopen} isClose={()=> handleClose() ||handleEditClose()}>
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          {open === true ? 'Add Department'  : 'Edit Department'}
-        </Typography>
-        <Box
-          sx={{
-            minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-            maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-          }}
-        >
+      <CommonModal isOpen={open || editopen} isClose={()=> handleClose() ||handleEditClose()} 
+      title={open === true ? 'Add Department'  : 'Edit Department'}>
         <DepartmentForm
         dep_name={editopen ? dep_name : null}
         apiFun={open === true ? addDepartment :handleEdit}
@@ -295,7 +282,7 @@ const Deartments = () => {
         error={serverError}
         btnName={open === true ?"Save":'Save Changes'}
       />
-        </Box>
+       
       </CommonModal>
 
       <DltndConf

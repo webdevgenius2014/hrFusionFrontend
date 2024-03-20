@@ -7,26 +7,8 @@ import Button from "@mui/material/Button";
 
 export const TemplateView = (props) => {
   return (
-    <CommonModal isOpen={props?.open} isClose={props?.handleClose}>
-      <Typography
-        id="modal-modal-title"
-        variant="h6"
-        component="h2"
-        sx={{ marginBottom: "20px", fontWeight: "600" }}
-      >
-        View Template
-      </Typography>
-      <Box
-        sx={{
-          mb: 2,
-          display: "flex",
-          flexDra: { xs: "wrap" },
-          minWidth: { xs: 900 },
-          height: 440,
-          overflow: "hidden",
-          overflowY: "scroll",
-        }}
-      >
+    <CommonModal isOpen={props?.open} isClose={props?.handleClose} title="View Template">
+     
         <Box>
           <Box sx={{ my: 2 }}>
             <b>Title:- </b> <span> {props?.data?.title}</span>
@@ -48,7 +30,6 @@ export const TemplateView = (props) => {
             )}
           </Box>
         </Box>
-      </Box>
     </CommonModal>
   );
 };

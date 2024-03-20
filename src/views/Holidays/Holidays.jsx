@@ -292,21 +292,8 @@ function Holidays() {
       <CommonModal
         isOpen={open || editopen}
         isClose={open ? handleClose : handleEditClose}
+        title={open ? "Add Holidays" : "Edit Holiday"}
       >
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          {open ? "Add Holidays" : "Edit Holiday"}
-        </Typography>
-        <Box
-          sx={{
-            minWidth: { lg: 350, md: 250, sm: 150, xs: 70, xl: 500 },
-            maxWidth: { lg: 500, md: 400, sm: 350, xs: 200, xl: 700 },
-          }}
-        >
           <HolidaysForm
             data={editopen ? editData : undefined}
             apiFun={open ? addHolidays : handleEdit}
@@ -314,7 +301,6 @@ function Holidays() {
             error={serverError}
             btnName={open ? "Save" : "Save Changes"}
           />
-        </Box>
       </CommonModal>
 
       <DltndConf

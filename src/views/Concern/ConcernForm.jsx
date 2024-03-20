@@ -100,7 +100,6 @@ function ConcernForm(props) {
                 label="Concern Title"
                 name="concern_title"
                 size="small"
-                focused
                 defaultValue={data?.concern_title}
                 error={errors && errors?.concern_title}
                 control={control}
@@ -115,7 +114,6 @@ function ConcernForm(props) {
                 label="Message"
                 name="message"
                 size="small"
-                focused
                 multiline
                 rows={3}
                 defaultValue={data?.message}

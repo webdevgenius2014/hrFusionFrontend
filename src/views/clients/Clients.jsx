@@ -423,26 +423,9 @@ const Clients = () => {
       <CommonModal
         isOpen={open || editopen}
         isClose={open ? handleClose : handleEditClose}
+        title={open ?  'Add Client' : 'Edit Client'}
       >
-        <Typography
-          id="modal-modal-title"
-          variant="h6"
-          component="h2"
-          sx={{ marginBottom: "20px", fontWeight: "600" }}
-        >
-          {open ? "Add Client" : "Edit Client"}
-        </Typography>
-        <Box
-          sx={{
-            mb: 2,
-            width: 850,
-            display: "flex",
-            height: 440,
-            flexDirection: "column",
-            overflow: "hidden",
-            overflowY: "scroll",
-          }}
-        >
+       
           <ClientsForm
             apiFunc={open ? handleAddClients : handleClientEdit}
             getAddChannel={getAddChannel}
@@ -451,7 +434,7 @@ const Clients = () => {
             serverError={serverError}
             btnName={open ? "Save" : "Save Changes"}
           />
-        </Box>
+       
       </CommonModal>
 
       {/* delete client  uplod csv file*/}
