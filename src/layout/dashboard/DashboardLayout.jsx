@@ -281,7 +281,7 @@ const DashboardLayout = () => {
             </IconButton>
           </Toolbar>
           <Divider />
-          <Sidenav />
+          <Sidenav  open={open} />
         </Drawer>
         <Box
           component="main"
@@ -319,7 +319,7 @@ const DashboardLayout = () => {
         </Box>
         
       </Box>
-      <CommonModal isOpen={openChnPass} isClose={handlePassClose}>
+       <CommonModal isOpen={openChnPass} isClose={handlePassClose}>
         <Typography
           id="modal-modal-title"
           variant="h6"

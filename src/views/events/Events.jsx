@@ -157,18 +157,18 @@ const MyCalendar = (props) => {
   }, []);
 
   const onSelectEvent = useCallback((calEvent) => {
-    if(userRole === 'Admin'|| userRole === 'HR' || userRole === 'Team Leader'){
+    // if(userRole === 'Admin'|| userRole === 'HR' || userRole === 'Team Leader'){
     setEventData(calEvent);
     window.clearTimeout(clickRef?.current);
     clickRef.current = window.setTimeout(() => {}, 250);
     handleEditOpen();
-    }
+    // }
   }, []);
 
   const clickRef = useRef(null);
 
   const onSelectSlot = useCallback((slotInfo) => {
-    if(userRole === 'Admin'|| userRole === 'HR' || userRole === 'Team Leader'){
+    // if(userRole === 'Admin'|| userRole === 'HR' || userRole === 'Team Leader'){
       window.clearTimeout(clickRef?.current);
       clickRef.current = window.setTimeout(() => {
         // window.alert(slotInfo)
@@ -176,7 +176,7 @@ const MyCalendar = (props) => {
         setEventData(() => slotInfo);
         handleOpen();
       }, 250);
-    }
+    // }
   }, []);
 
   useEffect(() => {

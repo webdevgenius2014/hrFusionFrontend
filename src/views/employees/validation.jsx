@@ -39,16 +39,13 @@ export const addValidation = Yup.object().shape({
   department: Yup.string().required('Please select an option'),
   role: Yup.string().required('Please select an option'),
   designation: Yup.string().required('Please select an option'),
-  profile_image: Yup
-  .mixed()
-  .required("Required")
-  .test("is-valid-type", "Not a valid image ",
-    value => isValidFileType(value && value.name.toLowerCase(), "image"))
-  .test("is-valid-size", "Max allowed size is 2Mb",
-    value => value && value.size <= maxImageSize), 
-
-
-
+  profile_image:Yup.mixed().test('fileType', 'Invalid file format', (value) => {
+    if (typeof value === 'string') return true; 
+    return value && ['image/jpeg', 'image/png', 'image/gif'].includes(value.type);
+  }).test('fileSize', 'Max size 2 Mb', (value) => {
+    if (typeof value === 'string') return true;
+    return value && value.size <= 1024 * 1024 * 2; 
+  }),
 });
 
 export const editValidation = Yup.object().shape({
@@ -69,15 +66,11 @@ export const editValidation = Yup.object().shape({
   department: Yup.string().required('Please select an option'),
   role: Yup.string().required('Please select an option'),
   designation: Yup.string().required('Please select an option'),
-  // profile_image: Yup.string().required("Profile Image is required"),
-  // profile_image: Yup
-  // .mixed()
-  // .required("Required")
-  // .test("is-valid-type", "Not a valid image ",
-  //   value => isValidFileType(value && value.name.toLowerCase(), "image"))
-  // .test("is-valid-size", "Max allowed size is 2Mb",
-  //   value => value && value.size <= maxImageSize), 
-
-
-
+  profile_image:Yup.mixed().test('fileType', 'Invalid file format', (value) => {
+    if (typeof value === 'string') return true; 
+    return value && ['image/jpeg', 'image/png', 'image/gif'].includes(value.type);
+  }).test('fileSize', 'Max size 2 Mb', (value) => {
+    if (typeof value === 'string') return true;
+    return value && value.size <= 1024 * 1024 * 2; 
+  }),
 });

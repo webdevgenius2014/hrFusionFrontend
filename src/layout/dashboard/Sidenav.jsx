@@ -3,10 +3,10 @@ import List from '@mui/material/List';
 import { MainListItems } from './listItems';
 
 
-const Sidenav = () => {
+const Sidenav = (props) => {
   return (
     <List component="nav">
-    <MainListItems />     
+    <MainListItems open={props?.open} />     
     </List>
   )
 }

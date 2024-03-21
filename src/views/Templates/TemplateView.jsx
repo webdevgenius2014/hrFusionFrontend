@@ -1,6 +1,5 @@
 import React from "react";
 import CommonModal from "../../components/modal/commonModal";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import parser from "react-html-parser";
 import Button from "@mui/material/Button";

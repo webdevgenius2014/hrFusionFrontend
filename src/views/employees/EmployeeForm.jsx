@@ -15,16 +15,16 @@ import { FormInputPassword } from "../../components/form-components/formInputPas
 import EmpDocView from "./EmpDocView";
 
 const EmployeesForm = (props) => {
-  const [data] = useState(() => props?.data);
-  let showRole = props?.showRole;
-  console.log("emp edit", data);
-  const [files, setFiles] = useState(props?.data?.documents || []);
-  const [showDesig, setShowDesig] = useState(props?.showDesig);
-  console.log(files, "files");
+  const [data] = useState(() => props?.data?.row?.user_meta);
+  const [showDesig, setShowDesig] = useState(props?.data?.row?.user_meta?.designation?.designation_name);
+  
+  console.log(props?.data);
+  const [files, setFiles] = useState(props?.data?.row?.user_meta?.documents || []);
   const [viewingIndex, setViewingIndex] = useState(null);
   const openDocView = (index) => {
     setViewingIndex(index);
   };
+  
   const closeDocView = () => {
     setViewingIndex(null);
   };
@@ -36,7 +36,7 @@ const EmployeesForm = (props) => {
     setValue,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(props.data ? editValidation : addValidation),
+    resolver: yupResolver(props?.data ? editValidation : addValidation),
     defaultValues: {
       first_name: data?.first_name,
       last_name: data?.last_name,
@@ -47,15 +47,23 @@ const EmployeesForm = (props) => {
       dob: data?.dob,
       phone: data?.phone,
       designation: data?.designation_id,
-      role: showRole,
+      role: props?.data?.row?.user_role?.role,
       department: data?.department_id,
       profile_image: data?.profile_image,
       documents: data?.documents,
       editForm: props?.editForm || false,
+      department_name : data?.department?.department_name,
     },
   });
 
+  useEffect(()=>{
+    if(props?.editForm){
+      props?.desByDepFn({department_id:data?.department_id})
+    }
+  },[])
+
   useEffect(() => {
+    
     if (props?.serverError) {
       Object.keys(props.serverError).forEach((field) => {
         console.log(field);
@@ -262,7 +270,7 @@ const EmployeesForm = (props) => {
                   control={control}
                   fieldaname="role"
                   error={errors && errors?.role}
-                  def={props?.showRole}
+                  def={props?.data?.row?.user_role?.role}
                 />
               )}
             </Grid>
@@ -375,9 +383,10 @@ const EmployeesForm = (props) => {
                       {file?.filename}
                     </span>
                     {files.length - 1 > index && <span> , </span>}
-                    <CommonModal
+                    <CommonModal 
                       isOpen={viewingIndex === index}
                       isClose={closeDocView}
+                      title={file?.filename}
                     >
                       <EmpDocView doc={file} />
                     </CommonModal>

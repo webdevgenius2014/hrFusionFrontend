@@ -48,7 +48,7 @@ const Deartments = () => {
         }
         if (res.status === 200 && res?.data?.success === false) {
           setFormLoader(false);
-          setGetdep([]);
+          setGetdep(res?.data?.messages);
         }
         if (res.status === 401) {
           dispatch(superAdminLogout());
@@ -269,11 +269,12 @@ const Deartments = () => {
           columns={columns}
           totalPages={totalPages}
           setPage={setPage}
+          noData={getdep}
         />
         {/* checkboxSelection  upline */}
       </Container>
       
-      <CommonModal isOpen={open || editopen} isClose={()=> handleClose() ||handleEditClose()} 
+      <CommonModal isOpen={open || editopen} isClose={()=> handleClose() || handleEditClose()} 
       title={open === true ? 'Add Department'  : 'Edit Department'}>
         <DepartmentForm
         dep_name={editopen ? dep_name : null}

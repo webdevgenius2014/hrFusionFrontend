@@ -104,7 +104,7 @@ const publicRoutes = [
         element: <ResetPassword />,
       },
       {
-        path: "/*",
+        path: "*",
         element: <Error />,
       },
     ],
@@ -212,6 +212,10 @@ const privateRoutes = [
       {
         path: "/concern",
         element: <Concern />,
+      },
+      {
+        path: "/*",
+        element: <Error />,
       },
     ],
   },

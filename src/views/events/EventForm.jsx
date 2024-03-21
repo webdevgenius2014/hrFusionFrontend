@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import dayjs from "dayjs";
-import Box from "@mui/material/Box";
+import {Box,Grid} from "@mui/material";
 import { Buttons } from "../../components/Buttons/AllButtons";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -81,7 +81,14 @@ const [eDateError,setEDateError]=useState()
 
   return (
     <>
-      <form noValidate onSubmit={handleSubmit(handleData)}>
+    <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(handleData)}
+          sx={{ mt: 1, mx: 1 }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} >
         <FormInputText
           required
           fullWidth
@@ -94,6 +101,8 @@ const [eDateError,setEDateError]=useState()
           control={control}
           autoComplete="family-name"
         />
+        </Grid>
+        <Grid item xs={12}>
         <FormInputText
           required
           fullWidth
@@ -106,6 +115,8 @@ const [eDateError,setEDateError]=useState()
           control={control}
           autoComplete="family-name"
         />
+        </Grid>
+        <Grid item xs={12} >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["DateTimePicker"]}>
             <DateTimePicker
@@ -120,23 +131,32 @@ const [eDateError,setEDateError]=useState()
                 },
               }}
             />
-            <DateTimePicker
-              label="Event End"
-              onOpen={isDatePickerOpen} onClose={handleClose}
-              
-              // eslint-disable-next-line no-mixed-operators
-              defaultValue={dayjs(end && end !== undefined || end !== null ? end : start)}
-              onChange={handleEndDate}
-              slotProps={{
-                textField: {
-                  size: "small",
-                    error: !!eDateError,
-                    helperText: eDateError && `${ eDateError?.message}`
-                },
-              }}
-            />
+          
           </DemoContainer>
         </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["DateTimePicker"]}>
+          <DateTimePicker
+          label="Event End"
+          onOpen={isDatePickerOpen} onClose={handleClose}
+          
+          // eslint-disable-next-line no-mixed-operators
+          defaultValue={dayjs(end && end !== undefined || end !== null ? end : start)}
+          onChange={handleEndDate}
+          slotProps={{
+            textField: {
+              size: "small",
+                error: !!eDateError,
+                helperText: eDateError && `${ eDateError?.message}`
+            },
+          }}
+        />
+          </DemoContainer>
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} >
         <Box sx={{display:'flex'}}>
         <SubmitButton loading={props.loading} btnName={props?.btnName} />
        {subject && subject !== undefined && subject !== null &&
@@ -150,7 +170,9 @@ const [eDateError,setEDateError]=useState()
        }
         
         </Box>
-      </form>
+        </Grid>
+        </Grid>
+      </Box>
     </>
   );
 };

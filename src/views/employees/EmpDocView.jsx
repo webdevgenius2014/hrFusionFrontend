@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Box } from '@mui/system';
 import React,{useEffect, useState} from 'react';
 
 const GoogleDocumentViewer = (props) => {
@@ -38,10 +39,9 @@ console.log(props?.doc?.file)
   }, []);
 
   return (
-    <div>
-    <h3>Preview:</h3>
+    <>
     {previewUrl && (
-      <div>
+      <Box>
         {getFileType(file?.name) === 'pdf' && (
           <embed src={previewUrl} type="application/pdf" width="100%" height="500px" />
         )}
@@ -51,9 +51,9 @@ console.log(props?.doc?.file)
         {getFileType(file?.name) === 'image' && (
           <img src={previewUrl} alt="Preview" style={{ maxWidth: '100%' }} />
         )}
-      </div>
+      </Box>
     )}  
-    </div>
+    </>
     );
 };
 

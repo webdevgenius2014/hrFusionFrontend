@@ -29,7 +29,7 @@ export const FormDate = ({
     });
   };
   let defaultDate='';
-  if(d_value !== undefined ||d_value !== null || d_value !== ' '  ){
+  if(d_value !== undefined   ){
     defaultDate =dayjs(d_value)
   }else
   {
