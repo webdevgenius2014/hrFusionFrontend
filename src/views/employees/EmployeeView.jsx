@@ -9,14 +9,20 @@ import dateFormat from "dateformat";
 import { useLocation } from "react-router-dom";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { Box } from "@mui/system";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const EmployeeView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // break points 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
+
   const url = useLocation();
   let location = url.pathname?.split("/")[1];
-  console.log(location);
   const apiURL = `${process.env.REACT_APP_API_BASE_URL}/`;
   const [viewEmployees, setViewEmployees] = useState({});
   const [feedback, setFeedback] = useState();
@@ -57,10 +63,12 @@ const EmployeeView = () => {
         <Box>
           <Grid
             container
-            spacing={2}
-            sx={{ paddingBottom: 3, paddingTop: 3, background: "aliceblue" }}
+            // spacing={2}
+            sx={{ paddingY:2,margin:'auto',
+             background: "aliceblue" ,fontSize:isSmallScreen ? '11px' :'' }}
           >
-            <Grid item xs={4}>
+            {/* Profile Image */}
+            <Grid item xs={12} sm={3}>
               <CardMedia
                 sx={{
                   height: 150,
@@ -70,101 +78,102 @@ const EmployeeView = () => {
                   margin: "auto",
                   border: "1px solid #dee2e6",
                 }}
-                image={`${apiURL}${viewEmployees?.user_meta?.profile_image} `}
-                title="green iguana"
+                image={`${apiURL}${viewEmployees?.user_meta?.profile_image}`}
+                title="Profile Image"
               />
             </Grid>
 
+            {/* Employee Details */}
             <Grid
               item
-              xs={8}
-              style={{
-                display: "flex",
-                alignContent: "center",
-                flexWrap: "wrap",
-              }}
+              sx={{margin:'auto 0 auto 20px',marginLeft:isMediumScreen ?'25px': "",
+              marginTop:isSmallScreen ?'15px': ""}}
+              xs={12}
+              sm={8}
+              container
+              direction="column"
+              justifyContent="center"
+              
             >
-              <Grid item xs={12}>
-                <h2 style={{ margin: "auto" }}>
+              {/* Name and Email */}
+              <Grid item xs={12} sx={{textAlign:isSmallScreen ?'center':''}}>
+                <h2 style={{margin:'1px'}}>
                   {location === "employeesFeedback"
                     ? `${viewEmployees?.user_meta?.first_name} ${viewEmployees?.user_meta?.last_name}`
                     : viewEmployees?.name}
                 </h2>
                 <span
-                  style={{ color: "#0000EE" }}
+                  style={{margin:'1px', color: "#0000EE", cursor: "pointer" }}
                   onClick={() =>
-                    (window.location = "mailto:yourmail@domain.com")
+                    (window.location = `mailto:${viewEmployees?.email}`)
                   }
                 >
                   {location === "employeesFeedback"
-                    ? viewEmployees?.user_meta?.email +
-                      viewEmployees?.user_meta?.last_name
+                    ? `${viewEmployees?.user_meta?.email} ${viewEmployees?.user_meta?.last_name}`
                     : viewEmployees?.email}
                 </span>
+                <p style={{ fontWeight: 600 ,marginTop:'5px'}}>
+                  Mob. {viewEmployees?.user_meta?.phone}
+                </p>
               </Grid>
 
-              <Grid container spacing={0} sx={{ paddingTop: "10px" }}>
-                <Grid item xs={4}>
-                  <span style={{ fontWeight: 600 }}>
-                    Mob. {viewEmployees?.user_meta?.phone}{" "}
-                  </span>
-                </Grid>
-              </Grid>
-            </Grid>
+             </Grid>
           </Grid>
+
           <Box
             sx={{
               background: "#E2EAF5",
               padding: "10px 10px",
               borderRadius: "10px",
               marginTop: "10px",
+              fontSize:isSmallScreen ? '14px' :''
             }}
           >
             Employee Detail
           </Box>
-          <Grid container spacing={0} sx={{ padding: 2 }}>
+          <Grid container spacing={0} sx={{ padding: 2 ,fontSize:isSmallScreen ? '11px' :''}}>
             <Grid item xs={12}>
               <Grid container spacing={1}>
-                <Grid item xs={2}>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}>User Role :</span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>{viewEmployees?.user_role?.role}</span>
-                </Grid> 
-                <Grid item xs={2}>
+                </Grid>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}>Employee Id :</span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>{viewEmployees?.user_meta?.employee_id}</span>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}> Department :</span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>
                     {viewEmployees?.user_meta?.department?.department_name}{" "}
                   </span>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}> Designation : </span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>
                     {viewEmployees?.user_meta?.designation?.designation_name}
                   </span>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}> Date of Birth :</span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>
                     {dateFormat(viewEmployees?.user_meta?.dob, "dd/mmm/yyyy")}{" "}
                   </span>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}>Joining Date :</span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>
                     {" "}
                     {dateFormat(
@@ -173,10 +182,10 @@ const EmployeeView = () => {
                     )}
                   </span>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={5} sm={4} md={2}>
                   <span style={{ fontWeight: 600 }}> Uername :</span>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={7} sm={8} md={4}>
                   <span>{viewEmployees?.user_meta?.username} </span>
                 </Grid>
               </Grid>
@@ -197,11 +206,7 @@ const EmployeeView = () => {
             </>
           )}
           {location === "employeesFeedback" && (
-            <Grid
-              container
-              spacing={0}
-              sx={{ padding: 2 }}
-            >
+            <Grid container spacing={0} sx={{ padding: 2 }}>
               <Grid item xs={12}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
@@ -239,4 +244,4 @@ export default EmployeeView;
 //     );
 //   })}{" "}
 // </span>
-// </Grid>
+// </Grid>  

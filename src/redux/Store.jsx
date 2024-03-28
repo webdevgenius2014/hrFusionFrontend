@@ -1,17 +1,15 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import SuperAdmin from "./SuperAdminSlice";
-import DepRole from "./DepRoleSlice";
 import { PERSIST, persistReducer, persistStore } from "redux-persist";
-import localStorage from "redux-persist/lib/storage";
+import Storage from "redux-persist/lib/storage";
  
 const reducers = combineReducers({
   SuperAdmin,
-  DepRole,
 });
 
 const persistConfig = {
   key: "root",
-  storage: localStorage,
+  storage: Storage,
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

@@ -17,9 +17,16 @@ import { DatagridHeader } from "../../../components/dataGrid/DatagridHeader";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import GeneralServices from "../../../services/GeneralServices";
 import { DocumentForm } from "./DocumentForm";
+import { useTheme } from '@mui/material/styles';
+import Menu3Dot from '../../../components/Menu3Dot';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export const DocumentsSettings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formLoader, setFormLoader] = useState(false);
   const [page, setPage] = useState(1);
@@ -199,13 +206,12 @@ export const DocumentsSettings = () => {
     <Container style={{ padding: 0 }}>
       <Box>
         <DatagridHeader name={"Documents  "}>
-          <AddButton
-            startIcon={<AddIcon />}
-            variant="contained"
-            onClick={handleOpen}
-          >
-            Add
-          </AddButton>
+        {isSmallScreen ? <>
+          <Menu3Dot option={[{value:'Add Documents',onClick:handleOpen}]}/>
+          </>
+          :
+          <AddButton onClick={handleOpen}>Add Documents</AddButton>
+        }
         </DatagridHeader>
         <CommonModal
           isOpen={open || editopen}

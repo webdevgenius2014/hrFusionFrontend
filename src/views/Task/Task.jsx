@@ -19,7 +19,9 @@ import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { CustomPagination } from "../../components/CustomPagination";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
-import { Table, TableBody, TableCell, TableHead, TableRow, Checkbox } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import Menu3Dot from '../../components/Menu3Dot';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import {
   allDesignations,
@@ -30,6 +32,9 @@ import {
 function Task() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [serverError, setServerError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -329,13 +334,17 @@ function Task() {
     <>
       <Box>
         <DatagridHeader name={"Task List"}>
+        {isSmallScreen ? <>
+          <Menu3Dot option={[{value:'Add Task',onClick:handleOpen}]}/>
+          </>
+          :
           <AddButton
-            startIcon={<AddIcon />}
-            variant="contained"
             onClick={handleOpen}
           >
             Add Task
           </AddButton>
+        }
+          
         </DatagridHeader>
       </Box>
 

@@ -25,7 +25,7 @@ import {
   allClients,
   allEmployees,
 } from "../../helperApis/HelperApis";
-import Loader from "../../components/Loader";
+import Loader from "../../components/Loader"; 
 const Projects = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

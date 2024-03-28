@@ -2,6 +2,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import Router from './routes/Router'
 import { useRoutes } from 'react-router-dom';
 import {defaultTheme} from './theme/theme'
+import CssBaseline from '@mui/material/CssBaseline';
 
 import './styles/custom.css';
 
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
     <ThemeProvider theme={theme}>
+      <CssBaseline />
         {routing}
       </ThemeProvider>
     </>

@@ -8,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import Loader from "../../components/Loader";
 import SearchIcon from "@mui/icons-material/Search";
@@ -24,10 +23,20 @@ import { AddButton, Buttons } from "../../components/Buttons/AllButtons";
 import { DemoCsv } from "../../helperFunctions/HelperFunction"; 
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
 import { ButtonBase } from "@material-ui/core";
+import Menu from '@mui/material/Menu';
+import { useTheme } from '@mui/material/styles';
+import { IconButton,MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Clients = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
 
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
@@ -319,59 +328,111 @@ const Clients = () => {
     setServerError(null);
   };
 
- 
+  const [anchorEl, setAnchorEl] = useState(null);
 
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
 
 
       <Container style={{ padding: 0 }}>
-        <DatagridHeader name={"Clients"}>
+        <DatagridHeader name={"Clients"} >
+        { isSmallScreen ? <Box >
           <>
-            {!srchbtn ? (
-              <Buttons
-                onClick={() => {
-                  handleSearchOpen(true);
-                  setSerchBtn(true);
-                }}
-                startIcon={<SearchIcon />}
-                variant="contained"
-              >
-                Search
-              </Buttons>
-            ) : (
-              <Buttons
-                onClick={() => {
-                  getClientsfn();
-                  setSerchBtn(false);
-                  handleSearchClose();
-                }}
-                variant="contained"
-              >
-                Clear Search
-              </Buttons>
-            )}
+      <IconButton onClick={handleMenuOpen} aria-label="Menu">
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        id="menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+      <MenuItem
+      onClick={() => {
+        handleOpen();
+        handleMenuClose();
+      }}
+    >
+    <AddIcon />
+       Add Clients
+    </MenuItem>
+        {searchFlag ? (
+          <MenuItem onClick={()=>{handleSearchClose();handleMenuClose();}}> Clear Search</MenuItem>
+        ) : (
+          <MenuItem onClick={()=>{handleSearchOpen();handleMenuClose();}  }> Search</MenuItem>
+        )}
+        <MenuItem
+        onClick={() => {
+          DemoCsv("download/ClientCsc.csv");
+          handleMenuClose();
+        }}
+      >
+        Sample Csv
+      </MenuItem>
+        <MenuItem>
+          <CsvUploadBtn
+            setCsvFile={setCsvFile}
+            handleConfirmOpne={handleConfirmOpne}
+          />
+        </MenuItem>
+        
+      </Menu>
+    </>
+          </Box>
+          :
+            <>
+              {!srchbtn ? (
+                <Buttons
+                  onClick={() => {
+                    handleSearchOpen(true);
+                    setSerchBtn(true);
+                  }}
+                  startIcon={<SearchIcon />}
+                  variant="contained"
+                >
+                  Search
+                </Buttons>
+              ) : (
+                <Buttons
+                  onClick={() => {
+                    getClientsfn();
+                    setSerchBtn(false);
+                    handleSearchClose();
+                  }}
+                  variant="contained"
+                >
+                  Clear Search
+                </Buttons>
+              )}
 
-            <AddButton
-              startIcon={<AddIcon />}
-              variant="contained"
-              onClick={handleOpen}
-            >
-              Add
-            </AddButton>
-            
-            <CsvUploadBtn
-              setCsvFile={setCsvFile}
-              handleConfirmOpne={handleConfirmOpne}
-            />
-            <Buttons
-              variant="contained"
-              onClick={() => DemoCsv("download/ClientCsc.csv")}
-            >
-              Sample Csv
-            </Buttons>
-          </>
+              <AddButton
+                startIcon={<AddIcon />}
+                variant="contained"
+                onClick={handleOpen}
+              >
+                Add
+              </AddButton>
+              
+              <CsvUploadBtn
+                setCsvFile={setCsvFile}
+                handleConfirmOpne={handleConfirmOpne}
+              />
+              <Buttons
+                variant="contained"
+                onClick={() => DemoCsv("download/EmployeeCsv.csv")}
+              >
+                Sample Csv
+              </Buttons>
+            </>}
         </DatagridHeader>
         {searchFlag && searchFlag === true && (
           <Searching

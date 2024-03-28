@@ -14,8 +14,16 @@ import { TemplateView } from "./TemplateView";
 import parser from "react-html-parser";
 import {useSelector  } from "react-redux";
 import {superAdminData} from "../../redux/SuperAdminSlice";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 
 const TemplateCard = (props) => {
+    // break points 
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+    const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));  
 
     // user role 
     const userData = useSelector(superAdminData);
@@ -39,10 +47,12 @@ const TemplateCard = (props) => {
   return (
     <>
       <Card
-        sx={{ minWidth: 470, maxWidth: 400 }}
-        xs={12}
-        sm={12}
-        md={6}
+      sx={{
+        width: isSmallScreen ? "100%" : (isMediumScreen ? "220px" : isLargeScreen ?"550px" :330),
+        margin:'5px',
+        minWidth: isSmallScreen ? 0 : (isMediumScreen ? 0 : 0),
+        maxWidth: isSmallScreen ? 340 : (isMediumScreen ? 740 : 700),
+         borderRadius:3}}
         variant="outlined"
       >
         <Box

@@ -28,7 +28,9 @@ export default function CsvUploadBtn({setCsvFile,handleConfirmOpne}) {
     variant="contained"
     onClick={handleButtonClick}
     // onClick={props?.onClick}
-    sx={{ mt: 3, mb: 2, px: 3, display: "flex", margin: "8px auto 8px auto", background:'#5D87FF ' }}
+    sx={{ mt: 3, mb: 2, px: 3, display: "flex", margin: "8px auto 8px auto", background:'#5D87FF ',
+    boxShadow:'0px 4px 20px 0px #5D87FF8C'
+  }}
   >
    Upload Csv file
   </Button>

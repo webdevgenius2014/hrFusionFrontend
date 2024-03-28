@@ -22,17 +22,11 @@ export const superAdminSlice = createSlice({
       state.status = action.payload.status;
       state.token = action.payload.token;
     },
-    superAdminLogout:(state,action) => {
-      state.id = undefined;
-      state.name = undefined;
-      state.email = undefined;
-      state.role = undefined;
-      state.status = undefined;
-      state.token = undefined;
+    superAdminLogout: (state, action) => {
+      Object.assign(state, initialState);
       sessionStorage.clear();
       localStorage.clear();
-      // persistor.purge();
-    } ,
+    },
 
     
   },

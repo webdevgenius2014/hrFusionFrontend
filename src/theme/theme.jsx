@@ -1,19 +1,36 @@
 import { createTheme } from '@mui/material/styles';
 
 const defaultTheme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
   overrides: {
-   
     MuiCssBaseline: {
       '@global': {
         '*::-webkit-scrollbar': {
-          width: '20px',
-          color:'black', 
+          width:'10px', 
+          background: 'black', 
         },
         '*::-webkit-scrollbar-thumb': {
-          backgroundColor: '#ff4081', 
-          borderRadius: '6px',
+          backgroundColor:'#ff4081', 
+          borderRadius: '10px',
+        },  
+        '*::-webkit-scrollbar-thumb:hover': {
+          backgroundColor:'#ff6699', 
         },
-        // Add more styles as needed
+        '*::-webkit-scrollbar-track': {
+          background:'#ebebeb',
+          borderRadius:'10px', 
+        },
+        '*::-webkit-scrollbar-corner': {
+          background: 'transparent', 
+        },
       },
     },
   },
@@ -40,12 +57,6 @@ const defaultTheme = createTheme({
             "boxShadow": "1px 1px 1px rgba(0.2, 0.2, 0.2, 0.3)"
           }
         },       
-      },
-    },
-    
-    MuiCssBaseline: {
-      styleOverrides: {
-        // Add more style overrides as needed
       },
     },
   },

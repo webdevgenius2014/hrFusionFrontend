@@ -1,22 +1,19 @@
 import React, { useState, useMemo } from "react";
 import { Card, Box } from "@mui/material/";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import {
-  department,
-  designations,
-  Employees,
-  Clients,
-} from "../../components/Svg/AllSvgFiles";
-import {
-  hr,
-  team_Managers,
-  team_Leaders,
-  Projects,
-} from "../../components/Svg/AllSvgFiles";
+import {department,designations,Employees,Clients,} from "../../components/Svg/AllSvgFiles";
+import {hr,team_Managers,team_Leaders,Projects,} from "../../components/Svg/AllSvgFiles";
 import { Link } from "react-router-dom";
 
 const DashboardCard = (props) => {
+  const theme = useTheme();
+const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
   // get dashboard values and key seprate them
   const key = Object.keys(props.data)[0];
   const value = props.data[key];
@@ -56,11 +53,17 @@ const DashboardCard = (props) => {
 
   return (
     <>
-      <Card
-        sx={{ minWidth: 230, border: "1px solid #DFEAF2" }}
-        variant="outlined"
-      >
-        <CardContent>
+    <Card
+     sx={{
+      display: 'flex',
+      width: isSmallScreen ? "100%" : (isMediumScreen ? "200px" : 275),
+      margin:'5px',
+      minWidth: isSmallScreen ? 0 : (isMediumScreen ? 0 : 0),
+      maxWidth: isSmallScreen ? 340 : (isMediumScreen ? 340 : 400),
+  }}
+     variant="outlined"
+  >
+        <CardContent sx={{width:'100%'}}>
           <Typography variant="div" component="div">
             <h4 style={{ margin: "auto", color: "#647691" }}>{key}</h4>
           </Typography>
@@ -69,8 +72,8 @@ const DashboardCard = (props) => {
             <h2 style={{ margin: "auto" }}>{value}</h2>
           </Typography>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+          <Box sx={{ display: "flex", margin:'auto', justifyContent: "space-between" }}>
+            <Box sx={{ display: "flex", alignItems:"flex-end" }}>
               <Link
                 style={{
                   fontSize: "14px",
@@ -79,11 +82,10 @@ const DashboardCard = (props) => {
                 }}
                 to={link}
               >
-                {" "}
                 See All
               </Link>
             </Box>
-            <Box>{svg}</Box>
+          <Box>{svg}</Box>
           </Box>
         </CardContent>
       </Card>

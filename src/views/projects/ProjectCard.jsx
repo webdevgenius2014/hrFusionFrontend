@@ -11,8 +11,17 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Grid, Box } from "@mui/material/";
 import { useNavigate } from "react-router-dom";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 export const ProjectCard = (props) => {
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+
+  
   const navigate = useNavigate();
   const data = props?.data;
   const [daysLeft, setDaysLeft] = React.useState();
@@ -43,15 +52,18 @@ export const ProjectCard = (props) => {
 
   return (
     <Card
-      columns={{ xs: 4, sm: 8, md: 12 }}
-      style={{
-        width: "100%",
-        maxWidth: "300px",
-        padding: "16px",
-        position: "relative",
-        borderRadius: "10px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      }}
+    sx={{
+      width: isSmallScreen ? "100%" : (isMediumScreen ? "205px" : isLargeScreen ?"320px" : 215),
+      minWidth: isSmallScreen ? 0 : (isMediumScreen ? 0 : 0),
+      maxWidth: isSmallScreen ? 440 : (isMediumScreen ? 440 : 450),
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      borderRadius: "10px",
+      padding: "16px",
+      borderRadius: "10px",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+
+
+       }}
     >
       <Box
         sx={{

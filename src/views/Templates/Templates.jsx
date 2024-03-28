@@ -15,12 +15,16 @@ import { DltndConf } from "../../components/modal/Dlt-Conf-Modal";
 import { CustomPagination } from "../../components/CustomPagination";
 import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
-
+import { useTheme } from '@mui/material/styles';
+import Menu3Dot from '../../components/Menu3Dot';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Templates = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [page, setPage] = useState(1);
   const [noRecord, setNoRecord] = useState();
@@ -179,9 +183,12 @@ const Templates = () => {
     <>
       <Container style={{ padding: 0 }}>
         <DatagridHeader name={"Templates"}>
-          <>
-            <AddButton onClick={handleOpen}>Add</AddButton>
+        {isSmallScreen ? <>
+          <Menu3Dot option={[{value:'Add Template',onClick:handleOpen}]}/>
           </>
+          :
+          <AddButton onClick={handleOpen}>Add Template</AddButton>
+        }
         </DatagridHeader>
         <Box>
           <Box

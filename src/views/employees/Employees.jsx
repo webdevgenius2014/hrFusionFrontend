@@ -482,6 +482,7 @@ const Employees = () => {
             filedName={["employee_id", "employee_name"]}
             getDesig={getDesig}
             apiFun={searchEmployee}
+            date='true'
           />
         )}
 

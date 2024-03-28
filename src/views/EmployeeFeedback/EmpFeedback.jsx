@@ -17,10 +17,16 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import EmployeServices from '../../services/EmployeServices'
 import {allEmployees,} from "../../helperApis/HelperApis";
+import { useTheme } from '@mui/material/styles';
+import Menu3Dot from '../../components/Menu3Dot';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 function EmpFeedback() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [page, setPage] = useState(1);
     const [formLoader, setFormLoader] = useState(false);
@@ -175,8 +181,6 @@ function EmpFeedback() {
         },
       ];
 
-    
-
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {setOpen(false);};
@@ -192,15 +196,12 @@ function EmpFeedback() {
     <Box>
     <DatagridHeader name={"Employees Feedback"}>
     <>
-        <Tooltip title="Sort Leaves By ">
-        <AddButton
-        startIcon={<AddIcon />}
-        variant="contained"
-        onClick={handleOpen}
-      >
-        Add Fields
-      </AddButton>
-          </Tooltip>          
+    {isSmallScreen ? <>
+      <Menu3Dot option={[{value:'Add Feedback',onClick:handleOpen}]}/>
+      </>
+      :
+      <AddButton onClick={handleOpen}>Add Feedback</AddButton>
+    }
           </>
     </DatagridHeader>
     

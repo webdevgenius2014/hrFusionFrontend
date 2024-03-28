@@ -114,16 +114,16 @@ const ProjectView = () => {
               </Grid>
               <Grid item sx={{ fontSize: "12px" }} xs={12}>
                 <Grid container spacing={1}>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={2} lg={2}>
                     <span style={{ fontWeight: 600 }}> Language:</span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                  <Grid item xs={6} sm={6} md={4} lg={4}>
                     <span>{viewProject?.language} </span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={2} lg={2}>
                     <span style={{ fontWeight: 600 }}> Status</span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                  <Grid item xs={6} sm={6} md={4} lg={4}>
                     <span>
                       {" "}
                       {viewProject?.status === 0
@@ -133,16 +133,16 @@ const ProjectView = () => {
                         : " On hold"}
                     </span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={2} lg={2}>
                     <span style={{ fontWeight: 600 }}> Team Lead </span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                  <Grid item xs={6} sm={6} md={4} lg={4}>
                     <span>{viewProject?.team_lead?.name} </span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={2} lg={2}>
                     <span style={{ fontWeight: 600 }}>Team Members</span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                  <Grid item xs={6} sm={6} md={4} lg={4}>
                     <span>
                       {" "}
                       {viewProject?.team_members?.map((itr, index) => {
@@ -157,18 +157,18 @@ const ProjectView = () => {
                       })}
                     </span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={2} lg={2}>
                     <span style={{ fontWeight: 600 }}> Deadline</span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={4}>
+                  <Grid item xs={6} sm={6} md={4} lg={4}>
                     <span>
                       {dateFormat(viewProject?.deadline, "dd/mmm/yyyy")}{" "}
                     </span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={2} lg={2}>
                     <span style={{ fontWeight: 600 }}>Payment Status</span>
                   </Grid>
-                  <Grid item xs={6} sm={6} md={6} lg={2}>
+                  <Grid item xs={6} sm={6} md={4} lg={2}>
                     <span>{viewProject?.payment_status}</span>
                   </Grid>
                 </Grid>

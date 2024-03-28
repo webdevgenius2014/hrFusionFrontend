@@ -1,9 +1,9 @@
 import { alpha, styled } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
-
 const ODD_OPACITY = 0.2;
- export const GridStyle = styled(DataGrid)(({ theme }) => ({
+
+export const GridStyle = styled(DataGrid)(({ theme }) => ({
   [`& .${gridClasses.row}.even`]: {
     backgroundColor: theme.palette?.grey[200],
     '&:hover, &.Mui-hovered': {
@@ -19,7 +19,6 @@ const ODD_OPACITY = 0.2;
       lineHeight: "unset !important",
       maxHeight: "none !important",
       whiteSpace: "normal",
-      
     },
     "& .MuiDataGrid-row": {
       maxHeight: "none !important"
@@ -43,11 +42,8 @@ const ODD_OPACITY = 0.2;
             ODD_OPACITY + theme.palette.action.selectedOpacity,
           ),
         },
-
       },
     },
   },
- 
-}
-
-))
+}));
+  

@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import DesignationForm from "./DesignationForm";
 import CommonModal from "../../components/modal/commonModal";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
-import {AddButton} from  '../../components/Buttons/AllButtons';
+import { AddButton } from "../../components/Buttons/AllButtons";
 import AddIcon from "@mui/icons-material/Add";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,17 +20,23 @@ import { useDispatch } from "react-redux";
 import { superAdminLogout } from "../../redux/SuperAdminSlice";
 import { getAllDepartmentfn } from "../../helperApis/HelperApis";
 import "react-toastify/dist/ReactToastify.css";
+import Menu3Dot from '../../components/Menu3Dot';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Designations = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [totalPages, setTotalPages] = useState();
   const [page, setPage] = useState(1);
   const [serverError, setServerError] = useState();
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
-  
+
   // api states
   const [getdep, setGetdep] = useState([]);
   const [getDesig, setGetDesig] = useState([]);
@@ -64,7 +70,7 @@ const Designations = () => {
         setFormLoader(false);
       });
   };
-  // get all departments 
+  // get all departments
   const getAllDepartmentsFn = async () => {
     try {
       const result = await getAllDepartmentfn();
@@ -171,10 +177,10 @@ const Designations = () => {
   };
   // get data on edit click
   const handleEditClick = (data) => () => {
-    setEditData(()=>data)
+    setEditData(() => data);
     handleEditOpen();
   };
-  // get delete designation id 
+  // get delete designation id
   const handleDeleteClick = (id) => {
     setDeleteDesignations({ id: id });
     handleDeleteOpen();
@@ -191,11 +197,17 @@ const Designations = () => {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => {setOpen(false); setServerError(null)};
+  const handleClose = () => {
+    setOpen(false);
+    setServerError(null);
+  };
 
   const [editopen, setEditOpen] = useState(false);
   const handleEditOpen = () => setEditOpen(true);
-  const handleEditClose = () => {setEditOpen(false); setServerError(null)}
+  const handleEditClose = () => {
+    setEditOpen(false);
+    setServerError(null);
+  };
 
   const [deleteopen, setDeleteOpen] = useState(false);
   const handleDeleteOpen = () => setDeleteOpen(true);
@@ -238,19 +250,19 @@ const Designations = () => {
       type: "actions",
       getActions: (params) => {
         let currentId = params?.id;
-        let data ={
-          dep : params?.row?.department_name,
-          dep_id : params?.row?.department.id,
-          id :  params?.id,
-          desig : params?.row?.designation_name
-        }
+        let data = {
+          dep: params?.row?.department_name,
+          dep_id: params?.row?.department.id,
+          id: params?.id,
+          desig: params?.row?.designation_name,
+        };
 
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={handleEditClick(data )}
+            onClick={handleEditClick(data)}
             color="inherit"
           />,
           <GridActionsCellItem
@@ -270,16 +282,21 @@ const Designations = () => {
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader name={"Designation"}>
-         
-          <AddButton
-          startIcon={<AddIcon />}
-          variant="contained"
-          onClick={handleOpen}
-        >
-          Add Fields
-        </AddButton>
+          {isSmallScreen ?<>
+            <Menu3Dot option={[{value:'Add Designation',onClick:handleOpen}]}/>
+            </>
+            :
+            <AddButton
+            startIcon={<AddIcon />}
+            variant="contained"
+            onClick={handleOpen}
+          >
+            Add Fields
+          </AddButton>
+          }
+          
           </DatagridHeader>
-         
+
           <CustDataGrid
             data={getDesig}
             loading={formLoader}
@@ -289,20 +306,22 @@ const Designations = () => {
           />
         </Box>
       </Container>
-      <CommonModal isOpen={open || editopen} isClose={editopen ? handleEditClose : handleClose} 
-      title={editopen ? "Edit Designation" : "Add Designation"}>
- 
-    <DesignationForm
-      showDesignation={editopen ? editData?.desig : null}
-      showDepartment={editopen ? editData?.dep : null}
-      getdep={getdep}
-      handleChangeDep={handleChangeDep}
-      loading={loading}
-      apiFun={editopen ? handleEditDasignation : handleAddDesignation}
-      error={serverError}
-      btnName={editopen ? "Save Changes" : "Save"}
-    />
-</CommonModal>
+      <CommonModal
+        isOpen={open || editopen}
+        isClose={editopen ? handleEditClose : handleClose}
+        title={editopen ? "Edit Designation" : "Add Designation"}
+      >
+        <DesignationForm
+          showDesignation={editopen ? editData?.desig : null}
+          showDepartment={editopen ? editData?.dep : null}
+          getdep={getdep}
+          handleChangeDep={handleChangeDep}
+          loading={loading}
+          apiFun={editopen ? handleEditDasignation : handleAddDesignation}
+          error={serverError}
+          btnName={editopen ? "Save Changes" : "Save"}
+        />
+      </CommonModal>
 
       <DltndConf
         title="Delete Designation"

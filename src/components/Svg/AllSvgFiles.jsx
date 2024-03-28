@@ -1,4 +1,6 @@
 
+
+// dashboard svg 
 export const department = (
     <svg width="47" height="47" viewBox="0 0 47 47" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="47" height="47" rx="5" fill="#E7EDFF"/>
@@ -77,8 +79,7 @@ export const Employees = (
     <path d="M15.8101 31.2314C16.0429 29.4527 16.8806 27.8619 18.1094 26.6724C18.4003 26.3909 18.7129 26.1317 19.0448 25.898C19.3871 25.657 19.7496 25.4426 20.1294 25.2587C20.8596 24.9049 21.6533 24.6624 22.4883 24.5531V30.8942C22.4883 31.4528 22.9412 31.9058 23.4999 31.9058C24.0586 31.9058 24.5115 31.4528 24.5115 30.8942V24.5531C25.3465 24.6624 26.1402 24.9049 26.8705 25.2587C27.2502 25.4427 27.6127 25.657 27.9551 25.898C28.2869 26.1317 28.5996 26.3909 28.8905 26.6724C30.1193 27.8619 30.957 29.4527 31.1897 31.2314C31.233 31.5625 31.2556 31.9001 31.2556 32.243C31.2556 32.8016 30.8027 33.2546 30.244 33.2546H16.7556C16.1969 33.2546 15.744 32.8015 15.744 32.243C15.7441 31.9001 15.7667 31.5625 15.8101 31.2314Z" fill="#5D87FF"/>
     </svg>
 );
-export const Clients = (
-   
+export const Clients = ( 
     <svg width="47" height="47" viewBox="0 0 47 47" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="47" height="47" rx="5" fill="#E7EDFF"/>
     <g clipPath="url(#clip0_12_2010)">
@@ -90,8 +91,7 @@ export const Clients = (
     <rect width="23" height="23" fill="white" transform="translate(12 12)"/>
     </clipPath>
     </defs>
-    </svg>
-        
+    </svg>    
 );
 export const Projects = (
     

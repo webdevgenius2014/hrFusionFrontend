@@ -17,9 +17,16 @@ import { DatagridHeader } from "../../../components/dataGrid/DatagridHeader";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import GeneralServices from "../../../services/GeneralServices";
 import { LeadPlatformForm } from "./LeadPlatformForm";
+import { useTheme } from '@mui/material/styles';
+import Menu3Dot from '../../../components/Menu3Dot';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export const LeadPlatform = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [loading, setLoading] = useState(false);
   const [formLoader, setFormLoader] = useState(false);
@@ -213,13 +220,12 @@ export const LeadPlatform = () => {
     <Container style={{ padding: 0 }}>
       <Box>
         <DatagridHeader name={"Lead Platform "}>
-          <AddButton
-            startIcon={<AddIcon />}
-            variant="contained"
-            onClick={handleOpen}
-          >
-            Add
-          </AddButton>
+        {isSmallScreen ? <>
+          <Menu3Dot option={[{value:'Add Platform',onClick:handleOpen}]}/>
+          </>
+          :
+          <AddButton onClick={handleOpen}>Add Platform</AddButton>
+        }
         </DatagridHeader>
         <CommonModal isOpen={open || editopen} 
         isClose={open ? handleClose : handleEditClose}

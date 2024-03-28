@@ -41,10 +41,21 @@ const handleChangeDesig= (id)=>{
 }
 
 const handleChangeDate= (date)=>{
-   const newDate =dateFormat(date, "yyyy-mm-dd")
-  const data= {'leave_date':newDate}
+  const newDate=dateFormat(date, "yyyy-mm-dd")
+  let data;
+  if(props?.searchEmployee){
+    data= {'emp_dob':newDate}
+  }
+  else{
+    data= {'leave_date':newDate}
+  }
   setCallFunc(()=>debouncedApiCall(data));
-  setField({...filed,'leave_date':newDate})
+  if(props?.searchEmployee){
+    setField({...filed,'emp_dob':newDate,})
+  }
+  else{
+    setField({...filed,'leave_date':newDate,})
+  }
   // console.log(newDate)
 }
 

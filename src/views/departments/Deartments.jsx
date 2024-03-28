@@ -19,10 +19,17 @@ import DepartmentServices from "../../services/DepartmentServices";
 import { CustomPagination } from "../../components/CustomPagination";
 import { CustDataGrid } from "../../components/dataGrid/CustDataGrid";
 import { DatagridHeader } from "../../components/dataGrid/DatagridHeader";
+import Menu3Dot from '../../components/Menu3Dot';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Deartments = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
 
   const [serverError, setServerError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -253,13 +260,18 @@ const Deartments = () => {
       <Container style={{ padding: 0 }}>
         <Box>
           <DatagridHeader name={"Department"}>
+          {isSmallScreen ? <>
+            <Menu3Dot option={[{value:'Add Department',onClick:handleOpen}]}/>
+            </>
+            :
             <AddButton
-              startIcon={<AddIcon />}
-              variant="contained"
-              onClick={handleOpen}
-            >
-              Add Fields
-            </AddButton>
+            startIcon={<AddIcon />}
+            variant="contained"
+            onClick={handleOpen}
+          >
+            Add Fields
+          </AddButton>
+          }
           </DatagridHeader>
         </Box>
 

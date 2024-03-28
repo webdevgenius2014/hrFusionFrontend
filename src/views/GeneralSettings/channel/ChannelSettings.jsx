@@ -17,9 +17,16 @@ import { DatagridHeader } from "../../../components/dataGrid/DatagridHeader";
 import { superAdminLogout } from "../../../redux/SuperAdminSlice";
 import GeneralServices from "../../../services/GeneralServices";
 import { ChannelForm } from "./ChannelForm";
+import { useTheme } from '@mui/material/styles';
+import Menu3Dot from '../../../components/Menu3Dot';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 export const ChannelSettings = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [formLoader, setFormLoader] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -212,13 +219,12 @@ export const ChannelSettings = () => {
     <Container style={{ padding: 0 }}>
       <Box>
         <DatagridHeader name={"Channel "}>
-          <AddButton
-            startIcon={<AddIcon />}
-            variant="contained"
-            onClick={handleOpen}
-          >
-            Add
-          </AddButton>
+        {isSmallScreen ? <>
+          <Menu3Dot option={[{value:'Add Channel',onClick:handleOpen}]}/>
+          </>
+          :
+          <AddButton onClick={handleOpen}>Add Channel</AddButton>
+        }
         </DatagridHeader>
 
         <CommonModal

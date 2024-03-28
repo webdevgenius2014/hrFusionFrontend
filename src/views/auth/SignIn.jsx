@@ -22,10 +22,17 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoginServices from "../../services/loginServices/LoginServices";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
 
+   // break points 
+   const theme = useTheme();
+   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));  
   // redux
   // const sAdminData = useSelector((state) => state.SuperAdmin);
   // console.log("sAdminData",sAdminData)
@@ -91,17 +98,18 @@ const SignIn = () => {
   };
   return (
     <>
-      <ToastContainer />
+    <ToastContainer />
       <Box
         sx={{
           background: "url('loginpage/box.png')",
           backgroundSize: "container",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          maxWidth: { xl: "400px", lg: "600px", md: "500px", sm: "400px" },
-          minWidth: { xl: "400px", lg: "440px", md: "430px", sm: "300px" },
-          minHeight: { xl: "400px", lg: "530px", md: "500px", sm: "400px" },
-          maxHeight: { xl: "400px", lg: "700px", md: "700px", sm: "400px" },
+          minHeight: { xl: "400px", lg: "530px", md: "640px", sm: "480px" },
+          maxHeight: { xl: "400px", lg: "700px", md: "900px", sm: "600px" },
+          width: isSmallScreen ? "100%" : (isMediumScreen ? "390px" : isLargeScreen ?"395px" : 440),
+          minWidth: isSmallScreen ? 0 : (isMediumScreen ? 0 : 0),
+          maxWidth: isSmallScreen ? 840 : (isMediumScreen ? 740 : 850),
           position: "absolute",
           borderRadius: "10px",
           top: "50%",
@@ -113,6 +121,7 @@ const SignIn = () => {
       >
         <Box
           sx={{
+            display:isSmallScreen?'none':'',
             position: "absolute",
             top: "50%",
             transform: "translate(0, -50%)",
@@ -163,10 +172,11 @@ const SignIn = () => {
       </Box>
       <Box
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-15%, -50%)",
+          position:isSmallScreen?"": "absolute" ,
+          top: isSmallScreen?"":"50%",
+          left:isSmallScreen?"": "50%",
+          margin:'auto',
+          transform:isSmallScreen?"": "translate(-15%, -50%)",
           zIndex: 2,
         }}
       >
@@ -179,11 +189,18 @@ const SignIn = () => {
               flexDirection: "column",
               alignItems: "center",
               borderRadius: "10px",
-              minWidth: { lg: "440px", md: "440px", sm: "200px" },
-              maxWidth: { lg: "680", md: "550px", sm: "300px" },
+              width: isSmallScreen ? "100%" : (isMediumScreen ? "380px" :  400),
+              minWidth: isSmallScreen ? 0 : (isMediumScreen ? 0 : 0),
+              maxWidth: isSmallScreen ? 740 : (isMediumScreen ? 740 : 750),
+              height: isSmallScreen ? "100%" : (isMediumScreen ? "360px" : 390),
+              minHeight: isSmallScreen ? 0 : (isMediumScreen ? 0 : 0),
+              maxHeight: isSmallScreen ? 750 : (isMediumScreen ? 750 : 750),
+            
             }}
           >
-            <CardContent sx={{ p: 3 }}>
+            <CardContent sx={{ p: 3 }}
+             
+              >
               <Typography
                 component="h1"
                 variant="h5"

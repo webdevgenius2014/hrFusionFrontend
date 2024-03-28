@@ -17,8 +17,8 @@ export const CustDataGrid = (props) => {
   const NorowSvg = () => (
     <CustomNoRowsOverlay noData={props?.noData} />
   );
-
   return (
+    <Box sx= {{minWidth:'600px'}}>
     <GridStyle
       style={styles}
       rows={props?.data}
@@ -26,7 +26,7 @@ export const CustDataGrid = (props) => {
       loading={props?.loading}
       autoHeight
       pagination  
-      hideFooterPagination
+      hideFooterPagination  
       hideFooterSelectedRowCount
       disableSelectionOnClick
       disableRowSelectionOnClick
@@ -53,6 +53,7 @@ export const CustDataGrid = (props) => {
         },
       }}
       />
+      </Box>
       );
     };
     
@@ -135,7 +136,7 @@ function CustomNoRowsOverlay(props) {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}> {props?.noData || 'No Data ound'}</Box>
+      <Box sx={{ mt: 1 }}> {props?.noData || 'No Data Found'}</Box>
     </StyledGridOverlay>
   );
 }

@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { superAdminLogout, superAdminData } from "../../redux/SuperAdminSlice";
 import Loader from "../../components/Loader";
+import { toast } from "react-toastify";
+import CssBaseline from '@mui/material/CssBaseline';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,7 @@ const Dashboard = () => {
         if (res.status === 200) {
           setDashboardData(res?.data?.data || []);
           setLoading(false);
+          // toast.success(res?.data?.message)
           if (res?.success === false) {
             setNoRecord(res.data?.message);
           }
@@ -63,6 +66,7 @@ const Dashboard = () => {
 
   return (
     <Container style={{ padding: 0 }}>
+    <CssBaseline />
       <Box>
         <Box
           maxWidth="sm"
@@ -80,13 +84,17 @@ const Dashboard = () => {
           </Box>
         </Box>
         <Box
-          maxWidth="sm"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "10px",
-            justifyContent: "flex-start",
-            alignItems: "center",
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            '& > *': {
+              flex: '0 0 auto',
+              margin: '5px',
+            },
+            '&:nth-of-type(even)': {
+              justifyContent: 'flex-start',
+            }
           }}
         >
           {dashboardData.length > 0 ? (
